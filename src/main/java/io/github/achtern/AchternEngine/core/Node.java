@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A Node represents a part of the scenegraph.
+ * This Node manages a its subnodes (children) and set
+ * of {@link Entity} (entites).
+ */
 public class Node implements EngineHolder<CoreEngine> {
 
     private Map<String, Node> children;
@@ -17,6 +22,10 @@ public class Node implements EngineHolder<CoreEngine> {
 
     private String name;
 
+    /**
+     * Create a new Node.
+     * @param name The name of the node
+     */
     public Node(String name) {
         this.children = new HashMap<String, Node>();
         this.entities = new ArrayList<Entity>();
@@ -24,6 +33,13 @@ public class Node implements EngineHolder<CoreEngine> {
         this.name = name;
     }
 
+    /**
+     * Creates and untitled Node.
+     * The name will be <code>NULL</code> until its
+     * getting added as a child to another node.
+     * (Then name will be "PARENT-NODE >> Untitled Node X" where X is
+     * the number of already existing subnodes.
+     */
     public Node() {
         this(null);
     }
@@ -65,7 +81,7 @@ public class Node implements EngineHolder<CoreEngine> {
 
     public Node add(Node node) {
         if (node.getName() == null) {
-            node.setName("Untitled Node " + getChildren().size());
+            node.setName(getName() + " >> Untitled Node " + getChildren().size());
         }
         getChildren().put(node.getName(), node);
         node.setEngine(getEngine());
