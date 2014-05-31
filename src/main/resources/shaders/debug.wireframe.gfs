@@ -1,0 +1,18 @@
+#version 330
+
+uniform vec3 wirecolor;
+
+uniform vec3 fillcolor;
+
+out vec4 fragColor;
+
+noperspective in vec3 dist;
+
+void main( void )
+{
+
+    float d = min(dist[0], min(dist[1], dist[2]));
+    float I = exp2(-2 * d * d);
+
+    fragColor = I * vec4(wirecolor, 1) + (1.0 - I) * vec4(fillcolor, 1);
+}
