@@ -6,33 +6,59 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
+/**
+ * A Figure represents a renderable {@link Mesh}.
+ * Included in this figure is a mesh, material and a DrawStrategy.
+ */
 public class Figure extends QuickEntity {
 
     private Mesh mesh;
     private Material material;
     private DrawStrategy drawStrategy;
 
+    /**
+     * Create an empty Figure
+     * @param name The name of the empty figure
+     */
     public Figure(String name) {
         this(name, null, null);
     }
 
+    /**
+     * Create a Figure with a Mesh only.
+     * If the mesh is null, it will throw an <code>IllegalArgumentException</code>.
+     * @param name The name of the figure
+     * @param mesh The mesh
+     */
     public Figure(String name, Mesh mesh) {
         this(name, mesh, null);
     }
 
+    /**
+     * Create a Figure with a Mesh and Material.
+     * @param name The name of the figure
+     * @param mesh The mesh (not null)
+     * @param material The material
+     */
     public Figure(String name, Mesh mesh, Material material) {
         super(name);
-
-        if (mesh == null) throw new IllegalArgumentException("Mesh must not be null");
 
         setMesh(mesh);
         setMaterial(material);
     }
 
+    /**
+     * Creates an untitled Figure with a mesh only.
+     * @param mesh The mesh
+     */
     public Figure(Mesh mesh) {
         this(mesh, null);
     }
 
+    /**
+     * Creates an untitled Figure with a mesh and a material
+     * @param mesh The mesh
+     */
     public Figure(Mesh mesh, Material material) {
         this("Untitled Figure", mesh, material);
     }
@@ -50,6 +76,12 @@ public class Figure extends QuickEntity {
         mesh.draw(ds);
     }
 
+    /**
+     * Returns the vertex count of the underlying mesh
+     * @return the vertex count
+     *
+     * @see Mesh#getVertexCount()
+     */
     public int getVertexCount() {
         return getMesh().getVertexCount();
     }
