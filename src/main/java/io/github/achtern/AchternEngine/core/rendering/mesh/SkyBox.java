@@ -4,8 +4,8 @@ import io.github.achtern.AchternEngine.core.rendering.Vertex;
 
 public class SkyBox extends Mesh {
 
-    private static final float X_MOD = 0.25f; // 1 / 4
-    private static final float Y_MOD = 1 / 3;
+    private static float X_MOD = 1f / 4;
+    private static float Y_MOD = 1f / 3;
 
 
     public SkyBox(float size) {
@@ -69,5 +69,21 @@ public class SkyBox extends Mesh {
 
         setVertices(vertices, indices, true);
 
+    }
+
+    public static float getX_MOD() {
+        return X_MOD;
+    }
+
+    public static void setX_MOD(float x_MOD) {
+        X_MOD = x_MOD;
+    }
+
+    public static float getY_MOD() {
+        return Y_MOD;
+    }
+
+    public static void setY_MOD(float y_MOD) {
+        Y_MOD = y_MOD;
     }
 }
