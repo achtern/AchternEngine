@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.exceptions.ImageToLargeException;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,11 @@ public class Texture implements RenderTarget {
         initRenderTarget(attachments);
     }
 
-    public Texture(BufferedImage image) {
+    public Texture(BufferedImage image) throws ImageToLargeException {
         this(image, 1, new int[] {GL_NONE});
     }
 
-    public Texture(BufferedImage image, int texturesCount, int[] attachments) {
+    public Texture(BufferedImage image, int texturesCount, int[] attachments) throws ImageToLargeException {
 
         ByteBuffer buffer = imageToBuffer(image);
 
@@ -118,7 +119,7 @@ public class Texture implements RenderTarget {
         return glGenFramebuffers();
     }
 
-    protected static ByteBuffer imageToBuffer(BufferedImage image) {
+    protected static ByteBuffer imageToBuffer(BufferedImage image) throws ImageToLargeException {
         int[] pxls = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 
         ByteBuffer buffer = UBuffer.createByteBuffer(image.getHeight() * image.getHeight() * 4);
@@ -129,14 +130,21 @@ public class Texture implements RenderTarget {
             for (int y = 0; y < image.getHeight(); y++) {
                 int pxl = pxls[y * image.getWidth() + x];
 
-                buffer.put((byte) ((pxl >> 16) & 0xFF));
-                buffer.put((byte) ((pxl >> 8)  & 0xFF));
-                buffer.put((byte) (pxl & 0xFF));
+                if (buffer.hasRemaining()) {
+                    buffer.put((byte) ((pxl >> 16) & 0xFF));
+                    buffer.put((byte) ((pxl >> 8)  & 0xFF));
+                    buffer.put((byte) (pxl & 0xFF));
 
-                if (alpha) {
-                    buffer.put((byte) ((pxl >> 24)& 0xFF));
+                    if (alpha) {
+                        buffer.put((byte) ((pxl >> 24) & 0xFF));
+                    } else {
+                        buffer.put((byte) 0xFF);
+                    }
+
                 } else {
-                    buffer.put((byte) 0xFF);
+                    LOGGER.warn("Buffer Limit Reached at x: {};y: {}", x, y);
+                    buffer.flip();
+                    return buffer;
                 }
             }
         }
