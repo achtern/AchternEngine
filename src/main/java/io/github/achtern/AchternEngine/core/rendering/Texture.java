@@ -1,13 +1,18 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
-import io.github.achtern.AchternEngine.core.exceptions.ImageToLargeException;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.awt.image.*;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Hashtable;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
@@ -35,11 +40,11 @@ public class Texture implements RenderTarget {
         initRenderTarget(attachments);
     }
 
-    public Texture(BufferedImage image) throws ImageToLargeException {
+    public Texture(BufferedImage image) throws IOException {
         this(image, 1, new int[] {GL_NONE});
     }
 
-    public Texture(BufferedImage image, int texturesCount, int[] attachments) throws ImageToLargeException {
+    public Texture(BufferedImage image, int texturesCount, int[] attachments) throws IOException {
 
         ByteBuffer buffer = imageToBuffer(image);
 
@@ -50,11 +55,13 @@ public class Texture implements RenderTarget {
 
         initRenderTarget(attachments);
 
+        int colormode = image.getColorModel().hasAlpha() ? GL_RGBA : GL_RGB;
+
 
 
         genTexParams();
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, colormode, GL_UNSIGNED_BYTE, buffer);
     }
 
     public void bind() {
@@ -119,39 +126,54 @@ public class Texture implements RenderTarget {
         return glGenFramebuffers();
     }
 
-    protected static ByteBuffer imageToBuffer(BufferedImage image) throws ImageToLargeException {
-        int[] pxls = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+    protected static ByteBuffer imageToBuffer(BufferedImage image) throws IOException {
 
-        ByteBuffer buffer = UBuffer.createByteBuffer(image.getHeight() * image.getHeight() * 4);
+        ByteBuffer buffer = null;
+        BufferedImage texture;
+        WritableRaster raster;
+
+        int texW = 2;
+        int texH = 2;
+        int depth;
+
+        // Powers of 2 only!
+        while (texW < image.getWidth()) texW *= 2;
+        while (texH < image.getHeight()) texH *= 2;
 
         boolean alpha = image.getColorModel().hasAlpha();
 
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                int pxl = pxls[y * image.getWidth() + x];
+        BufferedImage texI;
 
-                if (buffer.hasRemaining()) {
-                    buffer.put((byte) ((pxl >> 16) & 0xFF));
-                    buffer.put((byte) ((pxl >> 8)  & 0xFF));
-                    buffer.put((byte) (pxl & 0xFF));
-
-                    if (alpha) {
-                        buffer.put((byte) ((pxl >> 24) & 0xFF));
-                    } else {
-                        buffer.put((byte) 0xFF);
-                    }
-
-                } else {
-                    LOGGER.warn("Buffer Limit Reached at x: {};y: {}", x, y);
-                    buffer.flip();
-                    return buffer;
-                }
-            }
+        if (alpha) {
+            depth = 32;
+            raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texW, texH, 4, null);
+            texI = new BufferedImage(glAlphaColorModel, raster, false, new Hashtable());
+        } else {
+            depth = 24;
+            raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texW, texH, 3, null);
+            texI = new BufferedImage(glColorModel, raster, false, new Hashtable());
         }
 
+        Graphics2D g = (Graphics2D) texI.getGraphics();
+
+        if (alpha) {
+            g.setColor(new Color(0, 0, 0, 0));
+            g.fillRect(0, 0, texW, texH);
+        }
+
+        g.drawImage(image, 0, 0, null);
+
+        byte[] data = ((DataBufferByte) texI.getRaster().getDataBuffer()).getData();
+
+        buffer = ByteBuffer.allocateDirect(data.length);
+        buffer.order(ByteOrder.nativeOrder());
+        buffer.put(data, 0, data.length);
         buffer.flip();
+        g.dispose();
+
 
         return buffer;
+
     }
 
     protected static void genTexParams() {
@@ -160,4 +182,24 @@ public class Texture implements RenderTarget {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
+
+    private static final ColorModel glAlphaColorModel =
+            new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                    new int[] {8, 8, 8, 8},
+                    true,
+                    false,
+                    ComponentColorModel.TRANSLUCENT,
+                    DataBuffer.TYPE_BYTE
+            );
+
+    private static final  ColorModel glColorModel =
+            new ComponentColorModel(ColorSpace.getInstance(
+                    ColorSpace.CS_sRGB),
+                    new int[] {8, 8, 8, 0},
+                    false,
+                    false,
+                    ComponentColorModel.OPAQUE,
+                    DataBuffer.TYPE_BYTE
+            );
 }
