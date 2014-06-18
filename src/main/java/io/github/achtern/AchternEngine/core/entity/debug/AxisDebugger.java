@@ -7,11 +7,10 @@ import io.github.achtern.AchternEngine.core.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Quaternion;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
+import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.rendering.generator.ImageGenerator;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
-import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
-
-import java.io.IOException;
 
 public class AxisDebugger extends Node {
 
@@ -45,14 +44,8 @@ public class AxisDebugger extends Node {
 
         Figure f = new Figure("Axis", mesh);
         Material m = new Material();
-        try {
-            m.addTexture("diffuse", ResourceLoader.getTexture("plane.png"));
-        } catch (IOException e) {
-            // ignore
-        }
 
-        m.addFloat("specularIntensity", 0.1f);
-        m.addFloat("specularPower", 55);
+        m.addTexture("diffuse", new Texture(ImageGenerator.fromColor(color)));
 
         f.setMaterial(m);
 

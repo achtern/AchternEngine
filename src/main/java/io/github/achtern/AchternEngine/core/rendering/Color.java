@@ -39,6 +39,10 @@ public class Color extends Vector4f {
         super(rgb, a);
     }
 
+    public java.awt.Color toAwt() {
+        return new java.awt.Color(getRed(), getGreen(), getBlue(), getAlpha());
+    }
+
     /**
      * Returns the raw RGB values, ignoring the alpha
      * @return RBG components

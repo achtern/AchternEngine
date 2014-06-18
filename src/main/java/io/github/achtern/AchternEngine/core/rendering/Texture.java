@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static io.github.achtern.AchternEngine.core.resource.ResourceConverter.toByteBuffer;
@@ -36,11 +35,11 @@ public class Texture implements RenderTarget {
         initRenderTarget(attachments);
     }
 
-    public Texture(BufferedImage image) throws IOException {
+    public Texture(BufferedImage image) {
         this(image, 1, new int[] {GL_NONE});
     }
 
-    public Texture(BufferedImage image, int texturesCount, int[] attachments) throws IOException {
+    public Texture(BufferedImage image, int texturesCount, int[] attachments) {
 
         ByteBuffer buffer = toByteBuffer(image);
 
