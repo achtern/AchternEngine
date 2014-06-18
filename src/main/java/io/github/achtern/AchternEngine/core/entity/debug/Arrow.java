@@ -37,36 +37,6 @@ public class Arrow extends Mesh {
         this.data = data;
     }
 
-
-//    public Arrow(Vector3f arrow) {
-//
-//        float length = arrow.length();
-//        Vector3f direction = arrow.normalized();
-//
-//        Quaternion q = new Quaternion(new Matrix4f().initRotation(direction, Transform.Y_AXIS));
-//        q.faceAt(direction, Transform.Y_AXIS);
-//        q.normalize();
-//
-//        Vector3f tmp = new Vector3f(0, 0, 0);
-//
-//        float[] uVertices = new float[VERTICES.length];
-//
-//        for (int i = 0; i < VERTICES.length; i += 3) {
-//            Vector3f v = tmp.set(VERTICES[i], VERTICES[i + 1], VERTICES[i + 2]);
-//
-//            v.multLocal(length);
-//
-//            v = q.mult(v);
-//
-//            uVertices[i] = v.getX();
-//            uVertices[i + 1] = v.getY();
-//            uVertices[i + 2] = v.getZ();
-//        }
-//
-//        setVertices(Vertex.toArray(uVertices), new int[] {0, 1, 1, 2, 1, 3, 1, 4, 1, 5}, false);
-//
-//    }
-
     @Override
     public void draw(DrawStrategy drawStrategy) {
         if (!(drawStrategy instanceof WireframeDraw)) {
