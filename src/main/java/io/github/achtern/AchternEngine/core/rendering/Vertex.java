@@ -63,6 +63,10 @@ public class Vertex {
         this.normal = normal;
     }
 
+    public Vertex(float x, float y, float z, float texX, float texY) {
+        this(new Vector3f(x, y, z), new Vector2f(texX, texY));
+    }
+
     public Vector3f getPos() {
         return pos;
     }
