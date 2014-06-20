@@ -1,8 +1,6 @@
 package io.github.achtern.AchternEngine.core.entity.debug;
 
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
@@ -39,10 +37,11 @@ public class Arrow extends Mesh {
 
     @Override
     public void draw(DrawStrategy drawStrategy) {
-        if (!(drawStrategy instanceof WireframeDraw)) {
-            drawStrategy = DrawStrategyFactory.get("wireframe");
-        }
-
+//        if (!(drawStrategy instanceof WireframeDraw)) {
+//            drawStrategy = DrawStrategyFactory.get("wireframe");
+//        }
+//
+//        super.draw(drawStrategy);
         super.draw(drawStrategy);
     }
 }

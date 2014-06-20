@@ -15,6 +15,7 @@ public class Figure extends QuickEntity {
     private Mesh mesh;
     private Material material;
     private DrawStrategy drawStrategy;
+    private boolean useLights;
 
     /**
      * Create an empty Figure
@@ -45,6 +46,7 @@ public class Figure extends QuickEntity {
 
         setMesh(mesh);
         setMaterial(material);
+        setUseLights(true);
     }
 
     /**
@@ -108,5 +110,13 @@ public class Figure extends QuickEntity {
 
     public void setDrawStrategy(DrawStrategy drawStrategy) {
         this.drawStrategy = drawStrategy;
+    }
+
+    public boolean isUseLights() {
+        return useLights;
+    }
+
+    public void setUseLights(boolean useLights) {
+        this.useLights = useLights;
     }
 }
