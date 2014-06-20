@@ -4,6 +4,7 @@ import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -30,13 +31,20 @@ public class SolidDraw implements DrawStrategy {
         // Normals
         glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20);
 
+        drawElements(data);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data.getIbo());
-        glDrawElements(GL_TRIANGLES, data.getSize(), GL_UNSIGNED_INT, 0);
+
 
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
     }
+
+    protected void drawElements(MeshData data) {
+        glDrawElements(GL_TRIANGLES, data.getSize(), GL_UNSIGNED_INT, 0);
+    }
+
+
 }
