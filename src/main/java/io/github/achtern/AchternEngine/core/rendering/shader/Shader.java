@@ -110,13 +110,13 @@ public class Shader {
         glLinkProgram(this.program);
 
         if (glGetProgrami(this.program, GL_LINK_STATUS) == 0) {
-            LOGGER.warn(glGetProgramInfoLog(this.program, 1024) + " @ {}", this.getClass().getSimpleName());
+            LOGGER.warn("Link Status: {} @ {}", glGetProgramInfoLog(this.program, 1024), this.getClass().getSimpleName());
         }
 
         glValidateProgram(this.program);
 
         if (glGetProgrami(this.program, GL_VALIDATE_STATUS) == 0) {
-            LOGGER.warn(glGetProgramInfoLog(this.program, 1024) + " @ {}", this.getClass().getSimpleName());
+            LOGGER.warn("Validation Status: {} @ {}", glGetProgramInfoLog(this.program, 1024), this.getClass().getSimpleName());
         }
 
     }
