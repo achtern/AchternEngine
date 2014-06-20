@@ -1,15 +1,8 @@
 package io.github.achtern.AchternEngine.core.rendering.mesh;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
-import io.github.achtern.AchternEngine.core.util.UBuffer;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 
 public class Mesh {
 
@@ -38,16 +31,7 @@ public class Mesh {
             calcNormals(vertices, indices);
         }
 
-        this.data.setSize(indices.length);
-        this.data.setVertices(vertices);
-        this.data.setIndices(indices);
-
-        glBindBuffer(GL_ARRAY_BUFFER, this.data.getVbo());
-        glBindVertexArray(this.data.getVao());
-        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) UBuffer.create(vertices).flip(), GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.data.getIbo());
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) UBuffer.create(indices).flip(), GL_STATIC_DRAW);
+        this.data.bind(vertices, indices);
     }
 
     public void draw(DrawStrategy drawStrategy) {
