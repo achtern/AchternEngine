@@ -21,6 +21,10 @@ public class AxisDebugger extends Node {
      */
     public AxisDebugger(String name) {
         super(name);
+
+        pushFigure(new Arrow(), Color.RED, 0);
+        pushFigure( new Arrow(), Color.GREEN, 1);
+        pushFigure(new Arrow(), Color.BLUE, 2);
     }
 
     /**
@@ -28,11 +32,6 @@ public class AxisDebugger extends Node {
      */
     public AxisDebugger() {
         this("AxisDebugger");
-
-        pushFigure(new Arrow(), Color.RED, 0);
-        pushFigure( new Arrow(), Color.GREEN, 1);
-        pushFigure(new Arrow(), Color.BLUE, 2);
-
     }
 
     @Override
@@ -61,9 +60,10 @@ public class AxisDebugger extends Node {
 
         add(n);
 
-        if (i == 0)      n.getTransform().setRotation(new Quaternion(Transform.X_AXIS, (float) Math.toRadians(90)));
+        // Rotate, so they are laying on the corresponding axis
+        if (i == 0)      n.getTransform().setRotation(new Quaternion(Transform.Z_AXIS, (float) Math.toRadians(90)));
         else if (i == 1) n.getTransform().setRotation(new Quaternion(Transform.Y_AXIS, (float) Math.toRadians(90)));
-        else if (i == 2) n.getTransform().setRotation(new Quaternion(Transform.Z_AXIS, (float) Math.toRadians(90)));
+        else if (i == 2) n.getTransform().setRotation(new Quaternion(Transform.X_AXIS, (float) Math.toRadians(90)));
 
     }
 }
