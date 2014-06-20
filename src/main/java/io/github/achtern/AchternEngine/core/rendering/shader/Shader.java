@@ -116,9 +116,14 @@ public class Shader {
         glValidateProgram(this.program);
 
         if (glGetProgrami(this.program, GL_VALIDATE_STATUS) == 0) {
-            LOGGER.warn("Validation Status: {} @ {}", glGetProgramInfoLog(this.program, 1024), this.getClass().getSimpleName());
+            String error = glGetProgramInfoLog(this.program, 1024);
+            // This is a hack to prevent error message on every shader load.
+            // If we load the shaders before the mesh loading, there are not any
+            // VAO loaded. Works fine everytime, so just ignore this case specific error...
+            if (!error.contains("Validation Failed: No vertex array object bound")) {
+                LOGGER.warn("Validation Status: {} @ {}", error, this.getClass().getSimpleName());
+            }
         }
-
     }
 
     /**
