@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -18,6 +19,10 @@ import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 public class Window {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Window.class);
+
+    public static void create(Dimension dimension, String title) {
+        create(dimension.getWidth(), dimension.getHeight(), title);
+    }
 
     public static void create(int width, int height, String title) {
         Display.setTitle(title);
@@ -60,6 +65,10 @@ public class Window {
 
     public static Vector2f getCenter() {
         return new Vector2f(getWidth() / 2, getHeight() / 2);
+    }
+
+    public static Dimension getDimension() {
+        return new Dimension(getWidth(), getHeight());
     }
 
     public static int getWidth() {
