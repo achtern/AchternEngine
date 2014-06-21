@@ -3,7 +3,7 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.entity.Camera;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.RenderPass;
+import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
