@@ -4,7 +4,7 @@ import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.ByteImage;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
-import io.github.achtern.AchternEngine.core.rendering.TexturableData;
+import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 
 import java.awt.*;
