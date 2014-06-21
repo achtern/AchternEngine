@@ -3,6 +3,8 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Renderable;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
+import io.github.achtern.AchternEngine.core.input.KeyMap;
+import io.github.achtern.AchternEngine.core.input.LWJGLInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +34,10 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     private GameDebugger debugger;
 
-    /**
-     * Delegates to the scenegraph and debugger
-     * ALWAYS call this methods in overwritten versions,
-     * otherwise the scenegraph won't get inputed!
-     * @param delta The delta time
-     */
-    public void input(float delta) {
-        if (isDebug()) debugger.input(delta);
-        getSceneGraph().input(delta);
+    private KeyMap keyMap;
+
+    public Game() {
+        keyMap = new KeyMap(new LWJGLInput());
     }
 
     /**
@@ -196,5 +193,13 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
             debugger.disable();
             debugger = null;
         }
+    }
+
+    public KeyMap getKeyMap() {
+        return keyMap;
+    }
+
+    public void setKeyMap(KeyMap keyMap) {
+        this.keyMap = keyMap;
     }
 }

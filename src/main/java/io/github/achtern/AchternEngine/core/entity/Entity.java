@@ -4,11 +4,10 @@ import io.github.achtern.AchternEngine.core.CoreEngine;
 import io.github.achtern.AchternEngine.core.Node;
 import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.contracts.Inputable;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
-public interface Entity extends Inputable, Updatable {
+public interface Entity extends Updatable {
 
     /**
      * Called on render, draw stuff here
@@ -39,6 +38,11 @@ public interface Entity extends Inputable, Updatable {
      * Called when an Entity is about to get removed from the active scenegraph
      */
     public void removed();
+
+    /**
+     * Called when an Entity gets attached to an scenegraph
+     */
+    public void attached();
 
     /**
      * Should return the name of the Entits

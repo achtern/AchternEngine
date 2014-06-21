@@ -36,14 +36,6 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     }
 
     /**
-     * @see Entity#input(float)
-     */
-    @Override
-    public void input(float delta) {
-
-    }
-
-    /**
      * @see Entity#update(float)
      */
     @Override
@@ -64,6 +56,13 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
      */
     @Override
     public void removed() {
+    }
+
+    /**
+     * @see Entity#attached() ()
+     */
+    @Override
+    public void attached() {
     }
 
     public void setName(String name) {
