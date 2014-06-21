@@ -1,6 +1,5 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.math.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +21,14 @@ public class Texture {
     }
 
     public Texture(BufferedImage image) {
-        this(toByteBuffer(image), new Vector2f(image.getWidth(), image.getHeight()), image.getColorModel().hasAlpha());
+        this(toByteBuffer(image), Dimension.fromBufferedImage(image), image.getColorModel().hasAlpha());
     }
 
-    public Texture(ByteBuffer buffer, Vector2f dimensions, boolean alpha) {
+    public Texture(TexturableData data) {
+        this(data.getData(), data.getDimension(), data.hasAlpha());
+    }
+
+    public Texture(ByteBuffer buffer, Dimension dimension, boolean alpha) {
 
         this.id = genID();
 
@@ -38,8 +41,8 @@ public class Texture {
                 GL_TEXTURE_2D,
                 0,
                 GL_RGBA8,
-                (int) dimensions.getX(),
-                (int) dimensions.getY(),
+                dimension.getWidth(),
+                dimension.getHeight(),
                 0,
                 alpha ? GL_RGBA : GL_RGB,
                 GL_UNSIGNED_BYTE,

@@ -1,7 +1,10 @@
 package io.github.achtern.AchternEngine.core.rendering.generator;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
+import io.github.achtern.AchternEngine.core.rendering.ByteImage;
 import io.github.achtern.AchternEngine.core.rendering.Color;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.TexturableData;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 
 import java.awt.*;
@@ -29,15 +32,15 @@ public class ImageGenerator {
         return image;
     }
 
-    public static ByteBuffer bytesFromColor(Color color) {
-        return bytesFromColor(new Vector2f(1, 1), color);
+    public static TexturableData bytesFromColor(Color color) {
+        return bytesFromColor(new Dimension(1, 1), color);
     }
 
-    public static ByteBuffer bytesFromColor(Vector2f dimensions, Color color) {
-        ByteBuffer buffer = UBuffer.createByteBuffer((int) (dimensions.getX() * dimensions.getY() * 4));
+    public static TexturableData bytesFromColor(Dimension dimension, Color color) {
+        ByteBuffer buffer = UBuffer.createByteBuffer((int) (dimension.getX() * dimension.getY() * 4));
 
-        for(int y = 0; y < dimensions.getY(); y++) {
-            for(int x = 0; x < dimensions.getX(); x++) {
+        for(int y = 0; y < dimension.getY(); y++) {
+            for(int x = 0; x < dimension.getX(); x++) {
 
                 int pixel = color.toInt();
 
@@ -52,7 +55,7 @@ public class ImageGenerator {
         buffer.flip();
 
 
-        return buffer;
+        return new ByteImage(buffer, true, dimension);
     }
 
 }
