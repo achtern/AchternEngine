@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
+import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

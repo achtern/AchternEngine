@@ -1,5 +1,7 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
+import io.github.achtern.AchternEngine.core.contracts.TexturableData;
+
 import java.nio.ByteBuffer;
 
 public class ByteImage implements TexturableData {
