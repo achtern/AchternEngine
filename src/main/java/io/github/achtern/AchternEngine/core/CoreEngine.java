@@ -104,11 +104,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                     stop();
                 }
 
-
-
-                game.input((float) frameTime);
-
-                Input.update();
+                game.getKeyMap().trigger((float) frameTime);
 
                 game.update((float) frameTime);
 
@@ -169,5 +165,9 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     @Override
     public RenderEngine getEngine() {
         return renderEngine;
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

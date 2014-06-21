@@ -44,20 +44,9 @@ public class Node implements EngineHolder<CoreEngine> {
         this(null);
     }
 
-    public void input(float delta) {
+    public void update(float delta) {
 
         transform.update();
-
-        for (Entity entity : getEntities()) {
-            entity.input(delta);
-        }
-
-        for (Node node : getChildren().values()) {
-            node.input(delta);
-        }
-    }
-
-    public void update(float delta) {
 
         for (Entity entity : getEntities()) {
             entity.update(delta);
@@ -86,6 +75,11 @@ public class Node implements EngineHolder<CoreEngine> {
         getChildren().put(node.getName(), node);
         node.setEngine(getEngine());
         node.getTransform().setParent(this.getTransform());
+        for (Entity e : node.getEntities()) {
+            e.setEngine(node.getEngine());
+            e.setParent(node);
+            e.attached();
+        }
         return this;
     }
 

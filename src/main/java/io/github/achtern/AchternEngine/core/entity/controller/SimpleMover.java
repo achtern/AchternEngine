@@ -1,7 +1,9 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
-import io.github.achtern.AchternEngine.core.Input;
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
+import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.Key;
+import io.github.achtern.AchternEngine.core.input.KeyListener;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
 /**
@@ -10,17 +12,17 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 public class SimpleMover extends QuickEntity {
     protected float speed;
 
-    protected int forwardKey;
-    protected int backKey;
-    protected int leftKey;
-    protected int rightKey;
+    protected Key forwardKey;
+    protected Key backKey;
+    protected Key leftKey;
+    protected Key rightKey;
 
     /**
      * Initialize a SimpleMover with the default key binding
      * @param speed The movement speed
      */
     public SimpleMover(float speed) {
-        this(speed, Input.KEY_W, Input.KEY_S, Input.KEY_A, Input.KEY_D);
+        this(speed, Key.W, Key.S, Key.A, Key.D);
     }
 
     /**
@@ -31,7 +33,7 @@ public class SimpleMover extends QuickEntity {
      * @param leftKey The key to move left
      * @param rightKey The key to move right
      */
-    public SimpleMover(float speed, int forwardKey, int backKey, int leftKey, int rightKey) {
+    public SimpleMover(float speed, Key forwardKey, Key backKey, Key leftKey, Key rightKey) {
         this.speed = speed;
         this.forwardKey = forwardKey;
         this.backKey = backKey;
@@ -40,29 +42,57 @@ public class SimpleMover extends QuickEntity {
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.entity.QuickEntity#input(float)
+     * @see io.github.achtern.AchternEngine.core.entity.Entity#attached()
      */
     @Override
-    public void input(float delta) {
-
-        float amount = speed * delta;
-
-        if (Input.getKey(this.forwardKey)) {
-            move(getTransform().getRotation().getForward(), amount);
-        }
-
-        if (Input.getKey(this.backKey)) {
-            move(getTransform().getRotation().getForward(), -amount);
-        }
-
-        if (Input.getKey(this.leftKey)) {
-            move(getTransform().getRotation().getLeft(), amount);
-        }
-
-        if (Input.getKey(this.rightKey)) {
-            move(getTransform().getRotation().getRight(), amount);
-        }
+    public void attached() {
+        registerListener();
     }
+
+    protected void registerListener() {
+        getEngine().getGame().getKeyMap().register(forwardKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                move(getTransform().getRotation().getForward(), getSpeed() * event.getDelta());
+            }
+        }).register(backKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                move(getTransform().getRotation().getForward(), -getSpeed() * event.getDelta());
+            }
+        }).register(leftKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                move(getTransform().getRotation().getLeft(), getSpeed() * event.getDelta());
+            }
+        }).register(rightKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                move(getTransform().getRotation().getRight(), getSpeed() * event.getDelta());
+            }
+        });
+    }
+
 
     /**
      * Moves this node by amt into dir

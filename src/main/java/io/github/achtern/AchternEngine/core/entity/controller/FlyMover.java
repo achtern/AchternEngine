@@ -1,7 +1,9 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
-import io.github.achtern.AchternEngine.core.Input;
 import io.github.achtern.AchternEngine.core.Transform;
+import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.Key;
+import io.github.achtern.AchternEngine.core.input.KeyListener;
 
 /**
  * Moves an Node up and/or down.
@@ -10,15 +12,16 @@ import io.github.achtern.AchternEngine.core.Transform;
  * Default key binding is space to go up and left shift to go down.
  */
 public class FlyMover extends SimpleMover {
-    private int upKey;
-    private int downKey;
+    protected Key upKey;
+    protected Key downKey;
+
 
     /**
      * Initialize a FlyMover with the default key binding
      * @param speed The movement speed on Y
      */
     public FlyMover(float speed) {
-        this(speed, Input.KEY_SPACE, Input.KEY_LSHIFT);
+        this(speed, Key.SPACE, Key.LSHIFT);
     }
 
     /**
@@ -27,42 +30,57 @@ public class FlyMover extends SimpleMover {
      * @param upKey The key to move in positive Y
      * @param downKey The key to move in negative Y
      */
-    public FlyMover(float speed, int upKey, int downKey) {
+    public FlyMover(float speed, Key upKey, Key downKey) {
         super(speed);
         this.upKey = upKey;
         this.downKey = downKey;
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.entity.controller.SimpleMover#input(float)
+     * @see io.github.achtern.AchternEngine.core.entity.Entity#attached()
      */
     @Override
-    public void input(float delta) {
-
-        float amount = speed * delta;
-
-        if (Input.getKey(upKey)) {
-            move(Transform.Y_AXIS, amount);
-        }
-
-        if (Input.getKey(downKey)) {
-            move(Transform.Y_AXIS, -amount);
-        }
+    public void attached() {
+        registerListener();
     }
 
-    public int getUpKey() {
+    protected void registerListener() {
+        getEngine().getGame().getKeyMap().register(upKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                move(Transform.Y_AXIS, getSpeed() * event.getDelta());
+            }
+        }).register(downKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                move(Transform.Y_AXIS, -getSpeed() * event.getDelta());
+            }
+        });
+    }
+
+    public Key getUpKey() {
         return upKey;
     }
 
-    public void setUpKey(int upKey) {
+    public void setUpKey(Key upKey) {
         this.upKey = upKey;
     }
 
-    public int getDownKey() {
+    public Key getDownKey() {
         return downKey;
     }
 
-    public void setDownKey(int downKey) {
+    public void setDownKey(Key downKey) {
         this.downKey = downKey;
     }
 }

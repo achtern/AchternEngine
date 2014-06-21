@@ -1,7 +1,9 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
-import io.github.achtern.AchternEngine.core.Input;
 import io.github.achtern.AchternEngine.core.Transform;
+import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.Key;
+import io.github.achtern.AchternEngine.core.input.KeyListener;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
 /**
@@ -27,34 +29,55 @@ public class HumanMover extends SimpleMover {
      * @param leftKey The key to move left
      * @param rightKey The key to move right
      */
-    public HumanMover(float speed, int forwardKey, int backKey, int leftKey, int rightKey) {
+    public HumanMover(float speed, Key forwardKey, Key backKey, Key leftKey, Key rightKey) {
         super(speed, forwardKey, backKey, leftKey, rightKey);
     }
 
-    /**
-     * @see io.github.achtern.AchternEngine.core.entity.QuickEntity#input(float)
-     */
     @Override
-    public void input(float delta) {
+    protected void registerListener() {
+        getEngine().getGame().getKeyMap().register(forwardKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
 
-        float amount = speed * delta;
-        Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
+            @Override
+            public void onAction(InputEvent event) {
+                Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
+                move(horizontal, getSpeed() * event.getDelta());
+            }
+        }).register(backKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
 
-        if (Input.getKey(this.forwardKey)) {
-            move(horizontal, amount);
-        }
+            @Override
+            public void onAction(InputEvent event) {
+                Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
+                move(horizontal, -getSpeed() * event.getDelta());
+            }
+        }).register(leftKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
 
-        if (Input.getKey(this.backKey)) {
-            move(horizontal, -amount);
-        }
+            @Override
+            public void onAction(InputEvent event) {
+                move(getTransform().getRotation().getLeft(), getSpeed() * event.getDelta());
+            }
+        }).register(rightKey, new KeyListener() {
+            @Override
+            public Type getType() {
+                return Type.PRESS;
+            }
 
-        if (Input.getKey(this.leftKey)) {
-            move(getTransform().getRotation().getLeft(), amount);
-        }
-
-        if (Input.getKey(this.rightKey)) {
-            move(getTransform().getRotation().getRight(), amount);
-        }
-
+            @Override
+            public void onAction(InputEvent event) {
+                move(getTransform().getRotation().getRight(), getSpeed() * event.getDelta());
+            }
+        });
     }
+
 }
