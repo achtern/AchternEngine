@@ -1,6 +1,5 @@
 package io.github.achtern.AchternEngine.core.entity.debug;
 
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
@@ -13,15 +12,6 @@ public class Arrow extends Mesh {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Arrow.class);
 
-//    private static final float[] VERTICES = new float[]{
-//            0, 0, 0,
-//            0, 0, 1,
-//            0.05f, 0, 0.9f,
-//            -0.05f, 0, 0.9f,
-//            0, 0.05f, 0.9f,
-//            0, -0.05f, 0.9f
-//    };
-
     public Arrow() {
         super();
         MeshData data;
@@ -33,15 +23,5 @@ public class Arrow extends Mesh {
         }
 
         this.data = data;
-    }
-
-    @Override
-    public void draw(DrawStrategy drawStrategy) {
-//        if (!(drawStrategy instanceof WireframeDraw)) {
-//            drawStrategy = DrawStrategyFactory.get("wireframe");
-//        }
-//
-//        super.draw(drawStrategy);
-        super.draw(drawStrategy);
     }
 }
