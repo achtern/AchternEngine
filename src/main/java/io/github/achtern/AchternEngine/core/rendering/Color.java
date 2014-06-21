@@ -90,4 +90,11 @@ public class Color extends Vector4f {
     public void setAlpha(float alpha) {
         setW(alpha);
     }
+
+    public int toInt() {
+        return  (((int) (getAlpha() * 255)  & 0xFF) << 24) |
+                (((int) (getRed() * 255)    & 0xFF) << 16) |
+                (((int) (getGreen() * 255)  & 0xFF) << 8)  |
+                (((int) (getBlue() * 255)   & 0xFF));
+    }
 }

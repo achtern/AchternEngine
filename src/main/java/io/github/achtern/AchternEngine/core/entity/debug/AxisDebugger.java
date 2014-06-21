@@ -5,6 +5,7 @@ import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Quaternion;
+import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.Texture;
@@ -23,7 +24,7 @@ public class AxisDebugger extends Node {
         super(name);
 
         pushFigure(new Arrow(), Color.RED, 0);
-        pushFigure( new Arrow(), Color.GREEN, 1);
+        pushFigure(new Arrow(), Color.GREEN, 1);
         pushFigure(new Arrow(), Color.BLUE, 2);
     }
 
@@ -45,7 +46,7 @@ public class AxisDebugger extends Node {
         f.setUseLights(false);
         Material m = new Material();
 
-        m.addTexture("diffuse", new Texture(ImageGenerator.fromColor(color)));
+        m.addTexture("diffuse", new Texture(ImageGenerator.bytesFromColor(new Vector2f(1, 1), color), new Vector2f(1, 1), true));
 
         f.setMaterial(m);
 
