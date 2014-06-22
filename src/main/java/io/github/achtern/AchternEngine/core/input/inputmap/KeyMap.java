@@ -64,11 +64,11 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
         }
     }
 
-    public Map<KeyTrigger, List<KeyListener>> getListener() {
+    public Map<KeyTrigger, List<KeyListener>> getClickListener() {
         return listener;
     }
 
-    public void setListener(Map<KeyTrigger, List<KeyListener>> listener) {
+    public void setClickListener(Map<KeyTrigger, List<KeyListener>> listener) {
         this.listener = listener;
     }
 

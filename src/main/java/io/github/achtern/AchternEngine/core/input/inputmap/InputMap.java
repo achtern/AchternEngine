@@ -12,9 +12,9 @@ public interface InputMap<T extends Trigger,L> {
 
     public void trigger(float delta);
 
-    public Map<T, List<L>> getListener();
+    public Map<T, List<L>> getClickListener();
 
-    public void setListener(Map<T, List<L>> listener);
+    public void setClickListener(Map<T, List<L>> listener);
 
     public InputAdapter getInput();
 
