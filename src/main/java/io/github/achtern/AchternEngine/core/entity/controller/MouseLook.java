@@ -4,9 +4,12 @@ import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.input.Key;
+import io.github.achtern.AchternEngine.core.input.MouseButton;
 import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.MouseClickListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
+import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
@@ -42,24 +45,32 @@ public class MouseLook extends QuickEntity {
 
             @Override
             public void onAction(InputEvent event) {
-                LWJGLInput.setCursorStatic(true);
+                event.getInputAdapter().setCursor(true);
                 setMouselock(false);
+            }
+        });
+
+        getEngine().getGame().getInputManager().getMouseMap().register(new MouseButtonTrigger(MouseButton.LEFT), new MouseClickListener() {
+            @Override
+            public Type getType() {
+                return Type.DOWN;
+            }
+
+            @Override
+            public void onAction(InputEvent event) {
+                Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
+                event.getInputAdapter().setMousePosition(center);
+                event.getInputAdapter().setCursor(false);
+                setMouselock(true);
             }
         });
     }
 
     @Override
     public void update(float delta) {
-        Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
-
-
-        if (LWJGLInput.getMouseStatic(0)) {
-            LWJGLInput.setMousePositionStatic(center);
-            LWJGLInput.setCursorStatic(false);
-            this.mouselock = true;
-        }
 
         if(this.mouselock) {
+            Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
             transform(center);
         }
     }

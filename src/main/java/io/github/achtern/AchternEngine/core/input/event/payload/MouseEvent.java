@@ -1,26 +1,21 @@
 package io.github.achtern.AchternEngine.core.input.event.payload;
 
 import io.github.achtern.AchternEngine.core.input.MouseButton;
-import io.github.achtern.AchternEngine.core.input.MouseController;
-import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
+import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
 public class MouseEvent implements InputEvent {
 
-    protected final MouseController controller;
+    protected final InputAdapter input;
     protected final MouseButton button;
     protected final float delta;
     protected final Vector2f position;
 
-    public MouseEvent(MouseController controller, MouseButton button, float delta, Vector2f position) {
-        this.controller = controller;
+    public MouseEvent(InputAdapter input, MouseButton button, float delta, Vector2f position) {
+        this.input = input;
         this.button = button;
         this.delta = delta;
         this.position = position;
-    }
-
-    public MouseController getMouse() {
-        return controller;
     }
 
     public MouseButton getButton() {
@@ -35,4 +30,11 @@ public class MouseEvent implements InputEvent {
     public float getDelta() {
         return delta;
     }
+
+    @Override
+    public InputAdapter getInputAdapter() {
+        return input;
+    }
+
+
 }

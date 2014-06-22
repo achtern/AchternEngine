@@ -6,6 +6,10 @@ public class MouseButtonTrigger implements Trigger<MouseButton> {
 
     private MouseButton onClick;
 
+    public MouseButtonTrigger(MouseButton onClick) {
+        this.onClick = onClick;
+    }
+
     @Override
     public MouseButton get() {
         return onClick;
