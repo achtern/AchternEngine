@@ -21,6 +21,8 @@ public class MouseLook extends QuickEntity {
     protected boolean mouselock = false;
     protected Key unlockKey;
 
+    protected boolean skip = true;
+
     public MouseLook(float sensitivity) {
         this(sensitivity, Key.ESCAPE);
     }
@@ -64,13 +66,22 @@ public class MouseLook extends QuickEntity {
                 event.getInputAdapter().setCursor(false);
                 setMouselock(true);
                 centerMouse(event.getInputAdapter());
+                skip = true;
             }
         });
 
         getEngine().getGame().getInputManager().getMouseMap().register(new MouseMoveListener() {
             @Override
             public void onAction(MouseEvent event) {
-                if (!isMouselock()) return;
+                if (!isMouselock()) {
+                    return;
+                }
+
+                if (skip) {
+                    skip = false;
+                    return;
+                }
+
                 getTransform().rotate(getTransform().getRotation().getRight(), (float) Math.toRadians(-event.getMouseDelta().getY() * sensitivity));
 
                 getTransform().rotate(Transform.Y_AXIS, (float) Math.toRadians(event.getMouseDelta().getX() * sensitivity));
