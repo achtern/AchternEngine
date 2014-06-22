@@ -1,10 +1,10 @@
-package io.github.achtern.AchternEngine.core.rendering.drawing;
+package io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl;
 
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class WireframeDraw extends SolidDraw {
+public class LWJGLWireframeDraw extends LWJGLSolidDraw {
 
     @Override
     public void draw(MeshData data) {

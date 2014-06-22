@@ -34,6 +34,10 @@ public class Mesh {
         this.data.bind(vertices, indices);
     }
 
+    public void setMode(MeshData.Mode mode) {
+        getData().setMode(mode);
+    }
+
     public void draw(DrawStrategy drawStrategy) {
         drawStrategy.draw(this.data);
     }

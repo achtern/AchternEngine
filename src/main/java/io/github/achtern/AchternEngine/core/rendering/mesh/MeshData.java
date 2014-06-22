@@ -18,6 +18,14 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class MeshData {
 
+    public enum Mode {
+
+        TRIANGLES,
+        LINES,
+        LINE_LOOP
+
+    }
+
     protected int vbo;
     protected int ibo;
     protected int vao;
@@ -25,6 +33,8 @@ public class MeshData {
 
     protected Vertex[] vertices;
     protected int[] indices;
+
+    protected Mode mode = Mode.TRIANGLES;
 
     public MeshData() {
         this.vbo = glGenBuffers();
@@ -127,5 +137,13 @@ public class MeshData {
 
     public int getVertexCount() {
         return getVertices().length;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 }

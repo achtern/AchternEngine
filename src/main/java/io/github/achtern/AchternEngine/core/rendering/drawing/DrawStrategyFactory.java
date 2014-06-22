@@ -1,5 +1,8 @@
 package io.github.achtern.AchternEngine.core.rendering.drawing;
 
+import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +11,8 @@ public class DrawStrategyFactory {
     public static Map<String, DrawStrategy> strategies = new HashMap<String, DrawStrategy>();
 
     static {
-        strategies.put("solid", new SolidDraw());
-        strategies.put("wireframe", new WireframeDraw());
+        strategies.put("solid", new LWJGLSolidDraw());
+        strategies.put("wireframe", new LWJGLWireframeDraw());
     }
 
     public static DrawStrategy get(String key) {

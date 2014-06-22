@@ -10,8 +10,8 @@ import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
-import io.github.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +25,8 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
 
     protected Color prevClearColor;
 
-    protected DrawStrategy wD = new WireframeDraw();
-    protected DrawStrategy sD = new SolidDraw();
+    protected DrawStrategy wD = new LWJGLWireframeDraw();
+    protected DrawStrategy sD = new LWJGLSolidDraw();
     protected Node wireframe = new Node("Wireframe Display").add(new WireframeDisplay(new Vector3f(1, 1, 1), new Vector3f(0, 0, 0)));
 
     public GameDebugger(Game game) {
@@ -41,7 +41,7 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
             @Override
             public void onAction(KeyEvent event) {
                 if (!getGame().isDebug()) return;
-                if (getEngine().getRenderEngine().getDrawStrategy() instanceof WireframeDraw) {
+                if (getEngine().getRenderEngine().getDrawStrategy() instanceof LWJGLWireframeDraw) {
                     getEngine().getRenderEngine().setDrawStrategy(sD);
                 } else {
                     getEngine().getRenderEngine().setDrawStrategy(wD);

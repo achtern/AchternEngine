@@ -4,7 +4,7 @@ import io.github.achtern.AchternEngine.core.entity.Camera;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ public class RenderEngine {
 
     public RenderEngine() {
 
-        drawStrategy = new SolidDraw();
+        drawStrategy = new LWJGLSolidDraw();
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
