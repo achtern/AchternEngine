@@ -2,8 +2,10 @@ package io.github.achtern.AchternEngine.core.input.inputmap;
 
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import io.github.achtern.AchternEngine.core.input.event.listener.MouseClickListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.MouseMoveListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.MouseEvent;
+import io.github.achtern.AchternEngine.core.math.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +17,13 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseClickListener
 
     private InputAdapter input;
 
-    protected Map<MouseButtonTrigger, List<MouseClickListener>> listener;
+    protected Map<MouseButtonTrigger, List<MouseClickListener>> clickListener;
+
+    protected List<MouseMoveListener> moveListener;
 
     public MouseMap() {
-        this.listener = new HashMap<MouseButtonTrigger, List<MouseClickListener>>();
+        this.clickListener = new HashMap<MouseButtonTrigger, List<MouseClickListener>>();
+        this.moveListener = new ArrayList<MouseMoveListener>();
     }
 
     public MouseMap(InputAdapter input) {
@@ -26,20 +31,27 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseClickListener
         this.input = input;
     }
 
-    public MouseMap register(MouseButtonTrigger key, MouseClickListener h) {
-        if (!this.listener.containsKey(key)) {
-            this.listener.put(key, new ArrayList<MouseClickListener>());
+    public MouseMap register(MouseButtonTrigger key, MouseClickListener l) {
+        if (!this.clickListener.containsKey(key)) {
+            this.clickListener.put(key, new ArrayList<MouseClickListener>());
         }
 
-        this.listener.get(key).add(h);
+        this.clickListener.get(key).add(l);
 
         return this;
     }
 
+    public MouseMap register(MouseMoveListener l) {
+        moveListener.add(l);
+
+        return this;
+    }
+
+    protected Vector2f previousPosition = new Vector2f(0, 0);
 
     public void trigger(float delta) {
 
-        Set<MouseButtonTrigger> keys = this.listener.keySet();
+        Set<MouseButtonTrigger> keys = this.clickListener.keySet();
 
         for (MouseButtonTrigger b : keys) {
 
@@ -57,24 +69,35 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseClickListener
 
         }
 
+        Vector2f position = input.getMousePosition();
+
+        if (position.equals(previousPosition)) return;
+
+
+        for (MouseMoveListener l : this.moveListener) {
+            l.onAction(new MouseEvent(input, null, delta, position, position.sub(previousPosition)));
+        }
+
+
+        previousPosition = input.getMousePosition();
     }
 
     protected void cycle(MouseClickListener.Type type, MouseButtonTrigger b, float delta) {
-        for (MouseClickListener l : this.listener.get(b)) {
+        for (MouseClickListener l : this.clickListener.get(b)) {
             if (l.getClickType().equals(type)) {
-                l.onAction(new MouseEvent(input, b.get(), delta, input.getMousePosition()));
+                l.onAction(new MouseEvent(input, b.get(), delta, input.getMousePosition(), null));
             }
         }
     }
 
     @Override
-    public Map<MouseButtonTrigger, List<MouseClickListener>> getListener() {
-        return listener;
+    public Map<MouseButtonTrigger, List<MouseClickListener>> getClickListener() {
+        return clickListener;
     }
 
     @Override
-    public void setListener(Map<MouseButtonTrigger, List<MouseClickListener>> listener) {
-        this.listener = listener;
+    public void setClickListener(Map<MouseButtonTrigger, List<MouseClickListener>> clickListener) {
+        this.clickListener = clickListener;
     }
 
     @Override

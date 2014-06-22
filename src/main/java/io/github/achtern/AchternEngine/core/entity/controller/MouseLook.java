@@ -5,9 +5,10 @@ import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.MouseButton;
-import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
+import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.MouseClickListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.MouseMoveListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
@@ -59,42 +60,28 @@ public class MouseLook extends QuickEntity {
 
             @Override
             public void onAction(MouseEvent event) {
-                Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
-                event.getInputAdapter().setMousePosition(center);
                 event.getInputAdapter().setCursor(false);
                 setMouselock(true);
+                centerMouse(event.getInputAdapter());
+            }
+        });
+
+        getEngine().getGame().getInputManager().getMouseMap().register(new MouseMoveListener() {
+            @Override
+            public void onAction(MouseEvent event) {
+                if (!isMouselock()) return;
+                getTransform().rotate(getTransform().getRotation().getRight(), (float) Math.toRadians(-event.getMouseDelta().getY() * sensitivity));
+
+                getTransform().rotate(Transform.Y_AXIS, (float) Math.toRadians(event.getMouseDelta().getX() * sensitivity));
+
+                centerMouse(event.getInputAdapter());
             }
         });
     }
 
-    @Override
-    public void update(float delta) {
-
-        if(this.mouselock) {
-            Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
-            transform(center);
-        }
-    }
-
-    public void transform(Vector2f windowCenter) {
-
-        Vector2f deltaPos = LWJGLInput.getMousePositionStatic().sub(windowCenter);
-
-        boolean rotX = deltaPos.getY() != 0;
-        boolean rotY = deltaPos.getX() != 0;
-
-        if(rotX) {
-            getTransform().rotate(getTransform().getRotation().getRight(), (float) Math.toRadians(-deltaPos.getY() * sensitivity));
-        }
-
-        if(rotY) {
-            getTransform().rotate(Transform.Y_AXIS, (float) Math.toRadians(deltaPos.getX() * sensitivity));
-        }
-
-
-        if(rotY || rotX) {
-            LWJGLInput.setMousePositionStatic(windowCenter);
-        }
+    protected void centerMouse(InputAdapter input) {
+        Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
+        input.setMousePosition(center);
     }
 
     protected boolean isMouselock() {

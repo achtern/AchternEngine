@@ -10,12 +10,14 @@ public class MouseEvent implements InputEvent {
     protected final MouseButton button;
     protected final float delta;
     protected final Vector2f position;
+    protected final Vector2f mouseDelta;
 
-    public MouseEvent(InputAdapter input, MouseButton button, float delta, Vector2f position) {
+    public MouseEvent(InputAdapter input, MouseButton button, float delta, Vector2f position, Vector2f mouseDelta) {
         this.input = input;
         this.button = button;
         this.delta = delta;
         this.position = position;
+        this.mouseDelta = mouseDelta;
     }
 
     public MouseButton getButton() {
@@ -36,5 +38,7 @@ public class MouseEvent implements InputEvent {
         return input;
     }
 
-
+    public Vector2f getMouseDelta() {
+        return mouseDelta;
+    }
 }
