@@ -1,6 +1,6 @@
-package io.github.achtern.AchternEngine.core.input;
+package io.github.achtern.AchternEngine.core.input.event.listener;
 
-public interface KeyListener {
+public interface KeyListener extends EventListener {
 
     public enum Type {
         PRESS,
@@ -11,7 +11,5 @@ public interface KeyListener {
     }
 
     public Type getType();
-
-    public void onAction(KeyEvent event);
 
 }

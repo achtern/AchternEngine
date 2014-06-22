@@ -1,9 +1,10 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
-import io.github.achtern.AchternEngine.core.input.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
+import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
+import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 
 /**
  * Moves an Node up and/or down.
@@ -36,36 +37,29 @@ public class FlyMover extends SimpleMover {
         this.downKey = downKey;
     }
 
-    /**
-     * @see io.github.achtern.AchternEngine.core.entity.Entity#attached()
-     */
     @Override
-    public void attached() {
-        registerListener();
+    protected void registerListener() {
+        getEngine().getGame().getInputManager().getKeyMap()
+                    .register(new KeyTrigger(upKey), this)
+                    .register(new KeyTrigger(downKey), this);
     }
 
-    protected void registerListener() {
-        getEngine().getGame().getKeyMap().register(upKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
+    @Override
+    public void onAction(InputEvent event) {
+        KeyEvent keyE;
+        if (event instanceof KeyEvent) {
+            keyE = (KeyEvent) event;
+        } else {
+            throw new RuntimeException("Non KeyEvent received.");
+        }
 
-            @Override
-            public void onAction(KeyEvent event) {
-                move(Transform.Y_AXIS, getSpeed() * event.getDelta());
-            }
-        }).register(downKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
+        float amt = getSpeed() * event.getDelta();
 
-            @Override
-            public void onAction(KeyEvent event) {
-                move(Transform.Y_AXIS, -getSpeed() * event.getDelta());
-            }
-        });
+        if (keyE.getKey().equals(upKey)) {
+            move(Transform.Y_AXIS, amt);
+        } else if (keyE.getKey().equals(downKey)) {
+            move(Transform.Y_AXIS, -amt);
+        }
     }
 
     public Key getUpKey() {

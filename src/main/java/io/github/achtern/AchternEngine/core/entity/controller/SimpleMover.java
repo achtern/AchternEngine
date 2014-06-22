@@ -1,9 +1,11 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
-import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
-import io.github.achtern.AchternEngine.core.input.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
+import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
+import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
 /**
@@ -50,11 +52,11 @@ public class SimpleMover extends QuickEntity implements KeyListener {
     }
 
     protected void registerListener() {
-        getEngine().getGame().getKeyMap()
-                .register(forwardKey, this)
-                .register(backKey, this)
-                .register(leftKey, this)
-                .register(rightKey, this);
+        getEngine().getGame().getInputManager().getKeyMap()
+                .register(new KeyTrigger(forwardKey), this)
+                .register(new KeyTrigger(backKey), this)
+                .register(new KeyTrigger(leftKey), this)
+                .register(new KeyTrigger(rightKey), this);
     }
 
 
@@ -89,17 +91,24 @@ public class SimpleMover extends QuickEntity implements KeyListener {
     }
 
     @Override
-    public void onAction(KeyEvent event) {
+    public void onAction(InputEvent event) {
+
+        KeyEvent keyE;
+        if (event instanceof KeyEvent) {
+            keyE = (KeyEvent) event;
+        } else {
+            throw new RuntimeException("Non KeyEvent received.");
+        }
 
         float amt = getSpeed() * event.getDelta();
 
-        if (event.getKey().equals(forwardKey)) {
+        if (keyE.getKey().equals(forwardKey)) {
             move(getTransform().getRotation().getForward(), amt);
-        } else if (event.getKey().equals(backKey)) {
+        } else if (keyE.getKey().equals(backKey)) {
             move(getTransform().getRotation().getForward(), -amt);
-        } else if (event.getKey().equals(leftKey)) {
+        } else if (keyE.getKey().equals(leftKey)) {
             move(getTransform().getRotation().getLeft(), amt);
-        } else if (event.getKey().equals(rightKey)) {
+        } else if (keyE.getKey().equals(rightKey)) {
             move(getTransform().getRotation().getRight(), amt);
         }
     }

@@ -3,10 +3,11 @@ package io.github.achtern.AchternEngine.core.entity.controller;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
-import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
-import io.github.achtern.AchternEngine.core.input.KeyListener;
-import io.github.achtern.AchternEngine.core.input.LWJGLInput;
+import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
+import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
+import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
 public class MouseLook extends QuickEntity {
@@ -33,14 +34,14 @@ public class MouseLook extends QuickEntity {
     }
 
     protected void registerListener() {
-        getEngine().getGame().getKeyMap().register(this.unlockKey, new KeyListener() {
+        getEngine().getGame().getInputManager().getKeyMap().register(new KeyTrigger(this.unlockKey), new KeyListener() {
             @Override
             public Type getType() {
                 return Type.PRESS;
             }
 
             @Override
-            public void onAction(KeyEvent event) {
+            public void onAction(InputEvent event) {
                 LWJGLInput.setCursorStatic(true);
                 setMouselock(false);
             }

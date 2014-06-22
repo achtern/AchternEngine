@@ -3,8 +3,10 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Renderable;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
-import io.github.achtern.AchternEngine.core.input.KeyMap;
-import io.github.achtern.AchternEngine.core.input.LWJGLInput;
+import io.github.achtern.AchternEngine.core.input.InputManager;
+import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
+import io.github.achtern.AchternEngine.core.input.inputmap.KeyMap;
+import io.github.achtern.AchternEngine.core.input.inputmap.MouseMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +36,16 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     private GameDebugger debugger;
 
-    private KeyMap keyMap;
+    private InputManager inputManager;
 
     public Game() {
-        keyMap = new KeyMap(new LWJGLInput());
+        this(new InputManager(new LWJGLInput()));
+    }
+
+    public Game(InputManager inputManager) {
+        this.inputManager = inputManager;
+        this.inputManager.setMouseMap(new MouseMap());
+        this.inputManager.setKeyMap(new KeyMap());
     }
 
     /**
@@ -195,11 +203,11 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
         }
     }
 
-    public KeyMap getKeyMap() {
-        return keyMap;
+    public InputManager getInputManager() {
+        return inputManager;
     }
 
-    public void setKeyMap(KeyMap keyMap) {
-        this.keyMap = keyMap;
+    public void setInputManager(InputManager inputManager) {
+        this.inputManager = inputManager;
     }
 }
