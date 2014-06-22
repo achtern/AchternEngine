@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class KeyMap {
+public class KeyMap implements InputMap<Key, KeyListener> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyMap.class);
 
@@ -36,7 +36,7 @@ public class KeyMap {
             if (input.getKey(k)) {
                 for (KeyListener l : this.listener.get(k)) {
                     if (l.getType().equals(KeyListener.Type.PRESS)) {
-                        l.onAction(new InputEvent(k, delta));
+                        l.onAction(new KeyEvent(k, delta));
                     }
                 }
             }
@@ -45,7 +45,7 @@ public class KeyMap {
                 LOGGER.trace("Key Event DOWN: {}", k.toString());
                 for (KeyListener l : this.listener.get(k)) {
                     if (l.getType().equals(KeyListener.Type.DOWN)) {
-                        l.onAction(new InputEvent(k, delta));
+                        l.onAction(new KeyEvent(k, delta));
                     }
                 }
             }
@@ -54,13 +54,11 @@ public class KeyMap {
                 LOGGER.trace("Key Event UP: {}", k.toString());
                 for (KeyListener l : this.listener.get(k)) {
                     if (l.getType().equals(KeyListener.Type.UP)) {
-                        l.onAction(new InputEvent(k, delta));
+                        l.onAction(new KeyEvent(k, delta));
                     }
                 }
             }
         }
-
-        input.update();
 
     }
 

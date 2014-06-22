@@ -3,7 +3,7 @@ package io.github.achtern.AchternEngine.core.entity.controller;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
-import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.KeyListener;
 import io.github.achtern.AchternEngine.core.input.LWJGLInput;
@@ -40,7 +40,7 @@ public class MouseLook extends QuickEntity {
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 LWJGLInput.setCursorStatic(true);
                 setMouselock(false);
             }

@@ -1,7 +1,7 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
 import io.github.achtern.AchternEngine.core.entity.QuickEntity;
-import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.KeyListener;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
@@ -89,7 +89,7 @@ public class SimpleMover extends QuickEntity implements KeyListener {
     }
 
     @Override
-    public void onAction(InputEvent event) {
+    public void onAction(KeyEvent event) {
 
         float amt = getSpeed() * event.getDelta();
 

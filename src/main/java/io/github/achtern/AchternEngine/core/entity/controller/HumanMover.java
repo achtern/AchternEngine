@@ -1,7 +1,7 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
@@ -33,7 +33,7 @@ public class HumanMover extends SimpleMover {
     }
 
     @Override
-    public void onAction(InputEvent event) {
+    public void onAction(KeyEvent event) {
 
         Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
         float amt = getSpeed() * event.getDelta();

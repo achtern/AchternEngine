@@ -3,7 +3,7 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.entity.renderpasses.WireframeDisplay;
-import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.KeyListener;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
@@ -38,7 +38,7 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getEngine().getRenderEngine().getDrawStrategy() instanceof WireframeDraw) {
                     getEngine().getRenderEngine().setDrawStrategy(sD);
@@ -53,7 +53,7 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getGame().has(wireframe)) {
                     LOGGER.trace("Removing {}", wireframe.getName());
