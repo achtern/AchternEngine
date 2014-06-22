@@ -152,12 +152,12 @@ public class LWJGLInput implements InputAdapter {
     static {
 
         buttonIntegerMap.put(MouseButton.LEFT, 0);
-        buttonIntegerMap.put(MouseButton.RIGHT, 2);
-        buttonIntegerMap.put(MouseButton.MIDDLE, 3);
+        buttonIntegerMap.put(MouseButton.RIGHT, 1);
+        buttonIntegerMap.put(MouseButton.MIDDLE, 2);
 
         integerButtonMap.put(0, MouseButton.LEFT);
-        integerButtonMap.put(2, MouseButton.RIGHT);
-        integerButtonMap.put(3, MouseButton.MIDDLE);
+        integerButtonMap.put(1, MouseButton.RIGHT);
+        integerButtonMap.put(2, MouseButton.MIDDLE);
 
 
         keyIntegerMap.put(Key.NONE, NONE);
