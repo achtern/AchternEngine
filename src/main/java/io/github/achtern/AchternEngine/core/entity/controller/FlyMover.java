@@ -1,7 +1,7 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.input.InputEvent;
+import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.KeyListener;
 
@@ -52,7 +52,7 @@ public class FlyMover extends SimpleMover {
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 move(Transform.Y_AXIS, getSpeed() * event.getDelta());
             }
         }).register(downKey, new KeyListener() {
@@ -62,7 +62,7 @@ public class FlyMover extends SimpleMover {
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 move(Transform.Y_AXIS, -getSpeed() * event.getDelta());
             }
         });

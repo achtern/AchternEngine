@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.input;
 
-public interface KeyListener {
+public interface MouseListener {
+
 
     public enum Type {
         PRESS,
@@ -12,6 +13,8 @@ public interface KeyListener {
 
     public Type getType();
 
-    public void onAction(KeyEvent event);
+    public void onClick(MouseEvent event);
+
+    public void onMove(MouseEvent event);
 
 }

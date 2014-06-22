@@ -108,6 +108,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                 game.update((float) frameTime);
 
                 game.getKeyMap().trigger((float) frameTime);
+                game.getKeyMap().getInput().update(); // Hack for now
 
                 fps.display();
 
