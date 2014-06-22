@@ -42,11 +42,12 @@ public class MouseLook extends QuickEntity {
         getEngine().getGame().getInputManager().getKeyMap().register(new KeyTrigger(this.unlockKey), new KeyListener() {
             @Override
             public Type getPressType() {
-                return Type.PRESS;
+                return Type.DOWN;
             }
 
             @Override
             public void onAction(KeyEvent event) {
+                if (!isMouselock()) return;
                 event.getInputAdapter().setCursor(true);
                 setMouselock(false);
             }
