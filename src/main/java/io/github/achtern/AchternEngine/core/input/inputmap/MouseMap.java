@@ -44,25 +44,25 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseClickListener
         for (MouseButtonTrigger b : keys) {
 
             if (input.getMouse(b.get())) {
-                cycle(MouseClickListener.Type.PRESS, b, delta, input);
+                cycle(MouseClickListener.Type.PRESS, b, delta);
             }
 
             if (input.getMouseDown(b.get())) {
-                cycle(MouseClickListener.Type.DOWN, b, delta, input);
+                cycle(MouseClickListener.Type.DOWN, b, delta);
             }
 
             if (input.getMouseUp(b.get())) {
-                cycle(MouseClickListener.Type.UP, b, delta, input);
+                cycle(MouseClickListener.Type.UP, b, delta);
             }
 
         }
 
     }
 
-    protected void cycle(MouseClickListener.Type type, MouseButtonTrigger b, float delta, InputAdapter input) {
+    protected void cycle(MouseClickListener.Type type, MouseButtonTrigger b, float delta) {
         for (MouseClickListener l : this.listener.get(b)) {
             if (l.getType().equals(type)) {
-                l.onAction(new MouseEvent(null, b.get(), delta, input.getMousePosition()));
+                l.onAction(new MouseEvent(input, b.get(), delta, input.getMousePosition()));
             }
         }
     }
