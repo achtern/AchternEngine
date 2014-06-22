@@ -1,15 +1,18 @@
 package io.github.achtern.AchternEngine.core.input.event.listener;
 
-public interface KeyListener extends EventListener {
+import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
+
+public interface KeyListener {
 
     public enum Type {
         PRESS,
         UP,
         DOWN,
-        UP_AND_DOWN,
+        UP_OR_DOWN,
         ALL
     }
 
-    public Type getType();
+    public Type getPressType();
 
+    public void onAction(KeyEvent event);
 }

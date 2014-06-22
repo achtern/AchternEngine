@@ -10,7 +10,8 @@ import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.MouseClickListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
-import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
+import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
+import io.github.achtern.AchternEngine.core.input.event.payload.MouseEvent;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
 public class MouseLook extends QuickEntity {
@@ -39,12 +40,12 @@ public class MouseLook extends QuickEntity {
     protected void registerListener() {
         getEngine().getGame().getInputManager().getKeyMap().register(new KeyTrigger(this.unlockKey), new KeyListener() {
             @Override
-            public Type getType() {
+            public Type getPressType() {
                 return Type.PRESS;
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 event.getInputAdapter().setCursor(true);
                 setMouselock(false);
             }
@@ -52,12 +53,12 @@ public class MouseLook extends QuickEntity {
 
         getEngine().getGame().getInputManager().getMouseMap().register(new MouseButtonTrigger(MouseButton.LEFT), new MouseClickListener() {
             @Override
-            public Type getType() {
+            public Type getClickType() {
                 return Type.DOWN;
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(MouseEvent event) {
                 Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
                 event.getInputAdapter().setMousePosition(center);
                 event.getInputAdapter().setCursor(false);

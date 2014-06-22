@@ -4,7 +4,6 @@ import io.github.achtern.AchternEngine.core.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
-import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
@@ -86,29 +85,23 @@ public class SimpleMover extends QuickEntity implements KeyListener {
     }
 
     @Override
-    public Type getType() {
+    public Type getPressType() {
         return Type.PRESS;
     }
 
     @Override
-    public void onAction(InputEvent event) {
+    public void onAction(KeyEvent event) {
 
-        KeyEvent keyE;
-        if (event instanceof KeyEvent) {
-            keyE = (KeyEvent) event;
-        } else {
-            throw new RuntimeException("Non KeyEvent received.");
-        }
 
         float amt = getSpeed() * event.getDelta();
 
-        if (keyE.getKey().equals(forwardKey)) {
+        if (event.getKey().equals(forwardKey)) {
             move(getTransform().getRotation().getForward(), amt);
-        } else if (keyE.getKey().equals(backKey)) {
+        } else if (event.getKey().equals(backKey)) {
             move(getTransform().getRotation().getForward(), -amt);
-        } else if (keyE.getKey().equals(leftKey)) {
+        } else if (event.getKey().equals(leftKey)) {
             move(getTransform().getRotation().getLeft(), amt);
-        } else if (keyE.getKey().equals(rightKey)) {
+        } else if (event.getKey().equals(rightKey)) {
             move(getTransform().getRotation().getRight(), amt);
         }
     }
