@@ -3,9 +3,10 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.entity.renderpasses.WireframeDisplay;
-import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
-import io.github.achtern.AchternEngine.core.input.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
+import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
+import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
@@ -31,14 +32,14 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
     public GameDebugger(Game game) {
         this.game = game;
 
-        game.getKeyMap().register(Key.Z, new KeyListener() {
+        game.getInputManager().getKeyMap().register(new KeyTrigger(Key.Z), new KeyListener() {
             @Override
             public Type getType() {
                 return Type.DOWN;
             }
 
             @Override
-            public void onAction(KeyEvent event) {
+            public void onAction(InputEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getEngine().getRenderEngine().getDrawStrategy() instanceof WireframeDraw) {
                     getEngine().getRenderEngine().setDrawStrategy(sD);
@@ -46,14 +47,15 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
                     getEngine().getRenderEngine().setDrawStrategy(wD);
                 }
             }
-        }).register(Key.X, new KeyListener() {
+
+        }).register(new KeyTrigger(Key.X), new KeyListener() {
             @Override
             public Type getType() {
                 return Type.DOWN;
             }
 
             @Override
-            public void onAction(KeyEvent event) {
+            public void onAction(InputEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getGame().has(wireframe)) {
                     LOGGER.trace("Removing {}", wireframe.getName());

@@ -1,5 +1,6 @@
-package io.github.achtern.AchternEngine.core.input;
+package io.github.achtern.AchternEngine.core.input.adapter;
 
+import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
 public interface InputAdapter {

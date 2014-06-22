@@ -1,5 +1,7 @@
-package io.github.achtern.AchternEngine.core.input;
+package io.github.achtern.AchternEngine.core.input.event.payload;
 
+
+import io.github.achtern.AchternEngine.core.input.Key;
 
 public class KeyEvent implements InputEvent {
 

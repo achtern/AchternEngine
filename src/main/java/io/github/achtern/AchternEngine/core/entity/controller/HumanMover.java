@@ -1,8 +1,9 @@
 package io.github.achtern.AchternEngine.core.entity.controller;
 
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.input.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
+import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
+import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
 /**
@@ -33,18 +34,25 @@ public class HumanMover extends SimpleMover {
     }
 
     @Override
-    public void onAction(KeyEvent event) {
+    public void onAction(InputEvent event) {
+
+        KeyEvent keyE;
+        if (event instanceof KeyEvent) {
+            keyE = (KeyEvent) event;
+        } else {
+            throw new RuntimeException("Non KeyEvent received.");
+        }
 
         Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
         float amt = getSpeed() * event.getDelta();
 
-        if (event.getKey().equals(forwardKey)) {
+        if (keyE.getKey().equals(forwardKey)) {
             move(horizontal, amt);
-        } else if (event.getKey().equals(backKey)) {
+        } else if (keyE.getKey().equals(backKey)) {
             move(horizontal, -amt);
-        } else if (event.getKey().equals(leftKey)) {
+        } else if (keyE.getKey().equals(leftKey)) {
             move(getTransform().getRotation().getLeft(), amt);
-        } else if (event.getKey().equals(rightKey)) {
+        } else if (keyE.getKey().equals(rightKey)) {
             move(getTransform().getRotation().getRight(), amt);
         }
 

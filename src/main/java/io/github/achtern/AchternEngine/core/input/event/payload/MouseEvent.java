@@ -1,5 +1,8 @@
-package io.github.achtern.AchternEngine.core.input;
+package io.github.achtern.AchternEngine.core.input.event.payload;
 
+import io.github.achtern.AchternEngine.core.input.MouseButton;
+import io.github.achtern.AchternEngine.core.input.MouseController;
+import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
 public class MouseEvent implements InputEvent {
