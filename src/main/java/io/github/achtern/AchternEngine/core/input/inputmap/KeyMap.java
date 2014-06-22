@@ -42,32 +42,26 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
 
         for (KeyTrigger k : keys) {
             if (input.getKey(k.get())) {
-                for (KeyListener l : this.listener.get(k)) {
-                    if (l.getType().equals(KeyListener.Type.PRESS)) {
-                        l.onAction(new KeyEvent(k.get(), delta));
-                    }
-                }
+                cycle(KeyListener.Type.PRESS, k, delta);
             }
 
             if (input.getKeyDown(k.get())) {
-                LOGGER.trace("Key Event DOWN: {}", k.toString());
-                for (KeyListener l : this.listener.get(k)) {
-                    if (l.getType().equals(KeyListener.Type.DOWN)) {
-                        l.onAction(new KeyEvent(k.get(), delta));
-                    }
-                }
+                cycle(KeyListener.Type.DOWN, k, delta);
             }
 
             if (input.getKeyUp(k.get())) {
-                LOGGER.trace("Key Event UP: {}", k.toString());
-                for (KeyListener l : this.listener.get(k)) {
-                    if (l.getType().equals(KeyListener.Type.UP)) {
-                        l.onAction(new KeyEvent(k.get(), delta));
-                    }
-                }
+                cycle(KeyListener.Type.UP, k, delta);
             }
         }
 
+    }
+
+    protected void cycle(KeyListener.Type type, KeyTrigger k, float delta) {
+        for (KeyListener l : this.listener.get(k)) {
+            if (l.getType().equals(type)) {
+                l.onAction(new KeyEvent(k.get(), delta));
+            }
+        }
     }
 
     public Map<KeyTrigger, List<KeyListener>> getListener() {

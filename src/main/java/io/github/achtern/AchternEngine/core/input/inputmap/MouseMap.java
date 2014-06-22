@@ -3,6 +3,7 @@ package io.github.achtern.AchternEngine.core.input.inputmap;
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import io.github.achtern.AchternEngine.core.input.event.listener.MouseClickListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
+import io.github.achtern.AchternEngine.core.input.event.payload.MouseEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,30 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseClickListener
 
         Set<MouseButtonTrigger> keys = this.listener.keySet();
 
+        for (MouseButtonTrigger b : keys) {
+
+            if (input.getMouse(b.get())) {
+                cycle(MouseClickListener.Type.PRESS, b, delta, input);
+            }
+
+            if (input.getMouseDown(b.get())) {
+                cycle(MouseClickListener.Type.DOWN, b, delta, input);
+            }
+
+            if (input.getMouseUp(b.get())) {
+                cycle(MouseClickListener.Type.UP, b, delta, input);
+            }
+
+        }
+
+    }
+
+    protected void cycle(MouseClickListener.Type type, MouseButtonTrigger b, float delta, InputAdapter input) {
+        for (MouseClickListener l : this.listener.get(b)) {
+            if (l.getType().equals(type)) {
+                l.onAction(new MouseEvent(null, b.get(), delta, input.getMousePosition()));
+            }
+        }
     }
 
     @Override
