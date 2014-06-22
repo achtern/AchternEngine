@@ -72,13 +72,10 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseClickListener
 
         Vector2f position = input.getMousePosition();
 
-
         if (position.equals(previousPosition)) return;
-
 
         for (MouseMoveListener l : this.moveListener) {
             l.onAction(new MouseEvent(input, null, delta, position, position.sub(previousPosition)));
-            position = input.getMousePosition(); // The Adapter may change the position!
         }
 
 
