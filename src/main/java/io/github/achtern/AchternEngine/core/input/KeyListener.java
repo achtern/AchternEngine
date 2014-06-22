@@ -5,7 +5,9 @@ public interface KeyListener {
     public enum Type {
         PRESS,
         UP,
-        DOWN
+        DOWN,
+        UP_AND_DOWN,
+        ALL
     }
 
     public Type getType();

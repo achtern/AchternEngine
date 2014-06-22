@@ -3,15 +3,11 @@ package io.github.achtern.AchternEngine.core.input;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LWJGLInput implements InputAdapter {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LWJGLInput.class);
 
     public static final int NUM_KEYCODES = 256;
     public static final int NUM_MOUSEBUTTONS = 5;
@@ -421,7 +417,7 @@ public class LWJGLInput implements InputAdapter {
 
     public void update() {
         for (int i = 0; i < NUM_KEYCODES; i++) {
-            lastKeys[i] = getKey(toKey(i));
+            lastKeys[i] = getKey(i);
         }
 
         for (int i = 0; i < NUM_MOUSEBUTTONS; i++) {
@@ -436,7 +432,11 @@ public class LWJGLInput implements InputAdapter {
 
     @Override
     public boolean getKey(Key key) {
-        return Keyboard.isKeyDown(toInt(key));
+        return getKey(toInt(key));
+    }
+
+    protected boolean getKey(int keyCode) {
+        return Keyboard.isKeyDown(keyCode);
     }
 
     @Override

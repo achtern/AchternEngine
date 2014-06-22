@@ -11,9 +11,11 @@ public class QuickRenderPass extends QuickEntity implements RenderPass {
 
     @Override
     public void setEngine(CoreEngine engine) {
-        super.setEngine(engine);
-        if (engine != null) {
+        if (engine != null && engine != getEngine()) {
+            super.setEngine(engine);
             engine.getRenderEngine().addRenderPass(this);
+        } else if (engine == null) {
+            super.setEngine(null);
         }
     }
 

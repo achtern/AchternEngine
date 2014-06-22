@@ -52,14 +52,13 @@ public class MouseLook extends QuickEntity {
         Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
 
 
-        if (LWJGLInput.getMouseDownStatic(0)) {
+        if (LWJGLInput.getMouseStatic(0)) {
             LWJGLInput.setMousePositionStatic(center);
             LWJGLInput.setCursorStatic(false);
             this.mouselock = true;
         }
 
-        if(this.mouselock)
-        {
+        if(this.mouselock) {
             transform(center);
         }
     }

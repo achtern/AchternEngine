@@ -1,8 +1,13 @@
 package io.github.achtern.AchternEngine.core.input;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public class KeyMap {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyMap.class);
 
     private InputAdapter input;
 
@@ -25,8 +30,6 @@ public class KeyMap {
 
     public void trigger(float delta) {
 
-        input.update();
-
         Set<Key> keys = this.listener.keySet();
 
         for (Key k : keys) {
@@ -39,6 +42,7 @@ public class KeyMap {
             }
 
             if (input.getKeyDown(k)) {
+                LOGGER.trace("Key Event DOWN: {}", k.toString());
                 for (KeyListener l : this.listener.get(k)) {
                     if (l.getType().equals(KeyListener.Type.DOWN)) {
                         l.onAction(new InputEvent(k, delta));
@@ -47,6 +51,7 @@ public class KeyMap {
             }
 
             if (input.getKeyUp(k)) {
+                LOGGER.trace("Key Event UP: {}", k.toString());
                 for (KeyListener l : this.listener.get(k)) {
                     if (l.getType().equals(KeyListener.Type.UP)) {
                         l.onAction(new InputEvent(k, delta));
@@ -54,6 +59,8 @@ public class KeyMap {
                 }
             }
         }
+
+        input.update();
 
     }
 

@@ -9,7 +9,7 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 /**
  * Moves a node around based on the up vector of the node.
  */
-public class SimpleMover extends QuickEntity {
+public class SimpleMover extends QuickEntity implements KeyListener {
     protected float speed;
 
     protected Key forwardKey;
@@ -50,47 +50,11 @@ public class SimpleMover extends QuickEntity {
     }
 
     protected void registerListener() {
-        getEngine().getGame().getKeyMap().register(forwardKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
-
-            @Override
-            public void onAction(InputEvent event) {
-                move(getTransform().getRotation().getForward(), getSpeed() * event.getDelta());
-            }
-        }).register(backKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
-
-            @Override
-            public void onAction(InputEvent event) {
-                move(getTransform().getRotation().getForward(), -getSpeed() * event.getDelta());
-            }
-        }).register(leftKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
-
-            @Override
-            public void onAction(InputEvent event) {
-                move(getTransform().getRotation().getLeft(), getSpeed() * event.getDelta());
-            }
-        }).register(rightKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
-
-            @Override
-            public void onAction(InputEvent event) {
-                move(getTransform().getRotation().getRight(), getSpeed() * event.getDelta());
-            }
-        });
+        getEngine().getGame().getKeyMap()
+                .register(forwardKey, this)
+                .register(backKey, this)
+                .register(leftKey, this)
+                .register(rightKey, this);
     }
 
 
@@ -117,5 +81,26 @@ public class SimpleMover extends QuickEntity {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.PRESS;
+    }
+
+    @Override
+    public void onAction(InputEvent event) {
+
+        float amt = getSpeed() * event.getDelta();
+
+        if (event.getKey().equals(forwardKey)) {
+            move(getTransform().getRotation().getForward(), amt);
+        } else if (event.getKey().equals(backKey)) {
+            move(getTransform().getRotation().getForward(), -amt);
+        } else if (event.getKey().equals(leftKey)) {
+            move(getTransform().getRotation().getLeft(), amt);
+        } else if (event.getKey().equals(rightKey)) {
+            move(getTransform().getRotation().getRight(), amt);
+        }
     }
 }

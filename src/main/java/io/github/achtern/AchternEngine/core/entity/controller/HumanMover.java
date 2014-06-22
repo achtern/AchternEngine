@@ -3,7 +3,6 @@ package io.github.achtern.AchternEngine.core.entity.controller;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.input.InputEvent;
 import io.github.achtern.AchternEngine.core.input.Key;
-import io.github.achtern.AchternEngine.core.input.KeyListener;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
 /**
@@ -34,50 +33,20 @@ public class HumanMover extends SimpleMover {
     }
 
     @Override
-    protected void registerListener() {
-        getEngine().getGame().getKeyMap().register(forwardKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
+    public void onAction(InputEvent event) {
 
-            @Override
-            public void onAction(InputEvent event) {
-                Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
-                move(horizontal, getSpeed() * event.getDelta());
-            }
-        }).register(backKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
+        Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
+        float amt = getSpeed() * event.getDelta();
 
-            @Override
-            public void onAction(InputEvent event) {
-                Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
-                move(horizontal, -getSpeed() * event.getDelta());
-            }
-        }).register(leftKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
+        if (event.getKey().equals(forwardKey)) {
+            move(horizontal, amt);
+        } else if (event.getKey().equals(backKey)) {
+            move(horizontal, -amt);
+        } else if (event.getKey().equals(leftKey)) {
+            move(getTransform().getRotation().getLeft(), amt);
+        } else if (event.getKey().equals(rightKey)) {
+            move(getTransform().getRotation().getRight(), amt);
+        }
 
-            @Override
-            public void onAction(InputEvent event) {
-                move(getTransform().getRotation().getLeft(), getSpeed() * event.getDelta());
-            }
-        }).register(rightKey, new KeyListener() {
-            @Override
-            public Type getType() {
-                return Type.PRESS;
-            }
-
-            @Override
-            public void onAction(InputEvent event) {
-                move(getTransform().getRotation().getRight(), getSpeed() * event.getDelta());
-            }
-        });
     }
-
 }
