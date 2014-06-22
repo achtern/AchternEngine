@@ -11,8 +11,12 @@ import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
 import io.github.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameDebugger.class);
 
     protected CoreEngine engine;
 
@@ -52,8 +56,10 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
             public void onAction(InputEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getGame().has(wireframe)) {
+                    LOGGER.trace("Removing {}", wireframe.getName());
                     getGame().remove(wireframe);
                 } else {
+                    LOGGER.trace("Adding {}", wireframe.getName());
                     getGame().add(wireframe);
                 }
             }

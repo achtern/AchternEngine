@@ -104,9 +104,10 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                     stop();
                 }
 
-                game.getKeyMap().trigger((float) frameTime);
 
                 game.update((float) frameTime);
+
+                game.getKeyMap().trigger((float) frameTime);
 
                 fps.display();
 

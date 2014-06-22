@@ -83,10 +83,12 @@ public class RenderEngine {
     }
 
     public void addRenderPass(RenderPass pass) {
+        LOGGER.debug("Added RenderPass {}", pass.getClass());
         this.passes.add(pass);
     }
 
     public void removeRenderPass(RenderPass pass) {
+        LOGGER.debug("Removing RenderPass {}", pass.getClass());
         this.passes.remove(pass);
     }
 

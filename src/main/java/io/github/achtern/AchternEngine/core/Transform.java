@@ -47,7 +47,7 @@ public class Transform {
         Matrix4f rotationMat = rotation.toRotationMatrix();
         Matrix4f scaleMat = new Matrix4f().initScale(scale.getX(), scale.getY(), scale.getZ());
 
-        return getParentMat().mul(positionMat.mul(rotationMat.mul(scaleMat)));
+        return getParentMatrix().mul(positionMat.mul(rotationMat.mul(scaleMat)));
     }
 
     public void rotate(Vector3f axis, float angle) {
@@ -84,7 +84,7 @@ public class Transform {
     }
 
     public Vector3f getTransformedPosition() {
-        return getParentMat().transform(this.getPosition());
+        return getParentMatrix().transform(this.getPosition());
     }
 
     public Vector3f getPosition() {
@@ -127,7 +127,7 @@ public class Transform {
         this.parent = parent;
     }
 
-    private Matrix4f getParentMat() {
+    private Matrix4f getParentMatrix() {
         if (this.parent != null && this.parent.hasChanged()) {
             this.parentMat = this.parent.getTransformation();
         }
