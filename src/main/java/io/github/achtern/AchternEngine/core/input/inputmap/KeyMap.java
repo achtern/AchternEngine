@@ -58,7 +58,7 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
 
     protected void cycle(KeyListener.Type type, KeyTrigger k, float delta) {
         for (KeyListener l : this.listener.get(k)) {
-            if (l.getType().equals(type)) {
+            if (l.getPressType().equals(type)) {
                 l.onAction(new KeyEvent(input, k.get(), delta));
             }
         }

@@ -3,7 +3,6 @@ package io.github.achtern.AchternEngine.core.entity.controller;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
-import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 
 /**
@@ -45,19 +44,13 @@ public class FlyMover extends SimpleMover {
     }
 
     @Override
-    public void onAction(InputEvent event) {
-        KeyEvent keyE;
-        if (event instanceof KeyEvent) {
-            keyE = (KeyEvent) event;
-        } else {
-            throw new RuntimeException("Non KeyEvent received.");
-        }
+    public void onAction(KeyEvent event) {
 
         float amt = getSpeed() * event.getDelta();
 
-        if (keyE.getKey().equals(upKey)) {
+        if (event.getKey().equals(upKey)) {
             move(Transform.Y_AXIS, amt);
-        } else if (keyE.getKey().equals(downKey)) {
+        } else if (event.getKey().equals(downKey)) {
             move(Transform.Y_AXIS, -amt);
         }
     }

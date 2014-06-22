@@ -1,13 +1,12 @@
 package io.github.achtern.AchternEngine.core.input.inputmap;
 
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
-import io.github.achtern.AchternEngine.core.input.event.listener.EventListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.Trigger;
 
 import java.util.List;
 import java.util.Map;
 
-public interface InputMap<T extends Trigger,L extends EventListener> {
+public interface InputMap<T extends Trigger,L> {
 
     public InputMap register(T trigger, L h);
 

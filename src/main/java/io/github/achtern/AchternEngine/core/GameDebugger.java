@@ -6,7 +6,7 @@ import io.github.achtern.AchternEngine.core.entity.renderpasses.WireframeDisplay
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
-import io.github.achtern.AchternEngine.core.input.event.payload.InputEvent;
+import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
@@ -34,12 +34,12 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
 
         game.getInputManager().getKeyMap().register(new KeyTrigger(Key.Z), new KeyListener() {
             @Override
-            public Type getType() {
+            public Type getPressType() {
                 return Type.DOWN;
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getEngine().getRenderEngine().getDrawStrategy() instanceof WireframeDraw) {
                     getEngine().getRenderEngine().setDrawStrategy(sD);
@@ -50,12 +50,12 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
 
         }).register(new KeyTrigger(Key.X), new KeyListener() {
             @Override
-            public Type getType() {
+            public Type getPressType() {
                 return Type.DOWN;
             }
 
             @Override
-            public void onAction(InputEvent event) {
+            public void onAction(KeyEvent event) {
                 if (!getGame().isDebug()) return;
                 if (getGame().has(wireframe)) {
                     LOGGER.trace("Removing {}", wireframe.getName());
