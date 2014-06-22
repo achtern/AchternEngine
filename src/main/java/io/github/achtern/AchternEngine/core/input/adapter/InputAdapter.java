@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.input.adapter;
 
 import io.github.achtern.AchternEngine.core.input.Key;
+import io.github.achtern.AchternEngine.core.input.MouseButton;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
 public interface InputAdapter {
@@ -15,11 +16,11 @@ public interface InputAdapter {
 
     public boolean getKeyUp(Key key);
 
-    public boolean getMouse(int mouseButton);
+    public boolean getMouse(MouseButton mouseButton);
 
-    public boolean getMouseDown(int mouseButton);
+    public boolean getMouseDown(MouseButton mouseButton);
 
-    public boolean getMouseUp(int mouseButton);
+    public boolean getMouseUp(MouseButton mouseButton);
 
     public Vector2f getMousePosition();
 

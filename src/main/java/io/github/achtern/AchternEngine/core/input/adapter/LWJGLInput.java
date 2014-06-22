@@ -1,7 +1,7 @@
 package io.github.achtern.AchternEngine.core.input.adapter;
 
 import io.github.achtern.AchternEngine.core.input.Key;
-import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
+import io.github.achtern.AchternEngine.core.input.MouseButton;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -143,10 +143,22 @@ public class LWJGLInput implements InputAdapter {
     public static final int POWER           = 0xDE;
     public static final int SLEEP           = 0xDF;
 
-    public static final Map<Key, Integer> keyIntegerMap = new HashMap<Key, Integer>();
-    public static final Map<Integer, Key> integerKeyMap = new HashMap<Integer, Key>();
+    public static final Map<Key, Integer> keyIntegerMap = new HashMap<Key, Integer>(NUM_KEYCODES);
+    public static final Map<Integer, Key> integerKeyMap = new HashMap<Integer, Key>(NUM_KEYCODES);
+
+    public static final Map<MouseButton, Integer> buttonIntegerMap = new HashMap<MouseButton, Integer>(NUM_MOUSEBUTTONS);
+    public static final Map<Integer, MouseButton> integerButtonMap = new HashMap<Integer, MouseButton>(NUM_MOUSEBUTTONS);
 
     static {
+
+        buttonIntegerMap.put(MouseButton.LEFT, 0);
+        buttonIntegerMap.put(MouseButton.RIGHT, 2);
+        buttonIntegerMap.put(MouseButton.MIDDLE, 3);
+
+        integerButtonMap.put(0, MouseButton.LEFT);
+        integerButtonMap.put(2, MouseButton.RIGHT);
+        integerButtonMap.put(3, MouseButton.MIDDLE);
+
 
         keyIntegerMap.put(Key.NONE, NONE);
         keyIntegerMap.put(Key.ESCAPE, ESCAPE);
@@ -452,18 +464,22 @@ public class LWJGLInput implements InputAdapter {
     }
 
     @Override
-    public boolean getMouse(int mouseButton) {
+    public boolean getMouse(MouseButton mouseButton) {
+        return getMouse(toInt(mouseButton));
+    }
+
+    protected boolean getMouse(int mouseButton) {
         return Mouse.isButtonDown(mouseButton);
     }
 
     @Override
-    public boolean getMouseDown(int mouseButton) {
-        return getMouse(mouseButton) && !lastMouse[mouseButton];
+    public boolean getMouseDown(MouseButton mouseButton) {
+        return getMouse(mouseButton) && !lastMouse[toInt(mouseButton)];
     }
 
     @Override
-    public boolean getMouseUp(int mouseButton) {
-        return !getMouse(mouseButton) && lastMouse[mouseButton];
+    public boolean getMouseUp(MouseButton mouseButton) {
+        return !getMouse(mouseButton) && lastMouse[toInt(mouseButton)];
     }
 
     @Override
@@ -492,6 +508,20 @@ public class LWJGLInput implements InputAdapter {
         if (k == null) k = Key.NONE;
 
         return k;
+    }
+
+    protected int toInt(MouseButton button) {
+        if (button == null) return -1;
+
+        return buttonIntegerMap.get(button);
+    }
+
+    protected MouseButton toButton(int key) {
+        MouseButton b = integerButtonMap.get(key);
+
+        if (b == null) b = MouseButton.INVALID;
+
+        return b;
     }
 
 
