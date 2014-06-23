@@ -92,6 +92,36 @@ public class ResourceLoader {
     }
 
     /**
+     * Pre Load a Mesh, good at startup, to allow getting the Mesh at runtime.
+     * Binds the mesh to the Graphics API.
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @throws IOException
+     */
+    public static void preLoadMesh(String name) throws IOException {
+        getMesh(name);
+    }
+
+    /**
+     * Pre Load a Texture, good at startup, to allow getting the Texture at runtime.
+     * Binds the texture to the Graphics API.
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @throws IOException
+     */
+    public static void preLoadTexture(String name) throws IOException {
+        getTexture(name);
+    }
+
+    /**
+     * Pre Load a Shader source file.
+     * Only parses the sourcefile, no binding or uniform adding at this stage!
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @throws IOException
+     */
+    public static void preLoadShader(String name) throws IOException {
+        getShader(name);
+    }
+
+    /**
      * Loads a obj file, parses it, optimises it and converts it into renderable Mesh
      * (uses a internal cache if the texture has been loaded previously)
      * @param name The relative path (to various ResourceLocations) of the filename

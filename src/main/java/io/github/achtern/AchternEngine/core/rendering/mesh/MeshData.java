@@ -2,6 +2,8 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -17,6 +19,8 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class MeshData {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(MeshData.class);
 
     public enum Mode {
 
@@ -36,11 +40,18 @@ public class MeshData {
 
     protected Mode mode = Mode.TRIANGLES;
 
+    protected boolean bound;
+
     public MeshData() {
+        generate();
+    }
+
+    protected void generate() {
         this.vbo = glGenBuffers();
         this.ibo = glGenBuffers();
         this.vao = glGenVertexArrays();
-        size = 0;
+        this.size = 0;
+        this.bound = false;
     }
 
     public void bind(Vertex[] vertices, int[] indices) {
@@ -48,15 +59,30 @@ public class MeshData {
     }
 
     public void bind(Vertex[] vertices, int[] indices, int size) {
+        if (isBound()) {
+
+            // If data is the same, ignore!
+            if (getVertices() == vertices && getIndices() == indices && getSize() == size) return;
+
+
+            LOGGER.warn("Rebinding a MeshData Class with new data. You should a new instance instead. " +
+                    "Goind to bind mesh anyway master and generating new VBOs, IBOs and new VAO");
+            generate();
+        }
+
         this.setSize(size);
         this.setVertices(vertices);
         this.setIndices(indices);
-
         this.bind();
     }
 
 
     public void bind() {
+
+        if (isBound()) {
+            throw new IllegalStateException("MeshData already bound to VAO " + getVao());
+        }
+
         glBindVertexArray(getVao());
 
 
@@ -145,5 +171,9 @@ public class MeshData {
 
     public void setMode(Mode mode) {
         this.mode = mode;
+    }
+
+    public boolean isBound() {
+        return bound;
     }
 }
