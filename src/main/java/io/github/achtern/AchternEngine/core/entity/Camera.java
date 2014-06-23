@@ -25,11 +25,17 @@ public class Camera extends QuickEntity {
     }
 
     public Camera(float fov, float aspect, float zNear, float zFar) {
-        setProjection(new Matrix4f().initPerspective(fov, aspect, zNear, zFar), Projection.PERSPECTIVE);
+        setProjection(
+                new Matrix4f().initPerspective(fov, aspect, zNear, zFar),
+                Projection.PERSPECTIVE
+        );
     }
 
     public Camera(Dimension screen) {
-        setProjection(new Matrix4f().initOrthographic(0, screen.getHeight(), screen.getWidth(), 0, -1, 1), Projection.ORTHOGRAPHIC);
+        setProjection(
+                new Matrix4f().initOrthographic(0, screen.getHeight(), screen.getWidth(), 0, -1, 1),
+                Projection.ORTHOGRAPHIC
+        );
     }
 
     public Matrix4f getViewProjection() {
@@ -57,7 +63,7 @@ public class Camera extends QuickEntity {
                         Window.getHeight(),
                         Window.getWidth(),
                         0,
-                        -1, 1),
+                        -100, 100),
                         p
                 );
                 break;
