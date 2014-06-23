@@ -50,11 +50,9 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
 
     /**
      * Delegates to the scenegraph and debugger
-     * ALWAYS call this methods in overwritten versions,
-     * otherwise the scenegraph won't get updated!
      * @param delta The delta time
      */
-    public void update(float delta) {
+    public void updateSceneGraph(float delta) {
         if (isDebug()) debugger.update(delta);
         getSceneGraph().update(delta);
     }
@@ -64,7 +62,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * and inits the user's game.
      * @param engine The CoreEngine instance (parent)
      */
-    public void preInit(CoreEngine engine) {
+    public final void preInit(CoreEngine engine) {
         setEngine(engine);
         getSceneGraph().setEngine(engine);
 
@@ -81,11 +79,9 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
 
     /**
      * Renders the scenegraph
-     * ALWAYS call this methods in overwritten versions,
-     * otherwise the scenegraph won't get rendered!
      * @param renderEngine The active RenderEngine instance
      */
-    public void render(RenderEngine renderEngine) {
+    public final void renderSceneGraph(RenderEngine renderEngine) {
         LOGGER.trace("Rendering SceneGraph: {}", getSceneGraph());
         renderEngine.render(getSceneGraph());
     }

@@ -105,7 +105,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                 }
 
 
-                game.update((float) frameTime);
+                game.updateSceneGraph((float) frameTime);
 
                 game.getInputManager().trigger((float) frameTime);
 
@@ -114,7 +114,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
             }
 
             if (render) {
-                game.render(renderEngine);
+                game.renderSceneGraph(renderEngine);
                 Window.render();
                 fps.rendered();
             }
