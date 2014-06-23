@@ -80,7 +80,7 @@ public class Matrix4f {
         return this;
     }
 
-    public Matrix4f initOrthographic(float left, float right, float bottom, float top, float far, float near) {
+    public Matrix4f initOrthographic(float left, float right, float bottom, float top, float near, float far) {
 
         float width = right - left;
         float height = top - bottom;

@@ -72,12 +72,44 @@ public class Vector3f {
         return new Vector3f(x + v, y + v, z + v);
     }
 
+    public Vector3f addLocal(Vector3f v) {
+        x += v.getX();
+        y += v.getY();
+        z += v.getZ();
+
+        return this;
+    }
+
+    public Vector3f addLocal(float v) {
+        x += v;
+        y += v;
+        z += v;
+
+        return this;
+    }
+
     public Vector3f sub(Vector3f v) {
         return new Vector3f(x - v.getX(), y - v.getY(), z - v.getZ());
     }
 
     public Vector3f sub(float v) {
         return new Vector3f(x - v, y - v, z - v);
+    }
+
+    public Vector3f subLocal(Vector3f v) {
+        x -= v.getX();
+        y -= v.getY();
+        z -= v.getZ();
+
+        return this;
+    }
+
+    public Vector3f subLocal(float v) {
+        x -= v;
+        y -= v;
+        z -= v;
+
+        return this;
     }
 
     public Vector3f mul(Vector3f v) {
