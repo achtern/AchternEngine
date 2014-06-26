@@ -1,5 +1,7 @@
 package io.github.achtern.AchternEngine.core.resource;
 
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
@@ -29,11 +31,16 @@ public class ResourceConverter {
                     DataBuffer.TYPE_BYTE
             );
 
-
     public static ByteBuffer toByteBuffer(BufferedImage image) {
+        return toByteBuffer(image, Dimension.fromBufferedImage(image));
+    }
+
+    public static ByteBuffer toByteBuffer(BufferedImage image, Dimension dimension) {
         ByteBuffer buffer = null;
         BufferedImage texture;
         WritableRaster raster;
+
+        //TODO: Make use of dimension parameter!
 
         int texW = 2;
         int texH = 2;

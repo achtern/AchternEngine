@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.resource;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.Texture;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
@@ -178,22 +179,36 @@ public class ResourceLoader {
     /**
      * Loads a image file and converts it into a Texture
      * (uses a internal cache if the texture has been loaded previously)
+     * The dimensions/size will be the size of the source image.
      * @param name The relative path (to various ResourceLocations) of the filename
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
     public static Texture getTexture(String name) throws IOException {
-        return getTexture(name, false);
+        return getTexture(name, null, false);
+    }
+
+    /**
+     * Loads a image file and converts it into a Texture
+     * (uses a internal cache if the texture has been loaded previously)
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @param dimension The dimension of the new texture (if null the one of the images will get taken)
+     * @return A readable Stream | null if not exists
+     * @throws IOException if resource not found
+     */
+    public static Texture getTexture(String name, Dimension dimension) throws IOException {
+        return getTexture(name, dimension, false);
     }
 
     /**
      * Loads a image file and converts it into a Texture
      * @param name The relative path (to various ResourceLocations) of the filename
+     * @param dimension The dimension of the new texture
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    public static Texture getTexture(String name, boolean forceLoading) throws IOException {
+    public static Texture getTexture(String name, Dimension dimension, boolean forceLoading) throws IOException {
 
         if (textureCache.has(name) && !forceLoading) {
             return textureCache.get(name);
@@ -201,7 +216,12 @@ public class ResourceLoader {
 
         BufferedImage image = ImageIO.read(getStream(name));
 
-        Texture texture = new Texture(image);
+        Texture texture;
+        if (dimension != null) {
+            texture = new Texture(image, dimension);
+        } else {
+            texture = new Texture(image);
+        }
 
         textureCache.add(name, texture);
 
