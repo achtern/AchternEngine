@@ -8,16 +8,26 @@ import io.github.achtern.AchternEngine.core.rendering.Dimension;
 
 public class Camera extends QuickEntity {
 
-    public enum Projection {
-        PERSPECTIVE,
-        ORTHOGRAPHIC
+    protected Matrix4f projection;
+
+
+    /**
+     * For internal use only
+     * (or for really smart people out there)
+     * @param projection The view camera-projection
+     */
+    public Camera(Matrix4f projection) {
+        setProjection(projection);
     }
 
-    protected Matrix4f projection;
-    protected Projection projectionType;
 
     public Camera() {
-        this((float) Window.getWidth() / (float) Window.getHeight());
+        this(Window.getDimension());
+    }
+
+
+    public Camera(Dimension screen) {
+        this((float) screen.getWidth() / (float) screen.getHeight());
     }
 
     public Camera(float aspect) {
@@ -25,17 +35,7 @@ public class Camera extends QuickEntity {
     }
 
     public Camera(float fov, float aspect, float zNear, float zFar) {
-        setProjection(
-                new Matrix4f().initPerspective(fov, aspect, zNear, zFar),
-                Projection.PERSPECTIVE
-        );
-    }
-
-    public Camera(Dimension screen) {
-        setProjection(
-                new Matrix4f().initOrthographic(0, screen.getHeight(), screen.getWidth(), 0, -1, 1),
-                Projection.ORTHOGRAPHIC
-        );
+        setProjection(new Matrix4f().initPerspective(fov, aspect, zNear, zFar));
     }
 
     public Matrix4f getViewProjection() {
@@ -47,44 +47,17 @@ public class Camera extends QuickEntity {
         return projection.mul(cameraRotMat.mul(cameraTransMat));
     }
 
-    public void setProjection(Projection p) {
-        switch (p) {
-            case PERSPECTIVE:
-                setProjection(new Matrix4f().initPerspective(
-                        (float) Math.toRadians(70),
-                        Window.getWidth() / Window.getHeight(),
-                        0.1f, 1000),
-                        p
-                );
-                break;
-            case ORTHOGRAPHIC:
-                setProjection(new Matrix4f().initOrthographic(
-                        0,
-                        Window.getHeight(),
-                        Window.getWidth(),
-                        0,
-                        -100, 100),
-                        p
-                );
-                break;
-            default:
-                throw new RuntimeException("Unknow Projection Type");
-        }
-
-
-    }
-
-    public void setProjection(Matrix4f projection, Projection type) {
+    public void setProjection(Matrix4f projection) {
         this.projection = projection;
-        this.projectionType = type;
     }
 
-    public Projection getProjectionType() {
-        return projectionType;
+    public void bindAsMain() {
+        getEngine().getRenderEngine().addCamera(this);
     }
 
     @Override
     public void setEngine(CoreEngine engine) {
+        super.setEngine(engine);
         engine.getRenderEngine().addCamera(this);
     }
 }

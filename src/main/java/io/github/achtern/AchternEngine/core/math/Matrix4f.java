@@ -82,15 +82,17 @@ public class Matrix4f {
 
     public Matrix4f initOrthographic(float left, float right, float bottom, float top, float near, float far) {
 
-        float width = right - left;
-        float height = top - bottom;
-        float depth = far - near;
+        float RmL = right - left;
+        float TmB = top - bottom;
+        float FmN = far - near;
+        float RpL = right + left;
+        float TpB = top + bottom;
+        float FpN = far + near;
 
-
-        m[0][0] = 2 / width;    m[0][1] = 0;            m[0][2] = 0;            m[0][3] = - (right + left) / width;
-        m[1][0] = 0;            m[1][1] = 2 / height;   m[1][2] = 0;            m[1][3] = - (top + bottom) / height;
-        m[2][0] = 0;            m[2][1] = 0;            m[2][2] = - 2 / depth;  m[2][3] = - (far + near) / depth;
-        m[3][0] = 0;            m[3][1] = 0;            m[3][2] = 0;            m[3][3] = 1;
+        m[0][0] = 2 / RmL;   m[0][1] = 0;         m[0][2] = 0;         m[0][3] = - RpL / RmL;
+        m[1][0] = 0;         m[1][1] = 2 / TmB;   m[1][2] = 0;         m[1][3] = - TpB / TmB;
+        m[2][0] = 0;         m[2][1] = 0;         m[2][2] = - 1 / FmN; m[2][3] = - near / FmN;
+        m[3][0] = 0;         m[3][1] = 0;         m[3][2] = 0;         m[3][3] = 1;
 
         return this;
     }
