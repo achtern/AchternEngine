@@ -1,6 +1,15 @@
 package io.github.achtern.AchternEngine.core.math;
 
+import io.github.achtern.AchternEngine.core.rendering.Color;
+
 public class Vector4f {
+
+    public static final Vector4f ZERO   = new Vector4f(0, 0, 0, 0);
+    public static final Vector4f UNIT_X = new Vector4f(1, 0, 0, 0);
+    public static final Vector4f UNIT_Y = new Vector4f(0, 1, 0, 0);
+    public static final Vector4f UNIT_Z = new Vector4f(0, 0, 1, 0);
+    public static final Vector4f UNIT_W = new Vector4f(0, 0, 0, 1);
+    public static final Vector4f ONE    = new Vector4f(1, 1, 1, 1);
 
     private float x;
     private float y;
@@ -67,5 +76,14 @@ public class Vector4f {
 
     public boolean isNullVector() {
         return getXYZ().isNullVector() && getW() == 0;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + getX() + "/" + getY() + "/" + getZ() + "/" + getW() + ")";
+    }
+
+    public Color toColor() {
+        return new Color(this);
     }
 }

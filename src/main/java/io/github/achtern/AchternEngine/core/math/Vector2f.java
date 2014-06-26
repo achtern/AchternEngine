@@ -1,6 +1,15 @@
 package io.github.achtern.AchternEngine.core.math;
 
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+
 public class Vector2f {
+
+
+    public static final Vector2f ZERO   = new Vector2f(0, 0);
+    public static final Vector2f UNIT_X = new Vector2f(1, 0);
+    public static final Vector2f UNIT_Y = new Vector2f(0, 1);
+    public static final Vector2f ONE    = new Vector2f(1, 1);
+
 
     private float x;
     private float y;
@@ -126,5 +135,15 @@ public class Vector2f {
     @Override
     public String toString() {
         return "(" + getX() + "/" + getY() + ")";
+    }
+
+    /**
+     * Returns a new Dimension instance
+     * width from X-value
+     * height from Y-value
+     * @return dimension from this vector
+     */
+    public Dimension toDimension() {
+        return new Dimension((int) getX(), (int) getY());
     }
 }
