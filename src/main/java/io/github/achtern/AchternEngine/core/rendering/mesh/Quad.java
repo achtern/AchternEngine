@@ -10,6 +10,10 @@ public class Quad extends Mesh {
     protected float width;
     protected float height;
 
+    public Quad() {
+        this(1, 1);
+    }
+
     public Quad(Dimension size) {
         this(size.getWidth(), size.getHeight());
     }
