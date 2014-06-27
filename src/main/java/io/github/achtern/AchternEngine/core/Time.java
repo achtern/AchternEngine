@@ -2,7 +2,7 @@ package io.github.achtern.AchternEngine.core;
 
 public class Time {
 
-    private static final long SECOND = 1000000000L;
+    public static final long SECOND = 1000000000L;
     private static double delta;
 
     public static double getTime() {
@@ -11,5 +11,11 @@ public class Time {
 
     public static long getNanoTime() {
         return System.nanoTime();
+    }
+
+    public static String getNanoString() {
+
+        return "NanoTime: " + getNanoTime();
+
     }
 }

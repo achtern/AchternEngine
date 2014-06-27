@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.util.FPS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +31,10 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Creates a new Window.
      * @param title The window's title
-     * @param width The window's width
-     * @param height The window's height
+     * @param dimensions The window's dimensions
      */
-    public void createWindow(String title, int width, int height) {
-        Window.create(width, height, title);
+    protected void createWindow(String title, Dimension dimensions) {
+        Window.create(dimensions.getWidth(), dimensions.getHeight(), title);
         this.renderEngine = new RenderEngine();
         LOGGER.debug("OpenGL Version: {}", RenderEngine.getOpenGLVersion());
     }
@@ -73,6 +73,10 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
 
         running = true;
+
+        createWindow(game.getWindowTitle(), game.getWindowDimensions());
+
+        LoadingScreen.show(this);
 
         game.preInit(this);
 

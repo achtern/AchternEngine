@@ -7,6 +7,7 @@ import io.github.achtern.AchternEngine.core.input.InputManager;
 import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
 import io.github.achtern.AchternEngine.core.input.inputmap.KeyMap;
 import io.github.achtern.AchternEngine.core.input.inputmap.MouseMap;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,20 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
         this.inputManager.setMouseMap(new MouseMap());
         this.inputManager.setKeyMap(new KeyMap());
     }
+
+
+    /**
+     * Returns the dimensions of the window.
+     * @return The new window dimensions
+     */
+    public abstract Dimension getWindowDimensions();
+
+    /**
+     * Returns the title of the window.
+     * @return The window title
+     */
+    public abstract String getWindowTitle();
+
 
     /**
      * Delegates to the scenegraph and debugger
