@@ -76,7 +76,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
         createWindow(game.getWindowTitle(), game.getWindowDimensions());
 
-        LoadingScreen.show(this);
+        LoadingScreen.show(this, game.getSplashScreen());
 
         game.preInit(this);
 

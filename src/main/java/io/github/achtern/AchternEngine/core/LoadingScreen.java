@@ -30,7 +30,11 @@ public class LoadingScreen {
     }
 
     public static void show(CoreEngine engine, Texture loadingImage) {
-        System.out.println(Time.getNanoString());
+        if (loadingImage == null) {
+            show(engine);
+            return;
+        }
+
         // Create the Material
         Material material = new Material();
         material.addTexture("diffuse", loadingImage);
@@ -75,14 +79,14 @@ public class LoadingScreen {
         // Render the "scene"
         engine.getRenderEngine().render(holder);
 
+        // Sync the image to the Window
+        Window.render();
+
         // Make sure to delete this after render,
         // so the end-user doesn't see it!
         engine.getRenderEngine().removeRenderPass(basic);
+        engine.getRenderEngine().addCamera(null);
 
-        System.out.println(Time.getNanoString());
-        // Finally sync the image to the Window
-        Window.render();
-        System.out.println(Time.getNanoString());
     }
 
 

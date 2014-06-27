@@ -8,6 +8,7 @@ import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
 import io.github.achtern.AchternEngine.core.input.inputmap.KeyMap;
 import io.github.achtern.AchternEngine.core.input.inputmap.MouseMap;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.Texture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,6 +174,18 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
         }
 
         return mainNode;
+    }
+
+    /**
+     * Returns the loading/splash image.
+     * Should only do minimal stuff!
+     * FAST FAST FAST
+     * If the texture is null, the engine's
+     * default image will get shown.
+     * @return A texture | null
+     */
+    public Texture getSplashScreen() {
+        return null;
     }
 
     /**
