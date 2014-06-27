@@ -13,6 +13,14 @@ public class Vector3f {
     private float y;
     private float z;
 
+    public static float distance(Vector3f p, Vector3f q) {
+        return p.euclidean(q);
+    }
+
+    public static Vector3f lerp(Vector3f p, Vector3f q, float factor) {
+        return p.lerp(q, factor);
+    }
+
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
@@ -21,6 +29,14 @@ public class Vector3f {
 
     public Vector3f(Vector3f v) {
         this(v.getX(), v.getY(), v.getZ());
+    }
+
+    public float euclidean(Vector3f v) {
+        return (float) Math.sqrt(
+                (getX() - v.getX()) * (getX() - v.getX()) +
+                (getY() - v.getY()) * (getY() - v.getY()) +
+                (getZ() - v.getZ()) * (getZ() - v.getZ())
+        );
     }
 
     public float length() {
