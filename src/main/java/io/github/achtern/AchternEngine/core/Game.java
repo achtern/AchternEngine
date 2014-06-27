@@ -71,6 +71,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
     public void updateSceneGraph(float delta) {
         if (isDebug()) debugger.update(delta);
         getSceneGraph().update(delta);
+        update(delta);
     }
 
     /**
@@ -100,6 +101,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
     public final void renderSceneGraph(RenderEngine renderEngine) {
         LOGGER.trace("Rendering SceneGraph: {}", getSceneGraph());
         renderEngine.render(getSceneGraph());
+        render(renderEngine);
     }
 
     /**
