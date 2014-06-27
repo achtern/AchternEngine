@@ -155,6 +155,20 @@ public class Vector3f {
         return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
     }
 
+    public Vector3f clamp(float c) {
+        Vector3f r = new Vector3f(this);
+        r.clampLocal(c);
+        return r;
+    }
+
+    public Vector3f clampLocal(float c) {
+        if (getX() > c) setX(c);
+        if (getY() > c) setY(c);
+        if (getZ() > c) setZ(c);
+
+        return this;
+    }
+
     public Vector2f getXY() {
         return new Vector2f(getX(), getY());
     }
@@ -239,6 +253,16 @@ public class Vector3f {
     @Override
     public String toString() {
         return "(" + getX() + "/" + getY() + "/" + getZ() + ")";
+    }
+
+    public Vector3f get() {
+        return new Vector3f(this);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        super.clone();
+        return new Vector3f(this);
     }
 }
 
