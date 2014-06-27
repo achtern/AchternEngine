@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CoreEngine.class);
+
+    private static boolean stopRequest = false;
+
     private boolean running;
 
     private Game game;
@@ -17,6 +20,21 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     private double frameTime;
 
     private FPS fps;
+
+    /**
+     * Request a force stop of the engine
+     */
+    public static void requestStop() {
+        stopRequest = true;
+    }
+
+    /**
+     * Whether a force stop was request via {@link CoreEngine#requestStop()}
+     * @return stopRequest
+     */
+    public static boolean stopRequested() {
+        return stopRequest;
+    }
 
     /**
      * Creates a new Game Holder and runner
@@ -55,7 +73,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Stops the game.
      */
-    public void stop() {
+    protected void stop() {
         if (!running) {
             return;
         }
@@ -104,7 +122,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                 unprocessedTime -= frameTime;
 
 
-                if (Window.isCloseRequested()) {
+                if (Window.isCloseRequested() || stopRequested()) {
                     stop();
                 }
 
