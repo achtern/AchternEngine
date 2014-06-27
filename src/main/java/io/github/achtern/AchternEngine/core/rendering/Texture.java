@@ -26,7 +26,7 @@ public class Texture {
     }
 
     public Texture(BufferedImage image, Dimension dimension) {
-        this(toByteBuffer(image, dimension), dimension, image.getColorModel().hasAlpha());
+        this(toByteBuffer(image, dimension), dimension.factor2(), image.getColorModel().hasAlpha());
     }
 
     public Texture(TexturableData data) {
@@ -34,7 +34,6 @@ public class Texture {
     }
 
     public Texture(ByteBuffer buffer, Dimension dimension, boolean alpha) {
-
         this.id = genID();
 
         bind();

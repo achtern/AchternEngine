@@ -9,11 +9,13 @@ import io.github.achtern.AchternEngine.core.entity.renderpasses.light.SpotLight;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.math.Vector4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class Shader {
         }
     }
 
-    public void finish() {
+    public void compileAndAddUniforms() {
         compile();
         addUniforms();
     }
@@ -79,15 +81,27 @@ public class Shader {
     public void addUniforms() {
 
         if (vertexShader != null) {
-            magicUniforms(vertexShader);
+            vertexShader = magicUniforms(vertexShader);
         }
         if (geometryShader != null) {
-            magicUniforms(geometryShader);
+            geometryShader = magicUniforms(geometryShader);
         }
         if (fragmentShader != null) {
-            magicUniforms(fragmentShader);
+            fragmentShader = magicUniforms(fragmentShader);
         }
 
+    }
+
+    public void addAttributes() {
+        if (vertexShader != null) {
+            vertexShader = magicAttributes(vertexShader);
+        }
+        if (geometryShader != null) {
+            geometryShader = magicAttributes(geometryShader);
+        }
+        if (fragmentShader != null) {
+            fragmentShader = magicAttributes(fragmentShader);
+        }
     }
 
     public void addUniform(String name) {
@@ -102,7 +116,7 @@ public class Shader {
 
     }
 
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine) {
+    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
         material.getTexture("diffuse").bind();
     }
 
@@ -150,7 +164,7 @@ public class Shader {
         if (gs) addGeometryShader(ResourceLoader.getShader(name + ".ggs"));
         if (fs) addFragmentShader(ResourceLoader.getShader(name + ".gfs"));
 
-        finish();
+        compileAndAddUniforms();
     }
 
     /**
@@ -181,6 +195,10 @@ public class Shader {
 
     public void setUniform(String name, Vector3f vec) {
         glUniform3f(this.uniforms.get(name), vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    public void setUniform(String name, Vector4f vec) {
+        glUniform4f(this.uniforms.get(name), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
     }
 
     public void setUniform(String name, Vector2f vec) {
@@ -228,14 +246,36 @@ public class Shader {
         setUniform(name + ".cutoff", spotLight.getCutoff());
     }
 
-    private void magicUniforms(GLSLScript script) {
+    private GLSLScript magicUniforms(GLSLScript script) {
 
-        script = getParser().process(script);
+        if (!script.isProcessed()) {
+            script = getParser().process(script);
+        }
 
         for (String uName : script.getExpandedUniforms()) {
             LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), uName);
             addUniform(uName);
         }
+
+        return script;
+
+    }
+
+    private GLSLScript magicAttributes(GLSLScript script) {
+
+        if (!script.isProcessed()) {
+            script = getParser().process(script);
+        }
+
+        int loc = 0;
+
+        for (Variable aName : script.getAttributes()) {
+            LOGGER.trace("{}: attribute {} got added at {}", this.getClass().getSimpleName(), aName.getName(), loc);
+            setAttribLocation(aName.getName(), loc);
+            loc++;
+        }
+
+        return script;
 
     }
 

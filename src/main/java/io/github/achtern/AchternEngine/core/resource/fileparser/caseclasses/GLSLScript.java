@@ -25,6 +25,8 @@ public class GLSLScript {
 
     private String source;
 
+    private boolean processed;
+
 
     public GLSLScript(String name, Type type) {
         this.name = name;
@@ -89,5 +91,13 @@ public class GLSLScript {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
     }
 }

@@ -31,14 +31,11 @@ public class Ambient extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine) {
-        super.updateUniforms(transform, material, renderEngine);
-
-        Matrix4f worldMat = transform.getTransformation();
-        Matrix4f projectedMat = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
+    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
+        super.updateUniforms(transform, material, renderEngine, projection);
 
 
-        setUniform("MVP", projectedMat);
+        setUniform("MVP", projection);
         setUniform("ambientIntensity", (AmbientLight) renderEngine.getActiveRenderPass());
 
     }

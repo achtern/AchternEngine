@@ -32,16 +32,15 @@ public class Point extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine) {
+    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
 
-        super.updateUniforms(transform, material, renderEngine);
+        super.updateUniforms(transform, material, renderEngine, projection);
 
         Matrix4f worldMat = transform.getTransformation();
-        Matrix4f projectedMat = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
 
 
         setUniform("model", worldMat);
-        setUniform("MVP", projectedMat);
+        setUniform("MVP", projection);
 
         setUniform("specularIntensity", material.getFloat("specularIntensity"));
         setUniform("specularPower", material.getFloat("specularPower"));

@@ -163,7 +163,11 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
 
         script.setUniforms(getVariables(script.getSource(), TOKEN_UNIFORM));
 
+        script.setAttributes(getAttributes(script.getSource()));
+
         script.setExpandedUniforms(getUniforms(script.getSource(), script.getUniforms(), script.getStructs()));
+
+        script.setProcessed(true);
 
         return script;
 
@@ -239,8 +243,8 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         return stringUniforms;
     }
 
-    public List<String> getAttributes(String text) {
-        return getVariableNames(text, TOKEN_ATTRIBUTE);
+    public List<Variable> getAttributes(String text) {
+        return getVariables(text, TOKEN_ATTRIBUTE);
     }
 
     public List<String> getVariableNames(String text, final String token) {

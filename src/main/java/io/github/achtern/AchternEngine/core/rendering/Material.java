@@ -14,11 +14,13 @@ public class Material {
 
     private HashMap<String, Texture> textures;
     private HashMap<String, Vector3f> vectors;
+    private HashMap<String, Color> colors;
     private HashMap<String, Float> floats;
 
     public Material() {
         textures = new HashMap<String, Texture>();
         vectors = new HashMap<String, Vector3f>();
+        colors = new HashMap<String, Color>();
         floats = new HashMap<String, Float>();
     }
 
@@ -53,6 +55,27 @@ public class Material {
         }
 
         return new Vector3f(0, 0, 0);
+    }
+
+    public void addColor(String name, Color color) {
+        colors.put(name, color);
+    }
+
+    public Color getColor(String name) {
+        Color c = colors.get(name);
+        if (c != null) {
+            return c;
+        }
+
+        return Color.BLACK;
+    }
+
+    public void setColor(Color color) {
+        addColor("color", color);
+    }
+
+    public Color getColor() {
+        return getColor("color");
     }
 
     public void addFloat(String name, float f) {

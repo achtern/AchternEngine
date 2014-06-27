@@ -103,6 +103,11 @@ public class Vector2f {
         setY(v.getY());
     }
 
+    public void set(float x, float y) {
+        setX(x);
+        setY(y);
+    }
+
     public float getX() {
         return x;
     }

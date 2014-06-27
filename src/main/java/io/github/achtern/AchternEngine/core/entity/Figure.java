@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.entity;
 
 import io.github.achtern.AchternEngine.core.RenderEngine;
+import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
@@ -68,7 +69,11 @@ public class Figure extends QuickEntity {
     @Override
     public void render(Shader shader, RenderEngine renderEngine) {
         shader.bind();
-        shader.updateUniforms(getTransform(), getMaterial(), renderEngine);
+
+        Matrix4f worldMat = getTransform().getTransformation();
+        Matrix4f projection = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
+
+        shader.updateUniforms(getTransform(), getMaterial(), renderEngine, projection);
 
         DrawStrategy ds = getDrawStrategy();
         if (ds == null) {
