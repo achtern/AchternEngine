@@ -42,7 +42,6 @@ public class AxisDebugger extends Node {
     private void pushFigure(Mesh mesh, Color color, int i) {
 
         Figure f = new Figure("Axis", mesh);
-        f.setUseLights(false);
         Material m = new Material();
 
         m.addTexture("diffuse", new Texture(ImageGenerator.bytesFromColor(color)));
