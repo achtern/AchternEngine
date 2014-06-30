@@ -62,12 +62,16 @@ public class Material {
     }
 
     public Color getColor(String name) {
+        return getColor(name, Color.BLACK);
+    }
+
+    public Color getColor(String name, Color fallback) {
         Color c = colors.get(name);
         if (c != null) {
             return c;
         }
 
-        return Color.BLACK;
+        return fallback;
     }
 
     public void setColor(Color color) {
@@ -75,7 +79,7 @@ public class Material {
     }
 
     public Color getColor() {
-        return getColor("color");
+        return getColor("color", Color.WHITE);
     }
 
     public void addFloat(String name, float f) {

@@ -118,6 +118,9 @@ public class Shader {
 
     public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
         material.getTexture("diffuse").bind();
+        if (fragmentShader.getExpandedUniforms().contains("color")) {
+            setUniform("color", material.getColor());
+        }
     }
 
     public void compile() {
