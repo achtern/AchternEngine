@@ -1,6 +1,6 @@
 package io.github.achtern.AchternEngine.core.math;
 
-public class Vector3f {
+public class Vector3f implements Cloneable {
 
 
     public static final Vector3f ZERO   = new Vector3f(0, 0, 0);
@@ -259,11 +259,7 @@ public class Vector3f {
 
     @Override
     public boolean equals(Object obj) {
-        Vector3f v = (Vector3f) obj;
-
-        if (obj == null) return false;
-
-        return equals((Vector3f) obj);
+        return obj instanceof Vector3f && equals((Vector3f) obj);
     }
 
     @Override
@@ -276,9 +272,13 @@ public class Vector3f {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        super.clone();
-        return new Vector3f(this);
+    public Vector3f clone() throws CloneNotSupportedException {
+        try {
+            return (Vector3f) super.clone();
+        } catch (CloneNotSupportedException e) {
+
+            return null;
+        }
     }
 }
 
