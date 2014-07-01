@@ -15,7 +15,7 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lw
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
+public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameDebugger.class);
 
@@ -32,44 +32,30 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
     public GameDebugger(Game game) {
         this.game = game;
 
-        game.getInputManager().getKeyMap().register(new KeyTrigger(Key.Z), new KeyListener() {
-            @Override
-            public Type getPressType() {
-                return Type.DOWN;
-            }
-
-            @Override
-            public void onAction(KeyEvent event) {
-                if (!getGame().isDebug()) return;
-                if (getEngine().getRenderEngine().getDrawStrategy() instanceof LWJGLWireframeDraw) {
-                    getEngine().getRenderEngine().setDrawStrategy(sD);
-                } else {
-                    getEngine().getRenderEngine().setDrawStrategy(wD);
-                }
-            }
-
-        }).register(new KeyTrigger(Key.X), new KeyListener() {
-            @Override
-            public Type getPressType() {
-                return Type.DOWN;
-            }
-
-            @Override
-            public void onAction(KeyEvent event) {
-                if (!getGame().isDebug()) return;
-                if (getGame().has(wireframe)) {
-                    LOGGER.trace("Removing {}", wireframe.getName());
-                    getGame().remove(wireframe);
-                } else {
-                    LOGGER.trace("Adding {}", wireframe.getName());
-                    getGame().add(wireframe);
-                }
-            }
-        });
+        game.getInputManager().getKeyMap()
+                .register(new KeyTrigger(Key.Z), this)
+                .register(new KeyTrigger(Key.X), this);
     }
 
     @Override
-    public void update(float delta) {
+    public void onAction(KeyEvent event) {
+        if (event.getKey().equals(Key.Z)) {
+            if (!getGame().isDebug()) return;
+            if (getEngine().getRenderEngine().getDrawStrategy() instanceof LWJGLWireframeDraw) {
+                getEngine().getRenderEngine().setDrawStrategy(sD);
+            } else {
+                getEngine().getRenderEngine().setDrawStrategy(wD);
+            }
+        } else if (event.getKey().equals(Key.X)) {
+            if (!getGame().isDebug()) return;
+            if (getGame().has(wireframe)) {
+                LOGGER.trace("Removing {}", wireframe.getName());
+                getGame().remove(wireframe);
+            } else {
+                LOGGER.trace("Adding {}", wireframe.getName());
+                getGame().add(wireframe);
+            }
+        }
     }
 
     public void enable() {
@@ -93,5 +79,9 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine> {
 
     public Game getGame() {
         return game;
+    }
+
+    @Override
+    public void update(float delta) {
     }
 }

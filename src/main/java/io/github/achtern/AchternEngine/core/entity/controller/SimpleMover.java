@@ -52,10 +52,10 @@ public class SimpleMover extends QuickEntity implements KeyListener {
 
     protected void registerListener() {
         getEngine().getGame().getInputManager().getKeyMap()
-                .register(new KeyTrigger(forwardKey), this)
-                .register(new KeyTrigger(backKey), this)
-                .register(new KeyTrigger(leftKey), this)
-                .register(new KeyTrigger(rightKey), this);
+                .register(new KeyTrigger(forwardKey, KeyTrigger.Type.PRESS), this)
+                .register(new KeyTrigger(backKey, KeyTrigger.Type.PRESS), this)
+                .register(new KeyTrigger(leftKey, KeyTrigger.Type.PRESS), this)
+                .register(new KeyTrigger(rightKey, KeyTrigger.Type.PRESS), this);
     }
 
 
@@ -82,11 +82,6 @@ public class SimpleMover extends QuickEntity implements KeyListener {
 
     public void setSpeed(float speed) {
         this.speed = speed;
-    }
-
-    @Override
-    public Type getPressType() {
-        return Type.PRESS;
     }
 
     @Override

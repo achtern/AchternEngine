@@ -39,8 +39,8 @@ public class FlyMover extends SimpleMover {
     @Override
     protected void registerListener() {
         getEngine().getGame().getInputManager().getKeyMap()
-                    .register(new KeyTrigger(upKey), this)
-                    .register(new KeyTrigger(downKey), this);
+                    .register(new KeyTrigger(upKey, KeyTrigger.Type.PRESS), this)
+                    .register(new KeyTrigger(downKey, KeyTrigger.Type.PRESS), this);
     }
 
     @Override
