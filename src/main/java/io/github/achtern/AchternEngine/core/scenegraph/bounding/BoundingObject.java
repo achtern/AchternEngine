@@ -28,7 +28,9 @@ public abstract class BoundingObject implements Cloneable {
     public BoundingObject clone() throws CloneNotSupportedException {
 
         BoundingObject clone = (BoundingObject) super.clone();
-        // TODO: Make Vector3f clonable
+
+        clone.setCenter(center.clone());
+
         return clone;
     }
 
