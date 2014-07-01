@@ -13,8 +13,6 @@ public abstract class BoundingObject implements Cloneable {
 
     public abstract BoundingObject merge(BoundingObject other);
 
-    public abstract BoundingObject mergeWith(BoundingObject other);
-
     public abstract boolean intersects(BoundingObject bo);
 
     public abstract boolean contains(Vector3f point);
