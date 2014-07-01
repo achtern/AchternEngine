@@ -1,4 +1,4 @@
-package io.github.achtern.AchternEngine.core.entity.renderpasses;
+package io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.shader.forward.Wireframe;

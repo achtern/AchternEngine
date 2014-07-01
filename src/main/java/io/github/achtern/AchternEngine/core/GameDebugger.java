@@ -2,7 +2,7 @@ package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
-import io.github.achtern.AchternEngine.core.entity.renderpasses.WireframeDisplay;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
@@ -12,6 +12,7 @@ import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

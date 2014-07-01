@@ -1,4 +1,4 @@
-package io.github.achtern.AchternEngine.core.entity;
+package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;

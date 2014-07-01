@@ -9,6 +9,7 @@ import io.github.achtern.AchternEngine.core.input.inputmap.KeyMap;
 import io.github.achtern.AchternEngine.core.input.inputmap.MouseMap;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

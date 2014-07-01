@@ -1,10 +1,11 @@
 package io.github.achtern.AchternEngine.core;
 
-import io.github.achtern.AchternEngine.core.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package io.github.achtern.AchternEngine.core.entity.controller;
+package io.github.achtern.AchternEngine.core.scenegraph.entity.controller;
 
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.input.Key;

@@ -1,14 +1,14 @@
-package io.github.achtern.AchternEngine.core.entity;
+package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
-import io.github.achtern.AchternEngine.core.Node;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
 /**
- * A helper class to create an {@link io.github.achtern.AchternEngine.core.entity.Entity} easily.
+ * A helper class to create an {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Entity} easily.
  * Implements all methods in order to override only "needed" methods and handels the following:
  * - Storing the parent node
  * - Storing the coreengine
@@ -87,7 +87,7 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     }
 
     /**
-     * @see Entity#setParent(io.github.achtern.AchternEngine.core.Node)
+     * @see Entity#setParent(io.github.achtern.AchternEngine.core.scenegraph.Node)
      */
     @Override
     public void setParent(Node parent) {

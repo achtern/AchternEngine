@@ -1,4 +1,4 @@
-package io.github.achtern.AchternEngine.core.entity.renderpasses.light;
+package io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;

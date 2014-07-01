@@ -1,4 +1,4 @@
-package io.github.achtern.AchternEngine.core.entity.debug;
+package io.github.achtern.AchternEngine.core.scenegraph.entity.debug;
 
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;

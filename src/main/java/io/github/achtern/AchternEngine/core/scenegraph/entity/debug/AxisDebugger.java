@@ -1,9 +1,9 @@
-package io.github.achtern.AchternEngine.core.entity.debug;
+package io.github.achtern.AchternEngine.core.scenegraph.entity.debug;
 
-import io.github.achtern.AchternEngine.core.Node;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.entity.Figure;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Quaternion;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;

@@ -3,7 +3,7 @@ package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.Window;
-import io.github.achtern.AchternEngine.core.entity.renderpasses.WireframeDisplay;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Material;

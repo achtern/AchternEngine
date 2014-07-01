@@ -1,6 +1,6 @@
-package io.github.achtern.AchternEngine.core.entity.controller;
+package io.github.achtern.AchternEngine.core.scenegraph.entity.controller;
 
-import io.github.achtern.AchternEngine.core.entity.QuickEntity;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
@@ -43,7 +43,7 @@ public class SimpleMover extends QuickEntity implements KeyListener {
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.entity.Entity#attached()
+     * @see io.github.achtern.AchternEngine.core.scenegraph.entity.Entity#attached()
      */
     @Override
     public void attached() {

@@ -1,8 +1,8 @@
 package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.entity.Camera;
-import io.github.achtern.AchternEngine.core.entity.Figure;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
@@ -12,6 +12,7 @@ import io.github.achtern.AchternEngine.core.rendering.mesh.Quad;
 import io.github.achtern.AchternEngine.core.rendering.shader.BasicShader;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,7 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
 import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.entity.renderpasses.light.SpotLight;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
