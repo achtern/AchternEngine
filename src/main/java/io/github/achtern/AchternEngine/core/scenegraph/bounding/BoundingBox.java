@@ -2,14 +2,32 @@ package io.github.achtern.AchternEngine.core.scenegraph.bounding;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
+import io.github.achtern.AchternEngine.core.rendering.mesh.WireBox;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoundingBox extends BoundingObject {
 
+
+    public static Node makeNode(BoundingBox bb) {
+        WireBox wireBox = new WireBox(bb.getExtents());
+        Figure figure = new Figure("BoundingBox Figure", wireBox);
+
+        Node node = new Node("BoundingBox").add(figure);
+
+        node.getTransform().setPosition(bb.getCenter().get());
+
+        return node;
+    }
+
+
     protected Vector3f extents;
 
+    public BoundingBox() {
+    }
 
     public BoundingBox(Vector3f center, Vector3f extents) {
         super(center);
@@ -89,9 +107,6 @@ public class BoundingBox extends BoundingObject {
 
 
         for (Vector3f point : vectors) {
-
-            // If point is already in the BB, ignore it
-            if (contains(point)) continue;
 
 
             if (point.getX() > pX) { // Check if we are greater then the positive X extent
@@ -211,6 +226,10 @@ public class BoundingBox extends BoundingObject {
                 &&
                 Math.abs(getCenter().getZ() - point.getZ()) < getExtents().getZ()
         ;
+    }
+
+    public Node makeNode() {
+        return makeNode(this);
     }
 
     public Vector3f getExtents() {

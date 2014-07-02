@@ -9,6 +9,9 @@ public abstract class BoundingObject implements Cloneable {
     protected Vector3f center;
     protected int checkPlane = 0;
 
+    public BoundingObject() {
+    }
+
     public BoundingObject(Vector3f center) {
         this.center = center;
     }

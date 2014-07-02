@@ -22,17 +22,17 @@ public class Figure extends QuickEntity {
      * @param name The name of the empty figure
      */
     public Figure(String name) {
-        this(name, null, null);
+        this(name, null);
     }
 
     /**
-     * Create a Figure with a Mesh only.
+     * Create a Figure with a Mesh only (and empty Material).
      * If the mesh is null, it will throw an <code>IllegalArgumentException</code>.
      * @param name The name of the figure
      * @param mesh The mesh
      */
     public Figure(String name, Mesh mesh) {
-        this(name, mesh, null);
+        this(name, mesh, new Material());
     }
 
     /**
@@ -49,11 +49,11 @@ public class Figure extends QuickEntity {
     }
 
     /**
-     * Creates an untitled Figure with a mesh only.
+     * Creates an untitled Figure with a mesh only (and empty Material).
      * @param mesh The mesh
      */
     public Figure(Mesh mesh) {
-        this(mesh, null);
+        this(mesh, new Material());
     }
 
     /**
