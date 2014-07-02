@@ -3,10 +3,13 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
+import io.github.achtern.AchternEngine.core.scenegraph.bounding.BoundingBox;
 
 public class Mesh {
 
     protected MeshData data;
+
+    protected BoundingBox bb;
 
     public Mesh(MeshData data) {
         this.data = data;
@@ -25,6 +28,10 @@ public class Mesh {
         this.data = new MeshData();
     }
 
+    protected void setVertices(Vertex[] vertices, int[] indices) {
+        setVertices(vertices, indices, true);
+    }
+
     protected void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals) {
 
         if (calcNormals) {
@@ -32,6 +39,7 @@ public class Mesh {
         }
 
         this.data.bind(vertices, indices);
+        updateBounds();
     }
 
     public void setMode(MeshData.Mode mode) {
@@ -42,7 +50,11 @@ public class Mesh {
         drawStrategy.draw(this.data);
     }
 
-    private void calcNormals(Vertex[] vertices, int[] indices) {
+    protected void updateBounds() {
+        this.bb = new BoundingBox().fromVertices(getData().getVertices());
+    }
+
+    protected void calcNormals(Vertex[] vertices, int[] indices) {
 
         for (int i = 0; i < indices.length; i += 3) {
             int i0 = indices[i];
@@ -67,6 +79,10 @@ public class Mesh {
 
     public MeshData getData() {
         return data;
+    }
+
+    public BoundingBox getBoundingBox() {
+        return bb;
     }
 
     public int getVertexCount() {
