@@ -4,11 +4,12 @@ import io.github.achtern.AchternEngine.core.CoreEngine;
 import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -143,7 +144,7 @@ public class Node implements EngineHolder<CoreEngine> {
         this.children = children;
     }
 
-    public ArrayList<Entity> getEntities() {
+    public List<Entity> getEntities() {
         return entities;
     }
 
