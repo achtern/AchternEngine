@@ -2,6 +2,8 @@ package io.github.achtern.AchternEngine.core.scenegraph.bounding;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 
+import java.util.List;
+
 public abstract class BoundingObject implements Cloneable {
 
     protected Vector3f center;
@@ -10,6 +12,8 @@ public abstract class BoundingObject implements Cloneable {
     public BoundingObject(Vector3f center) {
         this.center = center;
     }
+
+    public abstract BoundingObject fromPoints(List<Vector3f> points);
 
     public abstract BoundingObject merge(BoundingObject other);
 
