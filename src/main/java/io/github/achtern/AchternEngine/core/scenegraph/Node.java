@@ -73,9 +73,20 @@ public class Node implements EngineHolder<CoreEngine> {
     }
 
     public Node add(Node node) {
-        if (node.getName() == null) {
+        return add(node, false);
+    }
+
+    public Node add(Node node, boolean forceName) {
+        if (node.getName() == null && !forceName) {
             node.setName(getName() + " >> Untitled Node " + getChildren().size());
         }
+
+        int i = 1;
+        while (getChildren().containsKey(node.getName()) && !forceName) {
+            node.setName(getName() + ">> " + node.getName() + " " + i);
+            i++;
+        }
+
         getChildren().put(node.getName(), node);
         node.setEngine(getEngine());
         node.getTransform().setParent(this.getTransform());
