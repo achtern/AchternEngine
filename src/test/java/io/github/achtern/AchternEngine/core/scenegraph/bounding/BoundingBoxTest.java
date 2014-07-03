@@ -59,6 +59,15 @@ public class BoundingBoxTest {
 
         assertEquals(expected, bb1.merge(bb2));
 
+        // With different center points
+
+        bb1 = new BoundingBox(new Vector3f(3, 3, 1), new Vector3f(2, 2, 1));
+        bb2 = new BoundingBox(new Vector3f(-4, 2, 1), new Vector3f(1, 1, 1));
+
+        expected = new BoundingBox(new Vector3f(0, 3, 1), new Vector3f(5, 2, 1));
+
+        assertEquals(expected, bb1.merge(bb2));
+
 
     }
 
