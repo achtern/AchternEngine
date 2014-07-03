@@ -7,6 +7,7 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BoundingBox extends BoundingObject {
@@ -91,59 +92,29 @@ public class BoundingBox extends BoundingObject {
             throw new IllegalArgumentException("At least 1 vertex is needed to calculate a BoundingBox");
         }
 
-        if (vectors.size() == 1) {
-            // use 'get()' here to create a copy (even though ZERO is final... just be safe)
-            setExtents(Vector3f.ZERO.get());
-            setCenter(vectors.get(0).get());
-            return this;
-        }
-
-        float pX = 0;
-        float nX = 0;
-        float pY = 0;
-        float nY = 0;
-        float pZ = 0;
-        float nZ = 0;
-
+        List<Float> xs = new ArrayList<Float>(vectors.size());
+        List<Float> ys = new ArrayList<Float>(vectors.size());
+        List<Float> zs = new ArrayList<Float>(vectors.size());
 
         for (Vector3f point : vectors) {
-
-
-            if (point.getX() > pX) { // Check if we are greater then the positive X extent
-                pX = point.getX();
-            } else if (point.getX() < nX) { // Check if we are greater then the negativ X extent
-                nX = point.getX();
-            }
-
-            if (point.getY() > pY) {
-                pY = point.getY();
-            } else if (point.getY() < nY) {
-                nY = point.getY();
-            }
-
-            if (point.getZ() > pZ) {
-                pZ = point.getZ();
-            } else if (point.getZ() < nZ) {
-                nZ = point.getZ();
-            }
-
+            xs.add(point.getX());
+            ys.add(point.getY());
+            zs.add(point.getZ());
         }
 
-        /*
-        Now we have a box in form of
-        farest negative and positve side, for every axis.
-        The center of this is always the addition of both!
-         e.g.
+        float maxX = Collections.max(xs);
+        float minX = Collections.min(xs);
 
-         -4 and 2 => -2  <=> -4 + 2 = 2
+        float maxY = Collections.max(ys);
+        float minY = Collections.min(ys);
 
-         This works because p.. can only be positive and n.. negativ only.
-         */
+        float maxZ = Collections.max(zs);
+        float minZ = Collections.min(zs);
 
         setCenter(new Vector3f(
-                pX + nX,
-                pY + nY,
-                pZ + nZ
+                (maxX + minX) / 2,
+                (maxY + minY) / 2,
+                (maxZ + minZ) / 2
         ));
 
         /* Calculate extents
@@ -151,9 +122,9 @@ public class BoundingBox extends BoundingObject {
         is the same, just calculate distance from center to pX, pY and pZ
         */
         setExtents(new Vector3f(
-                pX - getCenter().getX() + padding,
-                pY - getCenter().getY() + padding,
-                pZ - getCenter().getZ() + padding
+                maxX - getCenter().getX() + padding,
+                maxY - getCenter().getY() + padding,
+                maxZ - getCenter().getZ() + padding
         ));
 
 
@@ -172,7 +143,26 @@ public class BoundingBox extends BoundingObject {
     }
 
     public BoundingBox merge(BoundingBox bb) {
-        // TODO: implement
+
+
+        // To points
+        List<Vector3f> bb1 = toPoints();
+        List<Vector3f> bb2 = bb.toPoints();
+
+        // Convert from local to "absolute" coordinates
+        for (Vector3f v : bb1) {
+            v.set(v.add(getCenter()));
+        }
+
+        for (Vector3f v : bb2) {
+            v.set(v.add(bb.getCenter()));
+        }
+
+        bb1.addAll(bb2);
+
+        // Apply to current Object
+        fromPoints(bb1);
+
         return this;
     }
 
@@ -238,5 +228,54 @@ public class BoundingBox extends BoundingObject {
 
     public void setExtents(Vector3f extents) {
         this.extents = extents;
+    }
+
+    public Vertex[] toVertexArray() {
+        return new Vertex[] {
+                new Vertex(getExtents().mul(new Vector3f(-1, -1, 1))),
+                new Vertex(getExtents().mul(new Vector3f(1, -1, 1))),
+                new Vertex(getExtents().mul(new Vector3f(1, 1, 1))),
+                new Vertex(getExtents().mul(new Vector3f(-1, 1, 1))),
+
+                new Vertex(getExtents().mul(new Vector3f(-1, -1, -1))),
+                new Vertex(getExtents().mul(new Vector3f(1, -1, -1))),
+                new Vertex(getExtents().mul(new Vector3f(1, 1, -1))),
+                new Vertex(getExtents().mul(new Vector3f(-1, 1, -1))),
+        };
+    }
+
+    public List<Vector3f> toPoints() {
+        List<Vector3f> points = new ArrayList<Vector3f>(8);
+
+        points.add(getExtents().mul(new Vector3f(-1, -1, 1)));
+        points.add(getExtents().mul(new Vector3f(1, -1, 1)));
+        points.add(getExtents().mul(new Vector3f(1, 1, 1)));
+        points.add(getExtents().mul(new Vector3f(-1, 1, 1)));
+
+        points.add(getExtents().mul(new Vector3f(-1, -1, -1)));
+        points.add(getExtents().mul(new Vector3f(1, -1, -1)));
+        points.add(getExtents().mul(new Vector3f(1, 1, -1)));
+        points.add(getExtents().mul(new Vector3f(-1, 1, -1)));
+
+        return points;
+    }
+
+    @Override
+    public String toString() {
+        return "center=" + getCenter() + ";extents=" + getExtents();
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BoundingBox)) return false;
+        BoundingBox bb = (BoundingBox) obj;
+
+        return
+                bb.getExtents().equals(getExtents())
+             && bb.getCenter().equals(getCenter())
+             && bb.getCheckPlane() == getCheckPlane()
+        ;
+
     }
 }
