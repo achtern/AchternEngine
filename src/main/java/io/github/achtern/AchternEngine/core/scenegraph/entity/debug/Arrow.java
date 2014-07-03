@@ -23,5 +23,6 @@ public class Arrow extends Mesh {
         }
 
         this.data = data;
+        updateBounds();
     }
 }
