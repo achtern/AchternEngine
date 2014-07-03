@@ -1,7 +1,5 @@
-package io.github.achtern.AchternEngine.core.scenegraph.entity.debug;
+package io.github.achtern.AchternEngine.core.rendering.mesh;
 
-import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
-import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
