@@ -17,6 +17,8 @@ public class Material {
     private HashMap<String, Color> colors;
     private HashMap<String, Float> floats;
 
+    private boolean wireframe = false;
+
     public Material() {
         textures = new HashMap<String, Texture>();
         vectors = new HashMap<String, Vector3f>();
@@ -93,5 +95,13 @@ public class Material {
         }
 
         return 0;
+    }
+
+    public boolean isWireframe() {
+        return wireframe;
+    }
+
+    public void asWireframe(boolean wireframe) {
+        this.wireframe = wireframe;
     }
 }

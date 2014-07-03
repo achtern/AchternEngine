@@ -4,6 +4,7 @@ import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
+import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
@@ -76,6 +77,10 @@ public class Figure extends QuickEntity {
         DrawStrategy ds = getDrawStrategy();
         if (ds == null) {
             ds = renderEngine.getDrawStrategy();
+        }
+
+        if (getMaterial().isWireframe()) {
+            ds = DrawStrategyFactory.get("wireframe");
         }
 
         mesh.draw(ds);
