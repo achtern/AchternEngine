@@ -11,6 +11,11 @@ public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
     protected List<Node> nodes;
     protected List<Entity> entities;
 
+    public EntityRetriever() {
+        this.nodes = new ArrayList<Node>();
+        this.entities = new ArrayList<Entity>();
+    }
+
     @Override
     public void scan(Node node) {
         this.nodes.add(node);
@@ -73,7 +78,7 @@ public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
         flattenedList.addAll(node.getEntities());
 
         // Get all child nodes
-        List<Node> children = (List<Node>) node.getChildren().values();
+        List<Node> children = new ArrayList<Node>(node.getChildren().values());
 
         // Retrieve all entites from the children
         for (Node n : children) {

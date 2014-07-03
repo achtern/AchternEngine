@@ -19,7 +19,7 @@ public class FigureRetriever extends EntityRetriever {
     @Override
     public void scan(Node node) {
         super.scan(node);
-        figures = get();
+        figures = getAll(Figure.class);
         meshes = null;
         meshes = getMeshes();
         bb = getCompleteBoundingBox();
@@ -70,6 +70,7 @@ public class FigureRetriever extends EntityRetriever {
         for (Mesh m : getMeshes()) {
             if (bb == null) {
                 bb = m.getBoundingBox();
+                continue;
             }
 
             bb.merge(m.getBoundingBox());
