@@ -82,8 +82,9 @@ public class Node implements EngineHolder<CoreEngine> {
         }
 
         int i = 1;
+        final String orgName = node.getName();
         while (getChildren().containsKey(node.getName()) && !forceName) {
-            node.setName(getName() + ">> " + node.getName() + " " + i);
+            node.setName(getName() + ">> " + orgName + " " + i);
             i++;
         }
 
