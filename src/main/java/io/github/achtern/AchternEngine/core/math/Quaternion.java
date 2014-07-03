@@ -259,4 +259,9 @@ public class Quaternion {
     public boolean equals(Object obj) {
         return obj instanceof Quaternion && equals((Quaternion) obj);
     }
+
+    @Override
+    public String toString() {
+        return "(" + getX() + "/" + getY() + "/" + getZ() + "/" + getW() + ")";
+    }
 }

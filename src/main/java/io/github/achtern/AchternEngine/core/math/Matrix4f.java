@@ -164,4 +164,14 @@ public class Matrix4f {
     public void setM(float[][] m) {
         this.m = m;
     }
+
+    @Override
+    public String toString() {
+        return "(" +
+                "(" + get(0, 0) + "/" + get(0, 1) + "/" + get(0, 2) + "/" + get(0, 3) + ")," +
+                "(" + get(1, 0) + "/" + get(1, 1) + "/" + get(1, 2) + "/" + get(1, 3) + ")," +
+                "(" + get(2, 0) + "/" + get(2, 1) + "/" + get(2, 2) + "/" + get(2, 3) + ")," +
+                "(" + get(3, 0) + "/" + get(3, 1) + "/" + get(3, 2) + "/" + get(3, 3) + ")," +
+                ")";
+    }
 }
