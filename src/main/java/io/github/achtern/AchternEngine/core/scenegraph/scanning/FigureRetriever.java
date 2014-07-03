@@ -69,7 +69,7 @@ public class FigureRetriever extends EntityRetriever {
 
         for (Mesh m : getMeshes()) {
             if (bb == null) {
-                bb = m.getBoundingBox();
+                bb = new BoundingBox(m.getBoundingBox());
                 continue;
             }
 
