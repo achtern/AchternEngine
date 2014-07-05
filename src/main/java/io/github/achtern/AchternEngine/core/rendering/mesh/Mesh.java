@@ -88,4 +88,8 @@ public class Mesh {
     public int getVertexCount() {
         return getData().getVertexCount();
     }
+
+    public void setBoundingBox(BoundingBox boundingBox) {
+        this.bb = boundingBox;
+    }
 }

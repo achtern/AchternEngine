@@ -43,6 +43,13 @@ public class BoundingBox extends BoundingObject {
         this(copy.getCenter(), copy.getExtents());
     }
 
+    public BoundingBox copy(BoundingBox copy) {
+        setExtents(copy.getExtents());
+        setCenter(copy.getCenter());
+        setCheckPlane(copy.getCheckPlane());
+        return this;
+    }
+
     /**
      * Calculates a BoundingBox from Vertex Array. Only takes positions into account.
      * The outter most vertices will be directly on the edge of the bounding box.
