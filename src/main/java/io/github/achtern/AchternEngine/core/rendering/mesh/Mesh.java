@@ -50,7 +50,7 @@ public class Mesh {
         drawStrategy.draw(this.data);
     }
 
-    protected void updateBounds() {
+    public void updateBounds() {
         this.bb = new BoundingBox().fromVertices(getData().getVertices());
     }
 
