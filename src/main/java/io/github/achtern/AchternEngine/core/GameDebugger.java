@@ -4,7 +4,7 @@ import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
-import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
+import io.github.achtern.AchternEngine.core.input.event.listener.trigger.util.KeyTriggerList;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
@@ -34,10 +34,7 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     public GameDebugger(Game game) {
         this.game = game;
 
-        game.getInputManager().getKeyMap()
-                .register(new KeyTrigger(Key.Z), this)
-                .register(new KeyTrigger(Key.X), this)
-                .register(new KeyTrigger(Key.C), this);
+        game.getInputManager().getKeyMap().register(new KeyTriggerList(Key.Z, Key.X, Key.C), this);
     }
 
     @Override

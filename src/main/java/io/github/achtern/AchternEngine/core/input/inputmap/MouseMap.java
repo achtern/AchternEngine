@@ -30,12 +30,21 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseListener> {
         this.input = input;
     }
 
-    public MouseMap register(MouseButtonTrigger key, MouseListener l) {
-        if (!this.clickListener.containsKey(key)) {
-            this.clickListener.put(key, new ArrayList<MouseListener>());
+    public MouseMap register(MouseButtonTrigger button, MouseListener l) {
+        if (!this.clickListener.containsKey(button)) {
+            this.clickListener.put(button, new ArrayList<MouseListener>());
         }
 
-        this.clickListener.get(key).add(l);
+        this.clickListener.get(button).add(l);
+
+        return this;
+    }
+
+    public MouseMap register(List<MouseButtonTrigger> buttons, MouseListener h) {
+
+        for (MouseButtonTrigger t : buttons) {
+            register(t, h);
+        }
 
         return this;
     }

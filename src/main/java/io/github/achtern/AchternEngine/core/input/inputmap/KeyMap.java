@@ -36,6 +36,15 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
         return this;
     }
 
+    public KeyMap register(List<KeyTrigger> keys, KeyListener h) {
+
+        for (KeyTrigger t : keys) {
+            register(t, h);
+        }
+
+        return this;
+    }
+
     public void trigger(float delta) {
 
         Set<KeyTrigger> keys = this.listener.keySet();

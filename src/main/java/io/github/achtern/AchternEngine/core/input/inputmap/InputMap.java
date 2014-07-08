@@ -10,6 +10,8 @@ public interface InputMap<T extends Trigger,L> {
 
     public InputMap register(T trigger, L h);
 
+    public InputMap register(List<T> triggers, L h);
+
     public void trigger(float delta);
 
     public Map<T, List<L>> getClickListener();
