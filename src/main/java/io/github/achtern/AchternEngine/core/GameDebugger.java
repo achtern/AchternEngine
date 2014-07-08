@@ -9,7 +9,7 @@ import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -27,8 +27,8 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
 
     protected Color prevClearColor;
 
-    protected DrawStrategy wD = new LWJGLWireframeDraw();
-    protected DrawStrategy sD = new LWJGLSolidDraw();
+    protected DrawStrategy wD = DrawStrategyFactory.get(DrawStrategyFactory.Common.WIREFRAME);
+    protected DrawStrategy sD = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
     protected Node wireframe = new Node("Wireframe Display").add(new WireframeDisplay(new Vector3f(1, 1, 1), new Vector3f(0, 0, 0)));
 
     public GameDebugger(Game game) {

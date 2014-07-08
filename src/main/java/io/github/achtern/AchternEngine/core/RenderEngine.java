@@ -31,8 +31,8 @@ public class RenderEngine {
 
     public RenderEngine() {
 
-        DrawStrategyFactory.put("solid", new LWJGLSolidDraw());
-        DrawStrategyFactory.put("wireframe", new LWJGLWireframeDraw());
+        DrawStrategyFactory.put(DrawStrategyFactory.Common.SOLID, new LWJGLSolidDraw());
+        DrawStrategyFactory.put(DrawStrategyFactory.Common.WIREFRAME, new LWJGLWireframeDraw());
 
         drawStrategy = DrawStrategyFactory.get("solid");
         clearColor = new Color(0, 0, 0, 0);

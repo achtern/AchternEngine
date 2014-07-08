@@ -5,6 +5,26 @@ import java.util.Map;
 
 public class DrawStrategyFactory {
 
+    public enum Common {
+        WIREFRAME("wireframe"),
+        SOLID("solid");
+
+        private String key;
+
+        Common(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        @Override
+        public String toString() {
+            return getKey();
+        }
+    }
+
     public static Map<String, DrawStrategy> strategies = new HashMap<String, DrawStrategy>();
 
     public static DrawStrategy get(String key) {
@@ -13,6 +33,14 @@ public class DrawStrategyFactory {
 
     public static DrawStrategy put(String key, DrawStrategy value) {
         return strategies.put(key, value);
+    }
+
+    public static DrawStrategy get(Common key) {
+       return get(key.getKey());
+    }
+
+    public static DrawStrategy put(Common key, DrawStrategy value) {
+       return put(key.getKey(), value);
     }
 
     public static DrawStrategy remove(String key) {
