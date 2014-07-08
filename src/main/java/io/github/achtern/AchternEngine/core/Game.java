@@ -117,6 +117,17 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
     }
 
     /**
+     * Adds a node the scenegraph.
+     * Keep a reference to it, or the node's name,
+     * in order to retrieve the node at a later point easily.
+     * @param node The node which should get added.
+     */
+    public void add(Node node, boolean forceName) {
+        getSceneGraph().add(node, forceName);
+        LOGGER.trace("Node added to scene graph: {}", node);
+    }
+
+    /**
      * Retrives a node by it's name.
      * Only checks the top level and NOT sup-nodes
      * @param nodeName The node's name

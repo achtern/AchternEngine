@@ -20,7 +20,7 @@ public class Cube extends Mesh {
             data = null;
         }
 
-        this.data = data;
+        setData(data);
 
     }
 

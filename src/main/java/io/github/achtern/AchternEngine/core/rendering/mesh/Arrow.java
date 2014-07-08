@@ -20,7 +20,6 @@ public class Arrow extends Mesh {
             data = null;
         }
 
-        this.data = data;
-        updateBounds();
+        setData(data);
     }
 }

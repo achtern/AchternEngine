@@ -81,6 +81,11 @@ public class Mesh {
         return data;
     }
 
+    protected void setData(MeshData data) {
+        this.data = data;
+        updateBounds();
+    }
+
     public BoundingBox getBoundingBox() {
         return bb;
     }
