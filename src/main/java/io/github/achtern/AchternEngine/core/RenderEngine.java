@@ -1,5 +1,7 @@
 package io.github.achtern.AchternEngine.core;
 
+import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
+import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
@@ -29,7 +31,10 @@ public class RenderEngine {
 
     public RenderEngine() {
 
-        drawStrategy = new LWJGLSolidDraw();
+        DrawStrategyFactory.put("solid", new LWJGLSolidDraw());
+        DrawStrategyFactory.put("wireframe", new LWJGLWireframeDraw());
+
+        drawStrategy = DrawStrategyFactory.get("solid");
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
