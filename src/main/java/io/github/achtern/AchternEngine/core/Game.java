@@ -4,9 +4,6 @@ import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Renderable;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.input.InputManager;
-import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
-import io.github.achtern.AchternEngine.core.input.inputmap.KeyMap;
-import io.github.achtern.AchternEngine.core.input.inputmap.MouseMap;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.Texture;
@@ -42,17 +39,6 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
 
     private InputManager inputManager;
 
-    public Game() {
-        this(new InputManager(new LWJGLInput()));
-    }
-
-    public Game(InputManager inputManager) {
-        this.inputManager = inputManager;
-        this.inputManager.setMouseMap(new MouseMap());
-        this.inputManager.setKeyMap(new KeyMap());
-    }
-
-
     /**
      * Returns the dimensions of the window.
      * @return The new window dimensions
@@ -83,6 +69,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     public final void preInit(CoreEngine engine) {
         setEngine(engine);
+        setInputManager(new InputManager(engine.getBindingManager().getInputAdapter()));
         getSceneGraph().setEngine(engine);
 
         // And init the user's game

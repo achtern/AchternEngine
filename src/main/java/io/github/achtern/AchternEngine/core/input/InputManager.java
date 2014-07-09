@@ -18,6 +18,8 @@ public class InputManager {
 
     public InputManager(InputAdapter input) {
         this.input = input;
+        this.setMouseMap(new MouseMap());
+        this.setKeyMap(new KeyMap());
     }
 
     public void trigger(float delta) {

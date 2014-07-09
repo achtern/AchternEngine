@@ -1,8 +1,8 @@
 package io.github.achtern.AchternEngine.core;
 
+import io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
-import io.github.achtern.AchternEngine.core.rendering.LWJGLRenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.util.FPS;
 import org.slf4j.Logger;
@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CoreEngine.class);
+
+    protected WindowIOBindingManager bindingManager;
 
     private static boolean stopRequest = false;
 
@@ -43,9 +45,19 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param game The game to run.
      */
     public CoreEngine(Game game) {
+        this(game, WindowIOBindingManager.Binding.LWJGL);
+    }
+
+    /**
+     * Creates a new Game Holder and runner
+     * @param game The game to run.
+     */
+    public CoreEngine(Game game, WindowIOBindingManager.Binding binding) {
         this.game = game;
         this.running = false;
         this.fps = new FPS();
+        this.bindingManager = new WindowIOBindingManager(binding);
+        this.bindingManager.populateDrawStrategyFactory();
     }
 
     /**
@@ -55,7 +67,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      */
     protected void createWindow(String title, Dimension dimensions) {
         Window.create(dimensions.getWidth(), dimensions.getHeight(), title);
-        this.renderEngine = new LWJGLRenderEngine();
+        this.renderEngine = bindingManager.getRenderEngine();
         LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());
     }
 
@@ -194,5 +206,13 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public Game getGame() {
         return game;
+    }
+
+    public WindowIOBindingManager getBindingManager() {
+        return bindingManager;
+    }
+
+    public void setBindingManager(WindowIOBindingManager bindingManager) {
+        this.bindingManager = bindingManager;
     }
 }

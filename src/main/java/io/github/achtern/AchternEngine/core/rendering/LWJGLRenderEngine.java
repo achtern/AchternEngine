@@ -1,13 +1,11 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.Window;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
+import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +29,7 @@ public class LWJGLRenderEngine implements RenderEngine {
 
     public LWJGLRenderEngine() {
 
-        DrawStrategyFactory.put(DrawStrategyFactory.Common.SOLID, new LWJGLSolidDraw());
-        DrawStrategyFactory.put(DrawStrategyFactory.Common.WIREFRAME, new LWJGLWireframeDraw());
-
-        drawStrategy = DrawStrategyFactory.get("solid");
+        drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
