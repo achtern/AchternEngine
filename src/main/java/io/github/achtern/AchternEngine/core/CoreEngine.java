@@ -2,6 +2,8 @@ package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.LWJGLRenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.util.FPS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +55,8 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      */
     protected void createWindow(String title, Dimension dimensions) {
         Window.create(dimensions.getWidth(), dimensions.getHeight(), title);
-        this.renderEngine = new RenderEngine();
-        LOGGER.debug("OpenGL Version: {}", RenderEngine.getOpenGLVersion());
+        this.renderEngine = new LWJGLRenderEngine();
+        LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());
     }
 
     /**

@@ -1,6 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering.shader;
 
-import io.github.achtern.AchternEngine.core.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.DirectionalLight;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.PointLight;

@@ -1,9 +1,9 @@
-package io.github.achtern.AchternEngine.core;
+package io.github.achtern.AchternEngine.core.rendering;
 
+import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
-import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLSolidDraw;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
-public class RenderEngine {
+public class LWJGLRenderEngine implements RenderEngine {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
@@ -29,7 +29,7 @@ public class RenderEngine {
 
     private DrawStrategy drawStrategy;
 
-    public RenderEngine() {
+    public LWJGLRenderEngine() {
 
         DrawStrategyFactory.put(DrawStrategyFactory.Common.SOLID, new LWJGLSolidDraw());
         DrawStrategyFactory.put(DrawStrategyFactory.Common.WIREFRAME, new LWJGLWireframeDraw());
@@ -51,6 +51,7 @@ public class RenderEngine {
         glEnable(GL_TEXTURE_2D);
     }
 
+    @Override
     public void render(Node node) {
 
         Window.bindAsRenderTarget();
@@ -88,24 +89,29 @@ public class RenderEngine {
         glDisable(GL_BLEND);
     }
 
+    @Override
     public void addRenderPass(RenderPass pass) {
         LOGGER.debug("Added RenderPass {}", pass.getClass());
         this.passes.add(pass);
     }
 
+    @Override
     public void removeRenderPass(RenderPass pass) {
         LOGGER.debug("Removing RenderPass {}", pass.getClass());
         this.passes.remove(pass);
     }
 
+    @Override
     public void addCamera(Camera camera) {
         this.mainCamera = camera;
     }
 
+    @Override
     public RenderPass getActiveRenderPass() {
         return this.activePass;
     }
 
+    @Override
     public void setClearColor(Color color) {
         this.clearColor = color;
         glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -127,10 +133,12 @@ public class RenderEngine {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public static String getOpenGLVersion() {
+    @Override
+    public String getOpenGLVersion() {
         return glGetString(GL_VERSION);
     }
 
+    @Override
     public Camera getMainCamera() {
         if (mainCamera == null) {
             LOGGER.error("Please add a camera to the scene graph!");
@@ -138,18 +146,22 @@ public class RenderEngine {
         return mainCamera;
     }
 
+    @Override
     public void setMainCamera(Camera mainCamera) {
         this.mainCamera = mainCamera;
     }
 
+    @Override
     public Color getClearColor() {
         return clearColor;
     }
 
+    @Override
     public DrawStrategy getDrawStrategy() {
         return drawStrategy;
     }
 
+    @Override
     public void setDrawStrategy(DrawStrategy drawStrategy) {
         this.drawStrategy = drawStrategy;
     }

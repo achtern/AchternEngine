@@ -1,6 +1,6 @@
 package io.github.achtern.AchternEngine.core.contracts;
 
-import io.github.achtern.AchternEngine.core.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 
 public interface Renderable {
 
