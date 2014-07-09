@@ -229,6 +229,10 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
         }
     }
 
+    public GameDebugger getDebugger() {
+        return debugger;
+    }
+
     public InputManager getInputManager() {
         return inputManager;
     }

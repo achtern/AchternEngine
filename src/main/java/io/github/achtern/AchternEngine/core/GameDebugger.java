@@ -17,6 +17,9 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.Wiref
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameDebugger.class);
@@ -24,6 +27,8 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     protected CoreEngine engine;
 
     protected Game game;
+
+    protected List<DebugStateListener> hooks;
 
     protected Color prevClearColor;
 
@@ -33,8 +38,27 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
 
     public GameDebugger(Game game) {
         this.game = game;
+        this.hooks = new ArrayList<DebugStateListener>();
 
         game.getInputManager().getKeyMap().register(new KeyTriggerList(Key.Z, Key.X, Key.C), this);
+    }
+
+    /**
+     * Adds an listener
+     * @param l
+     */
+    public void register(DebugStateListener l) {
+        register(l, false);
+    }
+
+    /**
+     * Adds an listener
+     * @param l the listener
+     * @param pushState this will call changed() with the current status
+     */
+    public void register(DebugStateListener l, boolean pushState) {
+        hooks.add(l);
+        l.changed(true);
     }
 
     @Override
@@ -70,10 +94,16 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     public void enable() {
         prevClearColor = getEngine().getRenderEngine().getClearColor();
         getEngine().getRenderEngine().setClearColor(new Color(0, 0.3f, 0, 1));
+        for (DebugStateListener l : hooks) {
+            l.changed(true);
+        }
     }
 
     public void disable() {
         getEngine().getRenderEngine().setClearColor(prevClearColor);
+        for (DebugStateListener l : hooks) {
+            l.changed(false);
+        }
     }
 
     @Override
@@ -93,4 +123,11 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     @Override
     public void update(float delta) {
     }
+
+    public interface DebugStateListener {
+
+        public void changed(boolean enabled);
+
+    }
+
 }
