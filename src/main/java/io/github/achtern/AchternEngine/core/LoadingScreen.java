@@ -81,7 +81,7 @@ public class LoadingScreen {
         engine.getRenderEngine().render(holder);
 
         // Sync the image to the Window
-        Window.render();
+        engine.getWindow().render();
 
         // Make sure to delete this after render,
         // so the end-user doesn't see it!

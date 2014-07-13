@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
+import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -8,6 +9,10 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 public interface RenderEngine {
 
     public void render(Node node);
+
+    public void setRenderTarget(RenderTarget target);
+
+    public RenderTarget getRenderTarget();
 
     public void addRenderPass(RenderPass pass);
 

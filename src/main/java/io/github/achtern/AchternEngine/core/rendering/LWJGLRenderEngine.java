@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
+import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
@@ -18,14 +19,16 @@ public class LWJGLRenderEngine implements RenderEngine {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
-    private Camera mainCamera;
+    protected Camera mainCamera;
 
-    private ArrayList<RenderPass> passes;
-    private RenderPass activePass;
+    protected ArrayList<RenderPass> passes;
+    protected RenderPass activePass;
 
-    private Color clearColor;
+    protected RenderTarget target;
 
-    private DrawStrategy drawStrategy;
+    protected Color clearColor;
+
+    protected DrawStrategy drawStrategy;
 
     public LWJGLRenderEngine() {
 
@@ -33,6 +36,7 @@ public class LWJGLRenderEngine implements RenderEngine {
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
+        target = Window.getTarget();
 
         setClearColor(clearColor);
 
@@ -49,7 +53,9 @@ public class LWJGLRenderEngine implements RenderEngine {
     @Override
     public void render(Node node) {
 
-        Window.bindAsRenderTarget();
+        if (target != null) {
+            target.bindAsRenderTarget();
+        }
 
         clearScreen();
 
@@ -82,6 +88,14 @@ public class LWJGLRenderEngine implements RenderEngine {
         glDepthFunc(GL_LESS);
         glDepthMask(true);
         glDisable(GL_BLEND);
+    }
+
+    public void setRenderTarget(RenderTarget target) {
+        this.target = target;
+    }
+
+    public RenderTarget getRenderTarget() {
+        return target;
     }
 
     @Override

@@ -14,6 +14,8 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     protected WindowIOBindingManager bindingManager;
 
+    protected Window window;
+
     private static boolean stopRequest = false;
 
     private boolean running;
@@ -66,7 +68,8 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param dimensions The window's dimensions
      */
     protected void createWindow(String title, Dimension dimensions) {
-        Window.create(dimensions.getWidth(), dimensions.getHeight(), title);
+        window = new Window(dimensions);
+        window.create(title);
         this.renderEngine = bindingManager.getRenderEngine();
         LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());
     }
@@ -136,7 +139,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                 unprocessedTime -= frameTime;
 
 
-                if (Window.isCloseRequested() || stopRequested()) {
+                if (window.isCloseRequested() || stopRequested()) {
                     stop();
                 }
 
@@ -151,7 +154,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
             if (render) {
                 game.renderSceneGraph(renderEngine);
-                Window.render();
+                window.render();
                 fps.rendered();
             }
 
@@ -168,7 +171,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * Destroing Mouse and Keyboard.
      */
     public void cleanUp() {
-        Window.dispose();
+        window.dispose();
     }
 
     /**
@@ -214,5 +217,9 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public void setBindingManager(WindowIOBindingManager bindingManager) {
         this.bindingManager = bindingManager;
+    }
+
+    public Window getWindow() {
+        return window;
     }
 }

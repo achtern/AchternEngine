@@ -1,8 +1,6 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity.controller;
 
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.Window;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.MouseButton;
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
@@ -12,7 +10,7 @@ import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrig
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.event.payload.MouseEvent;
-import io.github.achtern.AchternEngine.core.math.Vector2f;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 
 public class MouseLook extends QuickEntity implements KeyListener, MouseListener {
 
@@ -84,8 +82,7 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
 
 
     protected void centerMouse(InputAdapter input) {
-        Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
-        input.setMousePosition(center);
+        input.setMousePosition(getEngine().getWindow().getCenter());
     }
 
     protected boolean isMouselock() {

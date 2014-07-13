@@ -22,7 +22,7 @@ public class Camera extends QuickEntity {
 
 
     public Camera() {
-        this(Window.getDimension());
+        this(Window.get());
     }
 
 

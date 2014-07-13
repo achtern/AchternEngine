@@ -88,9 +88,17 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * @param renderEngine The active RenderEngine instance
      */
     public final void renderSceneGraph(RenderEngine renderEngine) {
+        preRender(renderEngine);
         LOGGER.trace("Rendering SceneGraph: {}", getSceneGraph());
         renderEngine.render(getSceneGraph());
         render(renderEngine);
+        postRender(renderEngine);
+    }
+
+    public void preRender(RenderEngine renderEngine) {
+    }
+
+    public void postRender(RenderEngine renderEngine) {
     }
 
     /**

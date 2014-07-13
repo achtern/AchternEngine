@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.contracts.TexturableData;
+import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,15 +11,32 @@ import java.nio.ByteBuffer;
 import static io.github.achtern.AchternEngine.core.resource.ResourceConverter.toByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Texture {
+public class Texture extends Dimension {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Texture.class);
 
     private int id;
 
+    protected int target = GL_TEXTURE_2D;
 
-    public Texture(int id) {
-        this.id = id;
+    public Texture(final Dimension dimension) {
+        this(new TexturableData() {
+            @Override
+            public Dimension getDimension() {
+                return dimension;
+            }
+
+            @Override
+            public boolean hasAlpha() {
+                return true;
+            }
+
+            @Override
+            public ByteBuffer getData() {
+                // just black!
+                return UBuffer.createByteBuffer(dimension.getWidth() * dimension.getHeight() * 4);
+            }
+        });
     }
 
     public Texture(BufferedImage image) {
@@ -34,6 +52,7 @@ public class Texture {
     }
 
     public Texture(ByteBuffer buffer, Dimension dimension, boolean alpha) {
+        super(dimension);
         this.id = genID();
 
         bind();
@@ -42,7 +61,7 @@ public class Texture {
         genTexParams();
 
         glTexImage2D(
-                GL_TEXTURE_2D,
+                getTarget(),
                 0,
                 GL_RGBA8,
                 dimension.getWidth(),
@@ -60,6 +79,10 @@ public class Texture {
 
     public int getID() {
         return id;
+    }
+
+    public int getTarget() {
+        return target;
     }
 
     protected static int genID() {

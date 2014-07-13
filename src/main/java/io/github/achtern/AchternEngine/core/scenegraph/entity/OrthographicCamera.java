@@ -8,7 +8,7 @@ public class OrthographicCamera extends Camera {
 
 
     public OrthographicCamera() {
-        this(Window.getDimension());
+        this(Window.get());
     }
 
     public OrthographicCamera(Dimension screen) {
