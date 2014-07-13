@@ -58,6 +58,17 @@ public class Camera extends QuickEntity {
     @Override
     public void setEngine(CoreEngine engine) {
         super.setEngine(engine);
-        engine.getRenderEngine().addCamera(this);
+        if (engine != null) {
+            engine.getRenderEngine().addCamera(this);
+        }
+    }
+
+    /**
+     * @see io.github.achtern.AchternEngine.core.scenegraph.entity.Entity#removed()
+     */
+    @Override
+    public void removed() {
+        super.removed();
+        getEngine().getRenderEngine().setMainCamera(null);
     }
 }
