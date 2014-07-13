@@ -4,7 +4,8 @@ import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT32;
 import static org.lwjgl.opengl.GL30.*;
 
 public class FrameBuffer extends Dimension implements RenderTarget {
@@ -14,6 +15,7 @@ public class FrameBuffer extends Dimension implements RenderTarget {
     private static final int TARGET = GL_FRAMEBUFFER;
 
     protected int id;
+    protected int renderBuffer;
     protected Texture texture;
 
     public FrameBuffer(Texture texture) {
@@ -22,6 +24,7 @@ public class FrameBuffer extends Dimension implements RenderTarget {
 
         texture.bind();
         id = genID();
+        renderBuffer = genRID();
 
         setup();
 
@@ -40,6 +43,11 @@ public class FrameBuffer extends Dimension implements RenderTarget {
         int attachment = GL_COLOR_ATTACHMENT0;
 
         glBindFramebuffer(TARGET, getID());
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, getWidth(), getHeight());
+        glFramebufferRenderbuffer(TARGET, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
+
+
         glFramebufferTexture2D(TARGET, attachment, texture.getTarget(), texture.getID(), 0);
 
         int response = glCheckFramebufferStatus(TARGET);
@@ -55,6 +63,10 @@ public class FrameBuffer extends Dimension implements RenderTarget {
 
     protected static int genID() {
         return glGenFramebuffers();
+    }
+
+    protected static int genRID() {
+        return glGenRenderbuffers();
     }
 
 
