@@ -35,7 +35,6 @@ public class BasicShader extends Shader {
 
 
         setUniform("transform", projection);
-        setUniform("color", material.getColor());
 
     }
 
