@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
@@ -118,8 +119,53 @@ public class Shader {
 
     public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
         material.getTexture("diffuse").bind();
+
+        int numTex = 0;
+        for (Variable v : fragmentShader.getUniforms()) {
+            String name = v.getName();
+            if (v.getType().equalsIgnoreCase("sampler2D") && !name.equalsIgnoreCase("diffuse")) {
+                int texLoc = glGetUniformLocation(program, v.getName());
+                glUniform1i(texLoc, numTex);
+
+                int activeTexture;
+                switch (numTex) {
+                    case 0:
+                        activeTexture = GL_TEXTURE0;
+                        break;
+                    case 1:
+                        activeTexture = GL_TEXTURE1;
+                        break;
+                    case 2:
+                        activeTexture = GL_TEXTURE2;
+                        break;
+                    case 3:
+                        activeTexture = GL_TEXTURE3;
+                        break;
+                    case 4:
+                        activeTexture = GL_TEXTURE4;
+                        break;
+                    default:
+                        throw new UnsupportedOperationException(
+                                "This engine doesn't allow for this " + numTex + " sampler slots!"
+                        );
+                }
+                glActiveTexture(activeTexture);
+                renderEngine.getTexture(name).bind();
+
+                numTex++;
+            }
+        }
+
         if (fragmentShader.getExpandedUniforms().contains("color")) {
             setUniform("color", material.getColor());
+        }
+
+        if (fragmentShader.getExpandedUniforms().contains("shadowMatrix")) {
+            setUniform("shadowMatrix", renderEngine.getShadowMatrix());
+        }
+
+        if (vertexShader.getExpandedUniforms().contains("MVP")) {
+            setUniform("MVP", projection);
         }
     }
 

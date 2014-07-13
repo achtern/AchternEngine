@@ -3,14 +3,20 @@ package io.github.achtern.AchternEngine.core.rendering;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
+import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
+import io.github.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
@@ -30,6 +36,12 @@ public class LWJGLRenderEngine implements RenderEngine {
 
     protected DrawStrategy drawStrategy;
 
+    protected Map<String, Texture> textures = new HashMap<String, Texture>();
+
+    // WIP
+    public FrameBuffer shadowMap;
+    private Matrix4f shadowMatrix;
+
     public LWJGLRenderEngine() {
 
         drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
@@ -37,6 +49,9 @@ public class LWJGLRenderEngine implements RenderEngine {
 
         passes = new ArrayList<RenderPass>();
         target = Window.getTarget();
+
+        shadowMap = new FrameBuffer(new Dimension(1024, 1024));
+        textures.put("shadowMap", shadowMap.getTexture());
 
         setClearColor(clearColor);
 
@@ -68,26 +83,68 @@ public class LWJGLRenderEngine implements RenderEngine {
         LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
         node.render(activePass.getShader(), this);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glDepthMask(false);
-        glDepthFunc(GL_EQUAL);
-
         boolean skip = true;
         for (RenderPass pass : this.passes) {
             if (skip) {
                 skip = false;
                 continue;
             }
+
             this.activePass = pass;
-            LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
-            node.render(pass.getShader(), this);
+            if (this.activePass instanceof BaseLight) {
+                ShadowInfo shadowInfo = ((BaseLight) this.activePass).getShadowInfo();
+
+                shadowMap.bindAsRenderTarget();
+                glClear(GL_DEPTH_BUFFER_BIT);
+
+                if (shadowInfo != null) {
+                    Node holder = new Node();
+
+                    Camera shadowCamera = new Camera(shadowInfo.getMatrix());
+                    holder.add(shadowCamera);
+
+                    shadowCamera.getTransform().setPosition(
+                            ((BaseLight) this.activePass).getTransform().getTransformedPosition()
+                    );
+                    shadowCamera.getTransform().setRotation(
+                            ((BaseLight) this.activePass).getTransform().getTransformedRotation()
+                    );
+
+                    shadowMatrix = shadowCamera.getViewProjection();
+
+                    Camera main = getMainCamera();
+                    setMainCamera(shadowCamera);
+                    {
+
+                        holder.render(ShadowGenerator.getInstance(), this);
+
+                    }
+                    setMainCamera(main);
+
+
+                }
+
+
+                getRenderTarget().bindAsRenderTarget();
+
+            }
+
+
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE);
+            glDepthMask(false);
+            glDepthFunc(GL_EQUAL);
+            {
+
+                LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
+                node.render(pass.getShader(), this);
+            }
+            glDepthFunc(GL_LESS);
+            glDepthMask(true);
+            glDisable(GL_BLEND);
         }
 
-
-        glDepthFunc(GL_LESS);
-        glDepthMask(true);
-        glDisable(GL_BLEND);
     }
 
     public void setRenderTarget(RenderTarget target) {
@@ -156,6 +213,11 @@ public class LWJGLRenderEngine implements RenderEngine {
     }
 
     @Override
+    public Texture getTexture(String name) {
+        return this.textures.get(name);
+    }
+
+    @Override
     public void setMainCamera(Camera mainCamera) {
         this.mainCamera = mainCamera;
     }
@@ -173,5 +235,10 @@ public class LWJGLRenderEngine implements RenderEngine {
     @Override
     public void setDrawStrategy(DrawStrategy drawStrategy) {
         this.drawStrategy = drawStrategy;
+    }
+
+    @Override
+    public Matrix4f getShadowMatrix() {
+        return shadowMatrix;
     }
 }

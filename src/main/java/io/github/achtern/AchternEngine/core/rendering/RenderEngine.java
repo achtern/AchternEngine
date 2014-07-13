@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -36,4 +37,7 @@ public interface RenderEngine {
 
     public void setDrawStrategy(DrawStrategy drawStrategy);
 
+    public Texture getTexture(String name);
+
+    public Matrix4f getShadowMatrix();
 }
