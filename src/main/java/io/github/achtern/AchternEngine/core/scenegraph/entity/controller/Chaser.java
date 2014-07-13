@@ -26,6 +26,30 @@ public class Chaser extends QuickEntity implements GameDebugger.DebugStateListen
 
     private String tmpName;
 
+    public Chaser(Node to, float speed) {
+        this(to, speed, 5, 50);
+    }
+
+    public Chaser(String to, float speed) {
+        this(to, speed, 5, 50);
+    }
+
+    public Chaser(Node to) {
+        this(to, 10, 5, 50);
+    }
+
+    public Chaser(String to) {
+        this(to, 10, 5, 50);
+    }
+
+    public Chaser(Node to, float speed, float minDist, float maxDist) {
+        super("Chaser");
+        this.chaseTo = to;
+        this.speed = speed;
+        this.minDist = minDist;
+        this.maxDist = maxDist;
+    }
+
     /**
      * Create an Chaser Entity
      */
@@ -44,7 +68,7 @@ public class Chaser extends QuickEntity implements GameDebugger.DebugStateListen
     public void update(float delta) {
         super.update(delta);
 
-        if (chaseTo == null) {
+        if (chaseTo == null || tmpName == null) {
             init();
         }
 
@@ -124,7 +148,12 @@ public class Chaser extends QuickEntity implements GameDebugger.DebugStateListen
     }
 
     protected void init() {
-        chaseTo = getEngine().getGame().get(tmpName);
+        if (chaseTo == null) {
+            chaseTo = getEngine().getGame().get(tmpName);
+        } else {
+            tmpName = chaseTo.getName();
+        }
+
         FigureRetriever retriever = new FigureRetriever();
         retriever.scan(getParent());
         cacheFigure = retriever.get().get(0);
