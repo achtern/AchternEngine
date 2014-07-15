@@ -4,6 +4,7 @@ import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class BasicShader extends Shader {
         super();
 
         try {
-            setUpFromFile("basic");
+            setup(ResourceLoader.getShaderProgram("basic"));
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Basic Shader GLSL files.", e);
         }

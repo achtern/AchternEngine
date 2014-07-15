@@ -8,6 +8,7 @@ import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
+import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.IndexedModel;
 import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.OBJModel;
@@ -27,9 +28,12 @@ public class ResourceLoader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ResourceLoader.class);
 
+    public static final String SHADER_PROGRAM_EXT = ".yaml";
+
     private static ResourceCache<MeshData> meshCache = new ResourceCache<MeshData>();
     private static ResourceCache<Texture> textureCache = new ResourceCache<Texture>();
     private static ResourceCache<String> shaderCache = new ResourceCache<String>();
+    private static ResourceCache<GLSLProgram> shaderProgrammCache = new ResourceCache<GLSLProgram>();
 
     /**
      * This list contains locations to look for resources
@@ -44,6 +48,7 @@ public class ResourceLoader {
      * Bundled Textures
      * Bundled Models
      * Bundled Shaders
+     * Bundled Shader Programs
      *
      * Local File System
      */
@@ -53,6 +58,7 @@ public class ResourceLoader {
         locations.add(new BundledTextureLocation());
         locations.add(new BundledModelLocation());
         locations.add(new BundledShaderLocation());
+        locations.add(new BundledShaderProgramLocation());
 
         locations.add(new FileSystemLocation("."));
     }
@@ -286,6 +292,39 @@ public class ResourceLoader {
         shaderCache.add(name, shaderSource);
 
         return shaderSource;
+    }
+
+
+    public static GLSLProgram getShaderProgram(String name) throws IOException {
+        return getShaderProgram(name, false);
+    }
+
+
+    public static GLSLProgram getShaderProgram(String name, boolean forceLoading) throws IOException {
+
+        name = name + SHADER_PROGRAM_EXT;
+
+        if (shaderProgrammCache.has(name) && !forceLoading) {
+            return shaderProgrammCache.get(name);
+        }
+
+        StringBuilder programSource = new StringBuilder();
+
+        BufferedReader programReader = new BufferedReader(new InputStreamReader(getStream(name)));
+
+        String line;
+
+        while ((line = programReader.readLine()) != null) {
+            programSource.append(line).append("\n");
+        }
+
+        programReader.close();
+
+        GLSLProgram program = new GLSLProgram(name, programSource.toString());
+
+        shaderProgrammCache.add(name, program);
+
+        return program;
     }
 
     /**

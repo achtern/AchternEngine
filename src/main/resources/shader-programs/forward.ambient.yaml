@@ -1,0 +1,3 @@
+version: 330
+vertex: shaders/forward.ambient.gvs
+fragment: shaders/forward.ambient.gfs

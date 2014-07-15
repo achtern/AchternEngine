@@ -1,0 +1,3 @@
+version: 330
+vertex: shaders/basic.gvs
+fragment: shaders/basic.gfs

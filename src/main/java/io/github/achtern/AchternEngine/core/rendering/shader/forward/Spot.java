@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
@@ -24,7 +25,7 @@ public class Spot extends Shader {
         super();
 
         try {
-            setUpFromFile("forward.spot");
+            setup(ResourceLoader.getShaderProgram("forward.spot"));
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
         }

@@ -1,34 +1,33 @@
 package io.github.achtern.AchternEngine.core.rendering.shader;
 
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.DirectionalLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.PointLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.math.Vector4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
-import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
+import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.DirectionalLight;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.PointLight;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
+import org.lwjgl.opengl.GL32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
-public class Shader {
+public abstract class Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Shader.class);
 
@@ -38,76 +37,86 @@ public class Shader {
     private GLSLScript geometryShader;
     private GLSLScript fragmentShader;
 
-    private int program;
+    private GLSLProgram program;
 
     private HashMap<String, Integer> uniforms;
-    private RenderEngine renderEngine;
 
-    public Shader() {
-        this.program = glCreateProgram();
-        this.uniforms = new HashMap<String, Integer>();
-
-        if (program == 0) {
-            LOGGER.error("Shader Program creation failed. '0' is not a valid memory address.");
-        }
+    public Shader(GLSLProgram program) {
+        this();
+        setup(program);
     }
 
-    public void compileAndAddUniforms() {
+    public Shader() {
+        this.uniforms = new HashMap<String, Integer>();
+    }
+
+    public void setup(GLSLProgram program) {
+        this.program = program;
+        this.program.setID(glCreateProgram());
+
+        if (this.program.getID() == 0) {
+            LOGGER.error("Shader Program creation failed. '0' is not a valid memory address.");
+        }
+
+        init();
         compile();
         addUniforms();
     }
 
+    protected void init() {
+        for (GLSLScript script : program.getScripts()) {
+            int type = 0;
+            switch (script.getType()) {
+                case VERTEX_SHADER:
+                    type = GL_VERTEX_SHADER;
+                    break;
+                case FRAGMENT_SHADER:
+                    type = GL_FRAGMENT_SHADER;
+                    break;
+                case GEOMETRY_SHADER:
+                    type = GL32.GL_GEOMETRY_SHADER;
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Shader type not supported.");
+            }
+
+            this.addProgram(script.getSource(), type);
+        }
+    }
+
+    @Deprecated
     public void addVertexShader(String text) {
         vertexShader = new GLSLScript(this.getClass().getSimpleName(), GLSLScript.Type.VERTEX_SHADER);
         vertexShader.setSource(text);
         this.addProgram(text, GL_VERTEX_SHADER);
     }
 
-    public void addGeometryShader(String text) {
-        geometryShader = new GLSLScript(this.getClass().getSimpleName(), GLSLScript.Type.GEOMETRY_SHADER);
-        geometryShader.setSource(text);
-        this.addProgram(text, GL_GEOMETRY_SHADER);
-    }
-
+    @Deprecated
     public void addFragmentShader(String text) {
-        fragmentShader = new GLSLScript(this.getClass().getSimpleName(), GLSLScript.Type.FRAGMENT_SHADER);
-        fragmentShader.setSource(text);
+        vertexShader = new GLSLScript(this.getClass().getSimpleName(), GLSLScript.Type.FRAGMENT_SHADER);
+        vertexShader.setSource(text);
         this.addProgram(text, GL_FRAGMENT_SHADER);
     }
 
     public void bind() {
-        glUseProgram(this.program);
+        glUseProgram(this.program.getID());
     }
 
     public void addUniforms() {
-
-        if (vertexShader != null) {
-            vertexShader = magicUniforms(vertexShader);
+        for (GLSLScript s : program.getScripts()) {
+          magicUniforms(s);
         }
-        if (geometryShader != null) {
-            geometryShader = magicUniforms(geometryShader);
-        }
-        if (fragmentShader != null) {
-            fragmentShader = magicUniforms(fragmentShader);
-        }
-
     }
 
     public void addAttributes() {
-        if (vertexShader != null) {
-            vertexShader = magicAttributes(vertexShader);
-        }
-        if (geometryShader != null) {
-            geometryShader = magicAttributes(geometryShader);
-        }
-        if (fragmentShader != null) {
-            fragmentShader = magicAttributes(fragmentShader);
+        for (GLSLScript s : program.getScripts()) {
+            magicAttributes(s);
         }
     }
 
     public void addUniform(String name) {
 
-        int uniformLoc = glGetUniformLocation(this.program, name);
+        int uniformLoc = glGetUniformLocation(this.program.getID(), name);
 
         if (uniformLoc == 0xFFFFFFFF) {
             LOGGER.warn("Could not find uniform location for '{}'", name);
@@ -121,11 +130,10 @@ public class Shader {
         material.getTexture("diffuse").bind();
 
         int numTex = 0;
-        for (Variable v : fragmentShader.getUniforms()) {
+        for (Variable v : program.getFragment().getUniforms()) {
             String name = v.getName();
             if (v.getType().equalsIgnoreCase("sampler2D") && !name.equalsIgnoreCase("diffuse")) {
-                int texLoc = glGetUniformLocation(program, v.getName());
-                glUniform1i(texLoc, numTex);
+                setUniform(v.getName(), numTex);
 
                 int activeTexture;
                 switch (numTex) {
@@ -156,30 +164,31 @@ public class Shader {
             }
         }
 
-        if (fragmentShader.getExpandedUniforms().contains("color")) {
+        if (program.getFragment().getExpandedUniforms().contains("color")) {
             setUniform("color", material.getColor());
         }
 
-        if (fragmentShader.getExpandedUniforms().contains("shadowMatrix")) {
+        if (program.getFragment().getExpandedUniforms().contains("shadowMatrix")) {
             setUniform("shadowMatrix", renderEngine.getShadowMatrix());
         }
 
-        if (vertexShader.getExpandedUniforms().contains("MVP")) {
+        if (program.getFragment().getExpandedUniforms().contains("MVP")) {
             setUniform("MVP", projection);
         }
     }
 
     public void compile() {
-        glLinkProgram(this.program);
+        int id = this.program.getID();
+        glLinkProgram(id);
 
-        if (glGetProgrami(this.program, GL_LINK_STATUS) == 0) {
-            LOGGER.warn("Link Status: {} @ {}", glGetProgramInfoLog(this.program, 1024), this.getClass().getSimpleName());
+        if (glGetProgrami(id, GL_LINK_STATUS) == 0) {
+            LOGGER.warn("Link Status: {} @ {}", glGetProgramInfoLog(id, 1024), this.getClass().getSimpleName());
         }
 
-        glValidateProgram(this.program);
+        glValidateProgram(id);
 
-        if (glGetProgrami(this.program, GL_VALIDATE_STATUS) == 0) {
-            String error = glGetProgramInfoLog(this.program, 1024);
+        if (glGetProgrami(id, GL_VALIDATE_STATUS) == 0) {
+            String error = glGetProgramInfoLog(this.program.getID(), 1024);
             // This is a hack to prevent error message on every shader load.
             // If we load the shaders before the mesh loading, there are not any
             // VAO loaded. Works fine everytime, so just ignore this case specific error...
@@ -190,39 +199,12 @@ public class Shader {
     }
 
     /**
-     * Tries to load both vertex and fragment shader, compiles and setUniforms!
-     * @param name Name of the file (without .ext)
-     * @throws IOException
-     */
-    public void setUpFromFile(String name) throws IOException {
-        setUpFromFile(name, true, false, true);
-    }
-
-    /**
-     * Tries to load the shaders from file, compiles and setUniforms!
-     * Using extensions gvs, ggs, gfs for vertex, geometry and fragment
-     * shaders respectively.
-     * @param name The name of the shader file
-     * @param vs Whether to load a vertex shader
-     * @param gs Whether to load a geometry shader
-     * @param fs Whether to load a fragment shader
-     * @throws IOException
-     */
-    public void setUpFromFile(String name, boolean vs, boolean gs, boolean fs) throws IOException {
-        if (vs) addVertexShader(ResourceLoader.getShader(name + ".gvs"));
-        if (gs) addGeometryShader(ResourceLoader.getShader(name + ".ggs"));
-        if (fs) addFragmentShader(ResourceLoader.getShader(name + ".gfs"));
-
-        compileAndAddUniforms();
-    }
-
-    /**
      * Binds the Attribute Location (as specified in the GLSL shader sources)
      * @param name The name of the attribute
      * @param location The location id
      */
     public void setAttribLocation(String name, int location) {
-        glBindAttribLocation(program, location, name);
+        glBindAttribLocation(this.program.getID(), location, name);
     }
 
     private void addProgram(String text, int type) {
@@ -239,7 +221,7 @@ public class Shader {
             LOGGER.warn(glGetShaderInfoLog(shader, 1024));
         }
 
-        glAttachShader(this.program, shader);
+        glAttachShader(this.program.getID(), shader);
     }
 
     public void setUniform(String name, Vector3f vec) {

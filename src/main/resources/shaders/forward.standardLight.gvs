@@ -1,9 +1,5 @@
 #version 330
-
 #include "lighting.gvh"
-
-uniform mat4 model;
-uniform mat4 MVP;
 
 void main()
 {

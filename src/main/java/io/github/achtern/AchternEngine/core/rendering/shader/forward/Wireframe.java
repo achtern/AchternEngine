@@ -6,6 +6,7 @@ import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class Wireframe extends Shader {
         super();
 
         try {
-            setUpFromFile("debug.wireframe", true, true, true);
+            setup(ResourceLoader.getShaderProgram("debug.wireframe"));
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Debug Wireframe Shader GLSL files.", e);
         }

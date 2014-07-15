@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
@@ -24,7 +25,7 @@ public class Ambient extends Shader {
         super();
 
         try {
-            setUpFromFile("forward.ambient");
+            setup(ResourceLoader.getShaderProgram("forward.ambient"));
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Ambient Shader GLSL files.", e);
         }
