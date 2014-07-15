@@ -5,6 +5,7 @@ import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +22,6 @@ public class BasicShader extends Shader {
     }
 
     private BasicShader() {
-        super();
-
         try {
             setup(ResourceLoader.getShaderProgram("basic"));
         } catch (IOException e) {
@@ -31,12 +30,6 @@ public class BasicShader extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
-        super.updateUniforms(transform, material, renderEngine, projection);
-
-
-        setUniform("MVP", projection);
-
+    protected void handle(Uniform uniform, Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
     }
-
 }

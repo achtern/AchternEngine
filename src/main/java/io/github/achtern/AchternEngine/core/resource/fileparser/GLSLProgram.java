@@ -2,10 +2,12 @@ package io.github.achtern.AchternEngine.core.resource.fileparser;
 
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +23,7 @@ public class GLSLProgram {
 
     protected List<GLSLScript> scripts;
 
-
-    protected GLSLScript vertex;
-    protected GLSLScript fragment;
+    protected Map<String, Uniform> cachedUniforms;
 
     /**
      * Instance to parse yaml
@@ -39,6 +39,30 @@ public class GLSLProgram {
 
         parse();
 
+    }
+
+    public Uniform getUniform(String name) {
+        getUniforms();
+
+        return cachedUniforms.get(name);
+    }
+
+    public List<Uniform> getUniforms() {
+        if (cachedUniforms != null) {
+            return new ArrayList<Uniform>(cachedUniforms.values());
+        }
+
+        Map<String, Uniform> uniforms = new HashMap<String, Uniform>();
+
+        for (GLSLScript s : getScripts()) {
+            for (Uniform u : s.getUniforms()) {
+                uniforms.put(u.getName(), u);
+            }
+        }
+
+        cachedUniforms = uniforms;
+
+        return getUniforms();
     }
 
     protected void parse() throws IOException {
@@ -69,14 +93,6 @@ public class GLSLProgram {
         GLSLScript shader = new GLSLScript(this.name, type);
         shader.setSource(source);
         this.scripts.add(shader);
-
-        if (type.equals(GLSLScript.Type.VERTEX_SHADER)) {
-            vertex = shader;
-        }
-
-        if (type.equals(GLSLScript.Type.FRAGMENT_SHADER)) {
-            fragment = shader;
-        }
     }
 
     protected void validate(Map map) {
@@ -115,13 +131,5 @@ public class GLSLProgram {
 
     public int getID() {
         return id;
-    }
-
-    public GLSLScript getVertex() {
-        return vertex;
-    }
-
-    public GLSLScript getFragment() {
-        return fragment;
     }
 }

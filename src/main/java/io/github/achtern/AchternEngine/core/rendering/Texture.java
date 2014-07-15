@@ -10,6 +10,8 @@ import java.nio.ByteBuffer;
 
 import static io.github.achtern.AchternEngine.core.resource.ResourceConverter.toByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class Texture extends Dimension {
 
@@ -74,6 +76,15 @@ public class Texture extends Dimension {
     }
 
     public void bind() {
+        bind(0);
+    }
+
+    public void bind(int samplerslot) {
+        if (samplerslot < 0) {
+            throw new IllegalArgumentException("SamplerSlot MUST be a positive integer!");
+        }
+
+        glActiveTexture(GL_TEXTURE0 + samplerslot);
         glBindTexture(GL_TEXTURE_2D, getID());
     }
 

@@ -6,7 +6,7 @@ uniform PointLight pointLight;
 
 vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-    return CalcPointLight(pointLight, normalize(normal0), worldPos0);
+    return CalcPointLight(pointLight, normal, worldPos);
 }
 
 #include "lighting-main.gfh"

@@ -3,6 +3,7 @@ package io.github.achtern.AchternEngine.core.resource.fileparser;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLStruct;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,13 +176,14 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
 
     public GLSLScript process(GLSLScript script) {
 
-        script.setStructs(getUniformStructs(script.getSource()));
+        List<Variable> uniforms = getVariables(script.getSource(), TOKEN_UNIFORM);
 
-        script.setUniforms(getVariables(script.getSource(), TOKEN_UNIFORM));
+
+        script.setStructs(getUniformStructs(script.getSource()));
 
         script.setAttributes(getAttributes(script.getSource()));
 
-        script.setExpandedUniforms(getUniforms(script.getSource(), script.getUniforms(), script.getStructs()));
+        script.setUniforms(getUniforms(script.getSource(), uniforms, script.getStructs()));
 
         script.setProcessed(true);
 
@@ -189,8 +191,8 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
 
     }
 
-    public List<String> getUniforms(String text, List<Variable> uniforms, List<GLSLStruct> structs) {
-        List<String> stringUniforms = new ArrayList<String>();
+    public List<Uniform> getUniforms(String text, List<Variable> uniforms, List<GLSLStruct> structs) {
+        List<Uniform> finalUniforms = new ArrayList<Uniform>();
 
         if (LOGGER.isTraceEnabled()) {
             StringBuilder sb = new StringBuilder();
@@ -208,7 +210,9 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         uniforms.removeAll(primitives);
 
         // Add all primitives
-        stringUniforms.addAll(getNames(primitives));
+        for (Variable v : primitives) {
+            finalUniforms.add(new Uniform(v));
+        }
 
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Added the following primitve uniforms:");
@@ -248,15 +252,17 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
             // If it is a known struct, expand it, otherwise just add it
             if (match != null) {
                 LOGGER.trace("Found a match, now expanding");
-                stringUniforms.addAll(expandUniform(v, match, structs));
+                for (String expanded : expandUniform(v, match, structs)) {
+                    finalUniforms.add(new Uniform(match.getName(), expanded));
+                }
             } else {
                 LOGGER.debug("Did not found struct specified by uniform type! ({} {})", v.getType(), v.getName());
-                stringUniforms.add(v.getName());
+                finalUniforms.add(new Uniform(v));
             }
         }
 
 
-        return stringUniforms;
+        return finalUniforms;
     }
 
     public List<Variable> getAttributes(String text) {

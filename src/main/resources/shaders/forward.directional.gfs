@@ -1,12 +1,30 @@
 #version 330
 
 #include "lighting.gfh"
+/**
+in vec4 shadowMapCoords0;
 
+
+float SampleShadowMap(sampler2D map, vec2 coords, float diff)
+{
+    return step(diff, texture(map, coords.xy).r);
+}
+
+float CalcShadowEffect(sampler2D map, vec4 initCoords)
+{
+    vec3 coord = (initCoords.xyz / initCoords.w) * vec3(0.5) + vec3(0.5);
+
+    return SampleShadowMap(map, coord.xy, coord.z);
+}
+
+
+uniform sampler2D shadowMap;
+*/
 uniform DirectionalLight directionalLight;
 
 vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-    vec4 lightAmount = CalcDirectionalLight(directionalLight, normalize(normal0), worldPos0);
+    vec4 lightAmount = CalcDirectionalLight(directionalLight, normal, worldPos);
     // lightAmount *= vec4(CalcShadowEffect(shadowMap, shadowMapCoords0));
 
     return lightAmount;

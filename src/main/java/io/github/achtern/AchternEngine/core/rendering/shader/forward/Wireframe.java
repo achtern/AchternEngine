@@ -3,10 +3,13 @@ package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
+import io.github.achtern.AchternEngine.core.math.Vector2f;
+import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +27,6 @@ public class Wireframe extends Shader {
     }
 
     private Wireframe() {
-        super();
-
         try {
             setup(ResourceLoader.getShaderProgram("debug.wireframe"));
         } catch (IOException e) {
@@ -34,14 +35,17 @@ public class Wireframe extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
+    protected void handle(Uniform uniform, Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
+        if (uniform.getName().equalsIgnoreCase("WIN_SCALE")) {
+            uniform.setValue(Vector2f.class, Window.get());
+        }
 
-        super.updateUniforms(transform, material, renderEngine, projection);
+        if (uniform.getName().equalsIgnoreCase("wirecolor")) {
+            uniform.setValue(Vector3f.class, ((WireframeDisplay) renderEngine.getActiveRenderPass()).getWireColor());
+        }
 
-
-        setUniform("MVP", projection);
-        setUniform("WIN_SCALE", Window.get());
-        setUniform("wirecolor", ((WireframeDisplay) renderEngine.getActiveRenderPass()).getWireColor());
-        setUniform("fillcolor", ((WireframeDisplay) renderEngine.getActiveRenderPass()).getFillColor());
+        if (uniform.getName().equalsIgnoreCase("fillcolor")) {
+            uniform.setValue(Vector3f.class, ((WireframeDisplay) renderEngine.getActiveRenderPass()).getFillColor());
+        }
     }
 }

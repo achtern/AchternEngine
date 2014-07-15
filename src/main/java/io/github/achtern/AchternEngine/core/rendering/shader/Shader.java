@@ -5,12 +5,14 @@ import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.math.Vector4f;
+import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.DirectionalLight;
@@ -21,10 +23,12 @@ import org.lwjgl.opengl.GL32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
+import java.util.Map;
 
-import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 
 public abstract class Shader {
@@ -33,21 +37,43 @@ public abstract class Shader {
 
     private GLSLParser parser = new GLSLParser();
 
-    private GLSLScript vertexShader;
-    private GLSLScript geometryShader;
-    private GLSLScript fragmentShader;
-
     private GLSLProgram program;
 
-    private HashMap<String, Integer> uniforms;
+    protected static Map<Class<?>, Method> classMethodMap;
 
-    public Shader(GLSLProgram program) {
-        this();
-        setup(program);
+    static {
+        classMethodMap = new HashMap<Class<?>, Method>();
+        /**
+         * To the future developer:
+         * I'm very sorry I've wrote the code below.
+         * It's in a static block and no error checking.
+         * It works an it only costs time during startup.
+         * and it WORKS!
+         * Feel free to improve it!
+         * Regards,
+         * Christian
+         *
+         * This code puts all setUniform methods into the hashmap,
+         * with the corresponding type. This is used in #updateUniforms()
+         * in order to dynamiclly set uniforms.
+         */
+        Class c = Shader.class;
+        for (Method m : c.getDeclaredMethods()) {
+            if (m.getName().equalsIgnoreCase("setUniform")) {
+                Class type = m.getParameterTypes()[1];
+                classMethodMap.put(type, m);
+            }
+        }
     }
 
+    /**
+     * For subclasses.
+     */
     public Shader() {
-        this.uniforms = new HashMap<String, Integer>();
+    }
+
+    public Shader(GLSLProgram program) {
+        setup(program);
     }
 
     public void setup(GLSLProgram program) {
@@ -65,7 +91,7 @@ public abstract class Shader {
 
     protected void init() {
         for (GLSLScript script : program.getScripts()) {
-            int type = 0;
+            int type;
             switch (script.getType()) {
                 case VERTEX_SHADER:
                     type = GL_VERTEX_SHADER;
@@ -84,20 +110,6 @@ public abstract class Shader {
         }
     }
 
-    @Deprecated
-    public void addVertexShader(String text) {
-        vertexShader = new GLSLScript(this.getClass().getSimpleName(), GLSLScript.Type.VERTEX_SHADER);
-        vertexShader.setSource(text);
-        this.addProgram(text, GL_VERTEX_SHADER);
-    }
-
-    @Deprecated
-    public void addFragmentShader(String text) {
-        vertexShader = new GLSLScript(this.getClass().getSimpleName(), GLSLScript.Type.FRAGMENT_SHADER);
-        vertexShader.setSource(text);
-        this.addProgram(text, GL_FRAGMENT_SHADER);
-    }
-
     public void bind() {
         glUseProgram(this.program.getID());
     }
@@ -114,68 +126,106 @@ public abstract class Shader {
         }
     }
 
-    public void addUniform(String name) {
+    public void addUniform(Uniform uniform) {
 
-        int uniformLoc = glGetUniformLocation(this.program.getID(), name);
+        int uniformLoc = glGetUniformLocation(this.program.getID(), uniform.getName());
 
         if (uniformLoc == 0xFFFFFFFF) {
-            LOGGER.warn("Could not find uniform location for '{}'", name);
+            LOGGER.warn("{}: Could not find uniform location for '{}'",
+                    this.getClass().getSimpleName(), uniform.getName());
         }
 
-        this.uniforms.put(name, uniformLoc);
+        uniform.setLocation(uniformLoc);
 
     }
 
     public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
-        material.getTexture("diffuse").bind();
 
-        int numTex = 0;
-        for (Variable v : program.getFragment().getUniforms()) {
-            String name = v.getName();
-            if (v.getType().equalsIgnoreCase("sampler2D") && !name.equalsIgnoreCase("diffuse")) {
-                setUniform(v.getName(), numTex);
+//        material.getTexture("diffuse").bind();
 
-                int activeTexture;
-                switch (numTex) {
-                    case 0:
-                        activeTexture = GL_TEXTURE0;
-                        break;
-                    case 1:
-                        activeTexture = GL_TEXTURE1;
-                        break;
-                    case 2:
-                        activeTexture = GL_TEXTURE2;
-                        break;
-                    case 3:
-                        activeTexture = GL_TEXTURE3;
-                        break;
-                    case 4:
-                        activeTexture = GL_TEXTURE4;
-                        break;
-                    default:
-                        throw new UnsupportedOperationException(
-                                "This engine doesn't allow for this " + numTex + " sampler slots!"
-                        );
+        for (Uniform u : this.program.getUniforms()) {
+            String n = u.getName(); // Just a quick access to the name!
+
+            // textures aka sampler2Ds
+            if (u.getType().equalsIgnoreCase("sampler2D")) {
+                u.setShouldSet(false);
+
+                // material takes precedence over the renderengine
+                if (material.hasTexture(n)) {
+                    // Bind it to the sampler slot. this sampler slot comes from the RenderEngine
+                    material.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+                } else if (renderEngine.hasTexture(n)) {
+                    renderEngine.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+                } else {
+                    LOGGER.warn("{}: texture '{}' not found in material nor RenderEngine.",
+                            this.getClass().getSimpleName(), n);
+                    // If the texture has not been found, bind the missing texture from
+                    // Material
+                    material.getTexture(n).bind(renderEngine.getSamplerSlot(n));
                 }
-                glActiveTexture(activeTexture);
-                renderEngine.getTexture(name).bind();
 
-                numTex++;
+                // other stuff below
+                // currently supporting
+                // color, MVP, (shadowMatrix=TEMP)
+            } else if (n.equalsIgnoreCase("color")) {
+                u.setValue(Color.class, material.getColor());
+
+            } else if (n.equalsIgnoreCase("MVP")) {
+                u.setValue(Matrix4f.class, projection);
+
+            } else if (n.equalsIgnoreCase("model")) {
+                u.setValue(Matrix4f.class, transform.getTransformation());
+
+            } else if (n.equalsIgnoreCase("eyePos")) {
+                u.setValue(Vector3f.class, renderEngine.getMainCamera().getTransform().getTransformedPosition());
+
+            } else if (n.equalsIgnoreCase("shadowMatrix")) {
+                // TEMPORARAY CODE
+                Matrix4f m = new Matrix4f().initIdentiy();
+                if (renderEngine.getMatrix("shadowMatrix") != null) {
+                    m = renderEngine.getMatrix("shadowMatrix");
+                }
+                u.setValue(Matrix4f.class, m);
+
+            } else {
+                // In the last step we try to find the value in the material,
+                // otherwise leave it to the user!
+                if (u.getType().equalsIgnoreCase("float") && material.hasFloat(n)) {
+                    u.setValue(Float.class, material.getFloat(n));
+                } else if ((u.getType().equalsIgnoreCase("vec3") && material.hasVector(n))) {
+                    u.setValue(Vector3f.class, material.getVector(n));
+                } else if ((u.getType().equalsIgnoreCase("mat4") && material.hasMatrix(n))) {
+                    u.setValue(Matrix4f.class, material.getMatrix(n));
+                } else if ((u.getType().equalsIgnoreCase("vec4") && material.hasColor(n))) {
+                    u.setValue(Vector4f.class, material.getColor(n));
+                }
+            }
+
+            // If the value is null, the developer has to fill it,
+            // and has the change override values.
+            handle(u, transform, material, renderEngine, projection);
+
+            if (!u.shouldSet()) return;
+
+            if (u.getValue() != null) {
+                try {
+                    Class<?> type = u.getValueType();
+                    classMethodMap.get(type).invoke(this, u.getName(), u.getValue());
+                } catch (IllegalAccessException e) {
+                    LOGGER.error("Error invoking method on shader " + this + ";", e);
+                } catch (InvocationTargetException e) {
+                    LOGGER.error("Error invoking method on shader " + this + ";", e);
+                } catch (NullPointerException e) {
+                    LOGGER.error("Cannot set uniform of type {}.", u.getValueType().getName());
+                }
+            } else {
+                throw new IllegalStateException("Uniform value cannot be null for " + u);
             }
         }
-
-        if (program.getFragment().getExpandedUniforms().contains("color")) {
-            setUniform("color", material.getColor());
-        }
-
-        if (program.getFragment().getExpandedUniforms().contains("shadowMatrix")) {
-            setUniform("shadowMatrix", renderEngine.getShadowMatrix());
-        }
-
-        if (program.getFragment().getExpandedUniforms().contains("MVP")) {
-            setUniform("MVP", projection);
-        }
     }
+
+    protected abstract void handle(Uniform uniform, Transform transform, Material material,
+                                   RenderEngine renderEngine, Matrix4f projection);
 
     public void compile() {
         int id = this.program.getID();
@@ -225,27 +275,31 @@ public abstract class Shader {
     }
 
     public void setUniform(String name, Vector3f vec) {
-        glUniform3f(this.uniforms.get(name), vec.getX(), vec.getY(), vec.getZ());
+        glUniform3f(program.getUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ());
     }
 
     public void setUniform(String name, Vector4f vec) {
-        glUniform4f(this.uniforms.get(name), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
+        glUniform4f(program.getUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
+    }
+
+    public void setUniform(String name, Color color) {
+        setUniform(name, (Vector4f) color);
     }
 
     public void setUniform(String name, Vector2f vec) {
-        glUniform2f(this.uniforms.get(name), vec.getX(), vec.getY());
+        glUniform2f(program.getUniform(name).getLocation(), vec.getX(), vec.getY());
     }
 
     public void setUniform(String name, Matrix4f matrix) {
-        glUniformMatrix4(this.uniforms.get(name), true, (FloatBuffer) UBuffer.create(matrix).flip());
+        glUniformMatrix4(program.getUniform(name).getLocation(), true, (FloatBuffer) UBuffer.create(matrix).flip());
     }
 
     public void setUniform(String name, int value) {
-        glUniform1i(this.uniforms.get(name), value);
+        glUniform1i(program.getUniform(name).getLocation(), value);
     }
 
     public void setUniform(String name, float value) {
-        glUniform1f(this.uniforms.get(name), value);
+        glUniform1f(program.getUniform(name).getLocation(), value);
     }
 
     public void setUniform(String name, DirectionalLight directionalLight) {
@@ -283,9 +337,9 @@ public abstract class Shader {
             script = getParser().process(script);
         }
 
-        for (String uName : script.getExpandedUniforms()) {
-            LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), uName);
-            addUniform(uName);
+        for (Uniform u : script.getUniforms()) {
+            LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), u.getName());
+            addUniform(u);
         }
 
         return script;

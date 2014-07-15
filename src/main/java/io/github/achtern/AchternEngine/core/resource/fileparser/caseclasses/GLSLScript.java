@@ -17,11 +17,9 @@ public class GLSLScript {
 
     private List<GLSLStruct> structs;
 
-    private List<Variable> uniforms;
-
     private List<Variable> attributes;
 
-    private List<String> expandedUniforms;
+    private List<Uniform> uniforms;
 
     private String source;
 
@@ -32,9 +30,8 @@ public class GLSLScript {
         this.name = name;
         this.type = type;
         this.structs = new ArrayList<GLSLStruct>();
-        this.uniforms = new ArrayList<Variable>();
+        this.uniforms = new ArrayList<Uniform>();
         this.attributes = new ArrayList<Variable>();
-        this.expandedUniforms = new ArrayList<String>();
     }
 
     public String getName() {
@@ -61,11 +58,11 @@ public class GLSLScript {
         this.structs = structs;
     }
 
-    public List<Variable> getUniforms() {
+    public List<Uniform> getUniforms() {
         return uniforms;
     }
 
-    public void setUniforms(List<Variable> uniforms) {
+    public void setUniforms(List<Uniform> uniforms) {
         this.uniforms = uniforms;
     }
 
@@ -75,14 +72,6 @@ public class GLSLScript {
 
     public void setAttributes(List<Variable> attributes) {
         this.attributes = attributes;
-    }
-
-    public List<String> getExpandedUniforms() {
-        return expandedUniforms;
-    }
-
-    public void setExpandedUniforms(List<String> expandedUniforms) {
-        this.expandedUniforms = expandedUniforms;
     }
 
     public String getSource() {

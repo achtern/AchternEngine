@@ -1,12 +1,13 @@
 package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,20 +33,12 @@ public class Spot extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
-
-        super.updateUniforms(transform, material, renderEngine, projection);
-
-        Matrix4f worldMat = transform.getTransformation();
-
-        setUniform("model", worldMat);
-        setUniform("MVP", projection);
-
-        setUniform("specularIntensity", material.getFloat("specularIntensity"));
-        setUniform("specularPower", material.getFloat("specularPower"));
-        setUniform("eyePos", renderEngine.getMainCamera().getTransform().getTransformedPosition());
-
+    protected void handle(Uniform uniform, Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
+        uniform.setShouldSet(false);
         setUniform("spotLight", (SpotLight) renderEngine.getActiveRenderPass());
 
+        if (uniform.getType().equalsIgnoreCase("SpotLight")) {
+            uniform.setValue(SpotLight.class, (SpotLight) renderEngine.getActiveRenderPass());
+        }
     }
 }

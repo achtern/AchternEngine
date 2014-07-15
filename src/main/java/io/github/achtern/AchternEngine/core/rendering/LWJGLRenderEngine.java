@@ -3,7 +3,6 @@ package io.github.achtern.AchternEngine.core.rendering;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
-import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
@@ -11,17 +10,16 @@ import io.github.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
+import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
-public class LWJGLRenderEngine implements RenderEngine {
+public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
@@ -36,11 +34,8 @@ public class LWJGLRenderEngine implements RenderEngine {
 
     protected DrawStrategy drawStrategy;
 
-    protected Map<String, Texture> textures = new HashMap<String, Texture>();
-
     // WIP
     public FrameBuffer shadowMap;
-    private Matrix4f shadowMatrix;
 
     public LWJGLRenderEngine() {
 
@@ -51,7 +46,10 @@ public class LWJGLRenderEngine implements RenderEngine {
         target = Window.getTarget();
 
         shadowMap = new FrameBuffer(new Dimension(1024, 1024));
-        textures.put("shadowMap", shadowMap.getTexture());
+        addTexture("shadowMap", shadowMap.getTexture());
+
+        addInteger("diffuse", 0);
+        addInteger("shadowMap", 1);
 
         setClearColor(clearColor);
 
@@ -110,7 +108,7 @@ public class LWJGLRenderEngine implements RenderEngine {
                             ((BaseLight) this.activePass).getTransform().getTransformedRotation()
                     );
 
-                    shadowMatrix = shadowCamera.getViewProjection();
+                    addMatrix("shadowMatrix", shadowCamera.getViewProjection());
 
                     Camera main = getMainCamera();
                     setMainCamera(shadowCamera);
@@ -213,8 +211,8 @@ public class LWJGLRenderEngine implements RenderEngine {
     }
 
     @Override
-    public Texture getTexture(String name) {
-        return this.textures.get(name);
+    public int getSamplerSlot(String name) {
+        return getInteger(name);
     }
 
     @Override
@@ -235,10 +233,5 @@ public class LWJGLRenderEngine implements RenderEngine {
     @Override
     public void setDrawStrategy(DrawStrategy drawStrategy) {
         this.drawStrategy = drawStrategy;
-    }
-
-    @Override
-    public Matrix4f getShadowMatrix() {
-        return shadowMatrix;
     }
 }
