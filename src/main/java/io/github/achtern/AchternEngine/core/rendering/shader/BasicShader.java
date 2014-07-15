@@ -35,7 +35,7 @@ public class BasicShader extends Shader {
         super.updateUniforms(transform, material, renderEngine, projection);
 
 
-        setUniform("transform", projection);
+        setUniform("MVP", projection);
 
     }
 

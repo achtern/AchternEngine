@@ -71,6 +71,22 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     public static final String TOKEN_END_STATEMENT = ";";
 
     /**
+     * The parser will look into this directory, in order to include
+     * files.
+     * Vertex Shader: shaders/shader.gvs
+     * Random Header File: shaders/include/head.gh
+     *
+     * Vertex Source:
+     *
+     * #include "head.gh"
+     *
+     * ----
+     *
+     * This will work!
+     */
+    public static final String INCLUDE_DIRECTORY = "include/";
+
+    /**
      * @see io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser#parse(String)
      */
     @Override
@@ -86,7 +102,7 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
              */
             String filename = line.substring(CUSTOM_TOKEN_INCLUDE.length() + 2, line.length() - 1);
 
-            line = ResourceLoader.getShader(filename);
+            line = ResourceLoader.getShader(INCLUDE_DIRECTORY + filename);
 
 
         }

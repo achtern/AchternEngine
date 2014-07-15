@@ -1,20 +1,15 @@
 #version 330
 
-#include "lighting.gh"
-
 #include "lighting.gfh"
-
-uniform vec4 color;
-uniform sampler2D diffuse;
-uniform sampler2D shadowMap;
 
 uniform DirectionalLight directionalLight;
 
-void main()
+vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-
     vec4 lightAmount = CalcDirectionalLight(directionalLight, normalize(normal0), worldPos0);
-    lightAmount *= vec4(CalcShadowEffect(shadowMap, shadowMapCoords0));
+    // lightAmount *= vec4(CalcShadowEffect(shadowMap, shadowMapCoords0));
 
-    fragColor = color * texture(diffuse, texCoord0.xy) * lightAmount;
+    return lightAmount;
 }
+
+#include "lighting-main.gfh"
