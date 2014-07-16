@@ -1,10 +1,10 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.contracts.TexturableData;
+import io.github.achtern.AchternEngine.core.contracts.abstractVersion.CommonTexturableData;
 
 import java.nio.ByteBuffer;
 
-public class ByteImage implements TexturableData {
+public class ByteImage extends CommonTexturableData {
 
     protected ByteBuffer data;
     protected boolean alpha;

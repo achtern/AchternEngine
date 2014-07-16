@@ -4,8 +4,9 @@ import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT32;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL30.*;
 
 public class FrameBuffer extends Dimension implements RenderTarget {
@@ -19,6 +20,10 @@ public class FrameBuffer extends Dimension implements RenderTarget {
     protected Texture texture;
 
     public FrameBuffer(Texture texture) {
+        this(texture, GL_COLOR_ATTACHMENT0);
+    }
+
+    public FrameBuffer(Texture texture, int attachment) {
         super(texture);
         this.texture = texture;
 
@@ -26,7 +31,7 @@ public class FrameBuffer extends Dimension implements RenderTarget {
         id = genID();
         renderBuffer = genRID();
 
-        setup();
+        setup(attachment);
 
     }
 
@@ -35,16 +40,16 @@ public class FrameBuffer extends Dimension implements RenderTarget {
     }
 
     public void bindAsRenderTarget() {
-        glViewport(0, 0, getWidth(), getHeight());
+        glBindTexture(getTexture().getTarget(), 0);
         glBindFramebuffer(TARGET, getID());
+        glViewport(0, 0, getWidth(), getHeight());
     }
 
-    public void setup() {
-        int attachment = GL_COLOR_ATTACHMENT0;
+    public void setup(int attachment) {
 
         glBindFramebuffer(TARGET, getID());
         glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, getWidth(), getHeight());
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, getWidth(), getHeight());
         glFramebufferRenderbuffer(TARGET, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
 
 

@@ -9,6 +9,7 @@ import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
 import io.github.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT16;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
@@ -43,9 +46,11 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
-        target = Window.getTarget();
+        setRenderTarget(Window.getTarget());
 
-        shadowMap = new FrameBuffer(new Dimension(1024, 1024));
+        shadowMap = new FrameBuffer(new Texture(new Dimension(1024, 1024),
+                GL_TEXTURE_2D, GL_NEAREST, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT), GL_DEPTH_ATTACHMENT);
+
         addTexture("shadowMap", shadowMap.getTexture());
 
         addInteger("diffuse", 0);
@@ -114,7 +119,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
                     setMainCamera(shadowCamera);
                     {
 
-                        holder.render(ShadowGenerator.getInstance(), this);
+                        node.render(ShadowGenerator.getInstance(), this);
 
                     }
                     setMainCamera(main);
@@ -156,7 +161,11 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     @Override
     public void addRenderPass(RenderPass pass) {
         LOGGER.debug("Added RenderPass {}", pass.getClass());
-        this.passes.add(pass);
+        if (pass instanceof AmbientLight) {
+            this.passes.add(0, pass);
+        } else {
+            this.passes.add(pass);
+        }
     }
 
     @Override

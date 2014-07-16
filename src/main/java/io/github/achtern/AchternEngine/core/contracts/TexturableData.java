@@ -10,6 +10,20 @@ import java.nio.ByteBuffer;
  */
 public interface TexturableData {
 
+    public int getTarget();
+
+    public int getMinFilter();
+
+    public int getMagFilter();
+
+    /**
+     * Return -1 in order to indicate automatic generation!
+     * @return internal format
+     */
+    public int getFormat();
+
+    public int getInternalFormat();
+
     /**
      * Width & Height
      * @return the dimensions

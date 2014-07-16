@@ -128,8 +128,8 @@ public abstract class Shader {
         int uniformLoc = glGetUniformLocation(this.program.getID(), uniform.getName());
 
         if (uniformLoc == 0xFFFFFFFF) {
-            // Just debug, cause the uniform might be removed by the GLSL compiler, if un-used.
-            LOGGER.debug("{}: Could not find uniform location for '{}'",
+            // Just trace, cause the uniform might be removed by the GLSL compiler, if un-used.
+            LOGGER.trace("{}: Could not find uniform location for '{}'",
                     this.getClass().getSimpleName(), uniform.getName());
         }
 
