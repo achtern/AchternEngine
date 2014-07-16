@@ -14,10 +14,7 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.DirectionalLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.PointLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.*;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.lwjgl.opengl.GL32;
 import org.slf4j.Logger;
@@ -131,7 +128,8 @@ public abstract class Shader {
         int uniformLoc = glGetUniformLocation(this.program.getID(), uniform.getName());
 
         if (uniformLoc == 0xFFFFFFFF) {
-            LOGGER.warn("{}: Could not find uniform location for '{}'",
+            // Just debug, cause the uniform might be removed by the GLSL compiler, if un-used.
+            LOGGER.debug("{}: Could not find uniform location for '{}'",
                     this.getClass().getSimpleName(), uniform.getName());
         }
 
@@ -148,21 +146,40 @@ public abstract class Shader {
 
             // textures aka sampler2Ds
             if (u.getType().equalsIgnoreCase("sampler2D")) {
-                u.setShouldSet(false);
 
                 // material takes precedence over the renderengine
                 if (material.hasTexture(n)) {
                     // Bind it to the sampler slot. this sampler slot comes from the RenderEngine
                     material.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+
                 } else if (renderEngine.hasTexture(n)) {
                     renderEngine.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+
                 } else {
                     LOGGER.warn("{}: texture '{}' not found in material nor RenderEngine.",
                             this.getClass().getSimpleName(), n);
                     // If the texture has not been found, bind the missing texture from
                     // Material
                     material.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+                    n = "diffuse"; // Default to diffuse!
                 }
+
+                // and set the value of the uniform to the sampler slot
+                u.setValue(int.class, renderEngine.getSamplerSlot(n));
+
+                // Now common structs like DirectionalLight, PointLight, SpotLight, AmbientLight
+            } else if (u.getType().equalsIgnoreCase("DirectionalLight")) {
+                u.setValue(DirectionalLight.class, (DirectionalLight) renderEngine.getActiveRenderPass());
+
+            } else if (u.getType().equalsIgnoreCase("SpotLight")) {
+                u.setValue(SpotLight.class, (SpotLight) renderEngine.getActiveRenderPass());
+
+            } else if (u.getType().equalsIgnoreCase("PointLight")) {
+                u.setValue(PointLight.class, (PointLight) renderEngine.getActiveRenderPass());
+
+            } else if (u.getType().equalsIgnoreCase("AmbientLight")) {
+                u.setValue(AmbientLight.class, (AmbientLight) renderEngine.getActiveRenderPass());
+
 
                 // other stuff below
                 // currently supporting
@@ -191,7 +208,7 @@ public abstract class Shader {
                 // In the last step we try to find the value in the material,
                 // otherwise leave it to the user!
                 if (u.getType().equalsIgnoreCase("float") && material.hasFloat(n)) {
-                    u.setValue(Float.class, material.getFloat(n));
+                    u.setValue(float.class, material.getFloat(n));
                 } else if ((u.getType().equalsIgnoreCase("vec3") && material.hasVector(n))) {
                     u.setValue(Vector3f.class, material.getVector(n));
                 } else if ((u.getType().equalsIgnoreCase("mat4") && material.hasMatrix(n))) {
@@ -224,8 +241,9 @@ public abstract class Shader {
         }
     }
 
-    protected abstract void handle(Uniform uniform, Transform transform, Material material,
-                                   RenderEngine renderEngine, Matrix4f projection);
+    protected void handle(Uniform uniform, Transform transform, Material material,
+                                   RenderEngine renderEngine, Matrix4f projection) {
+    }
 
     public void compile() {
         int id = this.program.getID();
@@ -275,11 +293,11 @@ public abstract class Shader {
     }
 
     public void setUniform(String name, Vector3f vec) {
-        glUniform3f(program.getUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ());
+        glUniform3f(program.getExpandedUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ());
     }
 
     public void setUniform(String name, Vector4f vec) {
-        glUniform4f(program.getUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
+        glUniform4f(program.getExpandedUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
     }
 
     public void setUniform(String name, Color color) {
@@ -287,24 +305,28 @@ public abstract class Shader {
     }
 
     public void setUniform(String name, Vector2f vec) {
-        glUniform2f(program.getUniform(name).getLocation(), vec.getX(), vec.getY());
+        glUniform2f(program.getExpandedUniform(name).getLocation(), vec.getX(), vec.getY());
     }
 
     public void setUniform(String name, Matrix4f matrix) {
-        glUniformMatrix4(program.getUniform(name).getLocation(), true, (FloatBuffer) UBuffer.create(matrix).flip());
+        glUniformMatrix4(program.getExpandedUniform(name).getLocation(), true, (FloatBuffer) UBuffer.create(matrix).flip());
     }
 
     public void setUniform(String name, int value) {
-        glUniform1i(program.getUniform(name).getLocation(), value);
+        glUniform1i(program.getExpandedUniform(name).getLocation(), value);
     }
 
     public void setUniform(String name, float value) {
-        glUniform1f(program.getUniform(name).getLocation(), value);
+        glUniform1f(program.getExpandedUniform(name).getLocation(), value);
     }
 
     public void setUniform(String name, DirectionalLight directionalLight) {
         setUniform(name + ".base", (BaseLight) directionalLight);
         setUniform(name + ".direction", directionalLight.getDirection());
+    }
+
+    public void setUniform(String name, AmbientLight ambientLight) {
+        setUniform(name + ".color", ambientLight.getColor());
     }
 
     public void setUniform(String name, BaseLight baseLight) {
@@ -333,11 +355,7 @@ public abstract class Shader {
 
     private GLSLScript magicUniforms(GLSLScript script) {
 
-        if (!script.isProcessed()) {
-            script = getParser().process(script);
-        }
-
-        for (Uniform u : script.getUniforms()) {
+        for (Uniform u : script.getExpandedUniforms()) {
             LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), u.getName());
             addUniform(u);
         }
@@ -347,10 +365,6 @@ public abstract class Shader {
     }
 
     private GLSLScript magicAttributes(GLSLScript script) {
-
-        if (!script.isProcessed()) {
-            script = getParser().process(script);
-        }
 
         int loc = 0;
 

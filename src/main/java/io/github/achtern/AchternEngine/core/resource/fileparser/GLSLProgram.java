@@ -25,26 +25,33 @@ public class GLSLProgram {
 
     protected Map<String, Uniform> cachedUniforms;
 
+    protected Map<String, Uniform> cachedExpandedUniforms;
+
+    protected LineBasedParser parser;
+
     /**
      * Instance to parse yaml
      */
     private Yaml yaml;
 
 
-    public GLSLProgram(String name, String program) throws IOException {
+    public GLSLProgram(String name, String program) {
         this.name = name;
         this.source = program;
         this.yaml = new Yaml();
         this.scripts = new ArrayList<GLSLScript>();
-
-        parse();
-
     }
 
     public Uniform getUniform(String name) {
         getUniforms();
 
         return cachedUniforms.get(name);
+    }
+
+    public Uniform getExpandedUniform(String name) {
+        getExpandedUniforms();
+
+        return cachedExpandedUniforms.get(name);
     }
 
     public List<Uniform> getUniforms() {
@@ -65,8 +72,26 @@ public class GLSLProgram {
         return getUniforms();
     }
 
-    protected void parse() throws IOException {
+    public List<Uniform> getExpandedUniforms() {
+        if (cachedExpandedUniforms != null) {
+            return new ArrayList<Uniform>(cachedExpandedUniforms.values());
+        }
 
+        Map<String, Uniform> uniforms = new HashMap<String, Uniform>();
+
+        for (GLSLScript s : getScripts()) {
+            for (Uniform u : s.getExpandedUniforms()) {
+                uniforms.put(u.getName(), u);
+            }
+        }
+
+        cachedExpandedUniforms = uniforms;
+
+        return getExpandedUniforms();
+    }
+
+    public void parse(LineBasedParser parser) throws IOException {
+        setParser(parser);
         this.parsed = (Map) yaml.load(source);
 
         validate(parsed);
@@ -92,6 +117,9 @@ public class GLSLProgram {
     protected void pushShader(String source, GLSLScript.Type type) {
         GLSLScript shader = new GLSLScript(this.name, type);
         shader.setSource(source);
+        if (getParser() instanceof GLSLParser) {
+            ((GLSLParser) getParser()).process(shader);
+        }
         this.scripts.add(shader);
     }
 
@@ -131,5 +159,13 @@ public class GLSLProgram {
 
     public int getID() {
         return id;
+    }
+
+    public void setParser(LineBasedParser parser) {
+        this.parser = parser;
+    }
+
+    public LineBasedParser getParser() {
+        return parser;
     }
 }

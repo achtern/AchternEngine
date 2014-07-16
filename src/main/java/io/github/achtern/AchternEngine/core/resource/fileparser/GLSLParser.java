@@ -178,12 +178,13 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
 
         List<Variable> uniforms = getVariables(script.getSource(), TOKEN_UNIFORM);
 
+        script.setUniformsFromVariable(uniforms);
 
         script.setStructs(getUniformStructs(script.getSource()));
 
         script.setAttributes(getAttributes(script.getSource()));
 
-        script.setUniforms(getUniforms(script.getSource(), uniforms, script.getStructs()));
+        script.setExpandedUniforms(getExpandedUniforms(script.getSource(), uniforms, script.getStructs()));
 
         script.setProcessed(true);
 
@@ -191,7 +192,7 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
 
     }
 
-    public List<Uniform> getUniforms(String text, List<Variable> uniforms, List<GLSLStruct> structs) {
+    public List<Uniform> getExpandedUniforms(String text, List<Variable> uniforms, List<GLSLStruct> structs) {
         List<Uniform> finalUniforms = new ArrayList<Uniform>();
 
         if (LOGGER.isTraceEnabled()) {

@@ -1,14 +1,12 @@
 #version 330
 
-in vec2 texCoord0;
+#include "lighting.gfh"
 
-out vec4 fragColor;
+uniform AmbientLight ambientLight;
 
-uniform vec4 color;
-uniform vec3 ambientIntensity;
-uniform sampler2D diffuse;
-
-void main()
+vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-	fragColor = color * texture(diffuse, texCoord0.xy) * vec4(ambientIntensity, 1);
+    return ambientLight.color;
 }
+
+#include "lighting-main.gfh"

@@ -1,27 +1,27 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
 
-import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.shader.forward.Ambient;
 
 public class AmbientLight extends Light {
 
-    private Vector3f color;
+    private Color color;
 
-    public AmbientLight(Vector3f color) {
+    public AmbientLight(Color color) {
         this.color = color;
 
         setShader(Ambient.getInstance());
     }
 
     public AmbientLight(float r, float g, float b) {
-        this(new Vector3f(r, g, b));
+        this(new Color(r, g, b));
     }
 
-    public Vector3f getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(Vector3f color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 }

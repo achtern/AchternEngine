@@ -4,6 +4,11 @@ struct BaseLight
     float intensity;
 };
 
+struct AmbientLight
+{
+    vec4 color;
+};
+
 struct DirectionalLight
 {
     BaseLight base;

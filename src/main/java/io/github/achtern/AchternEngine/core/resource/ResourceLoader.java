@@ -296,11 +296,10 @@ public class ResourceLoader {
 
 
     public static GLSLProgram getShaderProgram(String name) throws IOException {
-        return getShaderProgram(name, false);
+        return getShaderProgram(name, false, new GLSLParser());
     }
 
-
-    public static GLSLProgram getShaderProgram(String name, boolean forceLoading) throws IOException {
+    public static GLSLProgram getShaderProgram(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
 
         name = name + SHADER_PROGRAM_EXT;
 
@@ -321,6 +320,7 @@ public class ResourceLoader {
         programReader.close();
 
         GLSLProgram program = new GLSLProgram(name, programSource.toString());
+        program.parse(parser);
 
         shaderProgrammCache.add(name, program);
 

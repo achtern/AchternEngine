@@ -21,6 +21,8 @@ public class GLSLScript {
 
     private List<Uniform> uniforms;
 
+    private List<Uniform> expandedUniforms;
+
     private String source;
 
     private boolean processed;
@@ -64,6 +66,23 @@ public class GLSLScript {
 
     public void setUniforms(List<Uniform> uniforms) {
         this.uniforms = uniforms;
+    }
+
+    public void setUniformsFromVariable(List<Variable> uniforms) {
+        List<Uniform> u = new ArrayList<Uniform>(uniforms.size());
+        for (Variable v : uniforms) {
+            u.add(new Uniform(v));
+        }
+
+        setUniforms(u);
+    }
+
+    public List<Uniform> getExpandedUniforms() {
+        return expandedUniforms;
+    }
+
+    public void setExpandedUniforms(List<Uniform> expandedUniforms) {
+        this.expandedUniforms = expandedUniforms;
     }
 
     public List<Variable> getAttributes() {
