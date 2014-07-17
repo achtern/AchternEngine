@@ -8,7 +8,7 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Quaternion;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
-import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.rendering.generator.ImageGenerator;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;

@@ -7,7 +7,7 @@ import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
-import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Quad;
 import io.github.achtern.AchternEngine.core.rendering.shader.BasicShader;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;

@@ -16,6 +16,9 @@ public class Dimension extends Vector2f {
 
     public Dimension(int width, int height) {
         super(width, height);
+        if (width < 0 || height < 0) {
+            throw new IllegalArgumentException("Not valid dimension, width|height MUST be greater than 0");
+        }
     }
 
     public Dimension factor2() {

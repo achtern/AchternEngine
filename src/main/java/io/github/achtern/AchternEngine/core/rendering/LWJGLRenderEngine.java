@@ -3,14 +3,15 @@ package io.github.achtern.AchternEngine.core.rendering;
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
+import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
-import io.github.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
+import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT16;
-import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
@@ -27,6 +26,8 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
     protected Camera mainCamera;
+
+    protected LWJGLDataBinder dataBinder;
 
     protected ArrayList<RenderPass> passes;
     protected RenderPass activePass;
@@ -42,16 +43,21 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     public LWJGLRenderEngine() {
 
+        dataBinder = new LWJGLDataBinder(this);
+
         drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
         setRenderTarget(Window.getTarget());
 
-        shadowMap = new FrameBuffer(new Texture(new Dimension(1024, 1024),
-                GL_TEXTURE_2D, GL_NEAREST, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT), GL_DEPTH_ATTACHMENT);
+//        shadowMap = new FrameBuffer(new Texture(new Dimension(1024, 1024),
+//                GL_TEXTURE_2D, GL_NEAREST, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT), GL_DEPTH_ATTACHMENT);
+//
+//        addTexture("shadowMap", shadowMap.getTexture());
 
-        addTexture("shadowMap", shadowMap.getTexture());
+        // until FBOs work
+        addTexture("shadowMap", new Texture(Window.get()));
 
         addInteger("diffuse", 0);
         addInteger("shadowMap", 1);
@@ -94,10 +100,11 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
             }
 
             this.activePass = pass;
+            /* until FBOs work!
             if (this.activePass instanceof BaseLight) {
                 ShadowInfo shadowInfo = ((BaseLight) this.activePass).getShadowInfo();
 
-                shadowMap.bindAsRenderTarget();
+                getDataBinder().bind(shadowMap);
                 glClear(GL_DEPTH_BUFFER_BIT);
 
                 if (shadowInfo != null) {
@@ -132,7 +139,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
             }
 
-
+            until FBOs work*/
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);
@@ -222,6 +229,11 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     @Override
     public int getSamplerSlot(String name) {
         return getInteger(name);
+    }
+
+    @Override
+    public DataBinder getDataBinder() {
+        return dataBinder;
     }
 
     @Override

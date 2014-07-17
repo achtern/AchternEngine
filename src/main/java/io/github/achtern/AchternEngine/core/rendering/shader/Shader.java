@@ -150,17 +150,17 @@ public abstract class Shader {
                 // material takes precedence over the renderengine
                 if (material.hasTexture(n)) {
                     // Bind it to the sampler slot. this sampler slot comes from the RenderEngine
-                    material.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+                    renderEngine.getDataBinder().bind(material.getTexture(n), renderEngine.getSamplerSlot(n));
 
                 } else if (renderEngine.hasTexture(n)) {
-                    renderEngine.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+                    renderEngine.getDataBinder().bind(renderEngine.getTexture(n), renderEngine.getSamplerSlot(n));
 
                 } else {
                     LOGGER.warn("{}: texture '{}' not found in material nor RenderEngine.",
                             this.getClass().getSimpleName(), n);
                     // If the texture has not been found, bind the missing texture from
                     // Material
-                    material.getTexture(n).bind(renderEngine.getSamplerSlot(n));
+                    renderEngine.getDataBinder().bind(material.getTexture(n), renderEngine.getSamplerSlot(n));
                     n = "diffuse"; // Default to diffuse!
                 }
 

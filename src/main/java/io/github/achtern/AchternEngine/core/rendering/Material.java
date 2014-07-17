@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;

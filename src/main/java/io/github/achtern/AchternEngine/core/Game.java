@@ -6,7 +6,7 @@ import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.input.InputManager;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
-import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -38,4 +39,6 @@ public interface RenderEngine extends DataStore {
     public void setDrawStrategy(DrawStrategy drawStrategy);
 
     public int getSamplerSlot(String name);
+
+    public DataBinder getDataBinder();
 }

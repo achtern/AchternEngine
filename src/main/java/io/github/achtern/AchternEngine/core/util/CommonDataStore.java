@@ -3,7 +3,7 @@ package io.github.achtern.AchternEngine.core.util;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
-import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 
 import java.util.HashMap;
 import java.util.Map;

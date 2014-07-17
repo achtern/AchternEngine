@@ -1,12 +1,13 @@
 package io.github.achtern.AchternEngine.core.contracts;
 
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 
 import java.nio.ByteBuffer;
 
 /**
  * TextureableData has enough information to bind
- * a {@link io.github.achtern.AchternEngine.core.rendering.Texture}.
+ * a {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture}.
  */
 public interface TexturableData {
 
@@ -16,11 +17,7 @@ public interface TexturableData {
 
     public int getMagFilter();
 
-    /**
-     * Return -1 in order to indicate automatic generation!
-     * @return internal format
-     */
-    public int getFormat();
+    public Format getFormat();
 
     public int getInternalFormat();
 

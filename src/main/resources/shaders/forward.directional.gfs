@@ -18,8 +18,8 @@ uniform DirectionalLight directionalLight;
 
 vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-    vec4 lightAmount = CalcDirectionalLight(directionalLight, normal, worldPos) * vec4(CalcShadowEffect(shadowMap, shadowMapCoords0));
-
+    vec4 lightAmount = CalcDirectionalLight(directionalLight, normal, worldPos); //* vec4(CalcShadowEffect(shadowMap, shadowMapCoords0));
+    // no shadows until FBOs work!
     return lightAmount;
 }
 
