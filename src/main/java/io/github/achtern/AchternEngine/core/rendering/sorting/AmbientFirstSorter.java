@@ -6,11 +6,9 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light
 
 /**
  * Sorts a List of RenderPasses for the LWJGLRenderEngine
- * when in shadow use.
- * The ambient light should be rendered first (no shadows)
- * and the others last (with shadow generation)
+ * with ambient light first
  */
-public class ShadowSorter implements RenderPassSorter {
+public class AmbientFirstSorter implements RenderPassSorter {
 
     @Override
     public int compare(RenderPass o1, RenderPass o2) {

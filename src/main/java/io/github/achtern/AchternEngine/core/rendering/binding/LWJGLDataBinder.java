@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering.binding;
 
+import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.rendering.LWJGLRenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.RenderBuffer;
@@ -31,6 +32,11 @@ public class LWJGLDataBinder implements DataBinder {
     public void bind(Texture texture, int samplerslot) {
         if (samplerslot < 0) {
             throw new IllegalArgumentException("SamplerSlot MUST be a positive integer!");
+        }
+
+        if (texture.getID() == -1) {
+            getIDGenerator().generate(texture);
+            upload(texture);
         }
 
         glActiveTexture(GL_TEXTURE0 + samplerslot);
@@ -84,6 +90,8 @@ public class LWJGLDataBinder implements DataBinder {
             }
         }
 
+        Window.get().bindAsRenderTarget();
+
     }
 
     @Override
@@ -104,6 +112,11 @@ public class LWJGLDataBinder implements DataBinder {
             // set the attachment type to the bound fbo
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo.getID());
         } else {
+
+            if (rbo.getTexture().getID() == -1) {
+                // upload texture
+                upload(rbo.getTexture());
+            }
 
             glFramebufferTexture2D(
                     GL_FRAMEBUFFER,

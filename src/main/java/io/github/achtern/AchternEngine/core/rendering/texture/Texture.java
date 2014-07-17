@@ -2,8 +2,6 @@ package io.github.achtern.AchternEngine.core.rendering.texture;
 
 import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
-import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
-import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLIDGenerator;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +16,7 @@ public class Texture extends Dimension implements TexturableData {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Texture.class);
 
-    private int id;
+    private int id = -1;
 
     protected int target;
 
@@ -56,21 +54,29 @@ public class Texture extends Dimension implements TexturableData {
         }
         this.alpha = alpha;
         this.data = data;
+    }
 
-        LWJGLIDGenerator.generateIt(this);
-        LWJGLDataBinder.uploadIt(this);
+    public Texture(Dimension dimension, int minFilter, int magFilter, int internalFormat, Format format, boolean alpha) {
+        this(
+                dimension,
+                GL_TEXTURE_2D,
+                minFilter,
+                magFilter,
+                internalFormat,
+                format,
+                alpha,
+                UBuffer.createByteBuffer(dimension.getWidth() * dimension.getHeight() * 4)
+        );
     }
 
     public Texture(Dimension dimension) {
         this(
                 dimension,
-                GL_TEXTURE_2D,
                 GL_NEAREST,
                 GL_NEAREST,
                 GL_RGBA8,
                 Format.RGBA,
-                true,
-                UBuffer.createByteBuffer(dimension.getWidth() * dimension.getHeight() * 4)
+                true
         );
     }
 
