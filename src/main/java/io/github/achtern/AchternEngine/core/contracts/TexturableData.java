@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.contracts;
 
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 
 import java.nio.ByteBuffer;
 
@@ -11,7 +12,7 @@ import java.nio.ByteBuffer;
  */
 public interface TexturableData {
 
-    public int getTarget();
+    public Texture.Type getType();
 
     public int getMinFilter();
 

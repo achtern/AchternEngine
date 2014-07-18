@@ -6,16 +6,13 @@ import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ContextAttribs;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.opengl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glGetInteger;
+import static org.lwjgl.opengl.GL30.*;
 
 public class Window extends Dimension implements RenderTarget {
 
@@ -30,6 +27,8 @@ public class Window extends Dimension implements RenderTarget {
     public static Window get() {
         return instance;
     }
+
+    protected int drawBuffer, readBuffer;
 
     public Window(Dimension copy) {
         super(copy);
@@ -54,6 +53,8 @@ public class Window extends Dimension implements RenderTarget {
             Display.create(pixelFormat, contextAtrributes);
             Keyboard.create();
             Mouse.create();
+            drawBuffer = glGetInteger(GL_DRAW_BUFFER);
+            readBuffer = glGetInteger(GL_READ_BUFFER);
         } catch (LWJGLException e) {
             LOGGER.error("Error setting up input and window", e);
         }
@@ -75,7 +76,9 @@ public class Window extends Dimension implements RenderTarget {
 
     @Override
     public void bindAsRenderTarget() {
-
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDrawBuffer(drawBuffer);
+        glReadBuffer(readBuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         glViewport(0, 0, getWidth(), getHeight());
 

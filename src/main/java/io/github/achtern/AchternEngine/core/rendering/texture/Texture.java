@@ -16,9 +16,15 @@ public class Texture extends Dimension implements TexturableData {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Texture.class);
 
+    public enum Type {
+        TWO_DIMENSIONAL,
+        THREE_DIMENSIONAL
+    }
+
+
     private int id = -1;
 
-    protected int target;
+    protected Type type;
 
     protected int minFilter;
 
@@ -35,7 +41,7 @@ public class Texture extends Dimension implements TexturableData {
 
     public Texture(
             Dimension dimension,
-            int target,
+            Type type,
             int minFilter,
             int magFilter,
             int internalFormat,
@@ -44,7 +50,7 @@ public class Texture extends Dimension implements TexturableData {
             ByteBuffer data) {
 
         super(dimension);
-        this.target = target;
+        this.type = type;
         this.minFilter = minFilter;
         this.magFilter = magFilter;
         this.internalFormat = internalFormat;
@@ -59,7 +65,7 @@ public class Texture extends Dimension implements TexturableData {
     public Texture(Dimension dimension, int minFilter, int magFilter, int internalFormat, Format format, boolean alpha) {
         this(
                 dimension,
-                GL_TEXTURE_2D,
+                Type.TWO_DIMENSIONAL,
                 minFilter,
                 magFilter,
                 internalFormat,
@@ -83,7 +89,7 @@ public class Texture extends Dimension implements TexturableData {
     public Texture(final BufferedImage image) {
         this(
                 Dimension.fromBufferedImage(image),
-                GL_TEXTURE_2D,
+                Type.TWO_DIMENSIONAL,
                 GL_NEAREST,
                 GL_NEAREST,
                 GL_RGBA8,
@@ -96,7 +102,7 @@ public class Texture extends Dimension implements TexturableData {
     public Texture(BufferedImage image, Dimension dimension) {
         this(
                 Dimension.fromBufferedImage(image),
-                GL_TEXTURE_2D,
+                Type.TWO_DIMENSIONAL,
                 GL_NEAREST,
                 GL_NEAREST,
                 GL_RGBA8,
@@ -109,7 +115,7 @@ public class Texture extends Dimension implements TexturableData {
     public Texture(TexturableData data) {
         this(
                 data.getDimension(),
-                data.getTarget(),
+                data.getType(),
                 data.getMinFilter(),
                 data.getMagFilter(),
                 data.getInternalFormat(),
@@ -123,8 +129,8 @@ public class Texture extends Dimension implements TexturableData {
         return id;
     }
 
-    public int getTarget() {
-        return target;
+    public Type getType() {
+        return type;
     }
 
     @Override

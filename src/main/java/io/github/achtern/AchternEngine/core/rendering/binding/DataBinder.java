@@ -12,9 +12,11 @@ public interface DataBinder {
     public void upload(Texture texture);
 
 
-    public void bind(FrameBuffer texture);
+    public void bindAsRenderTarget(FrameBuffer fbo);
 
-    public void upload(FrameBuffer texture);
+    public void bind(FrameBuffer fbo);
+
+    public void upload(FrameBuffer fbo);
 
     public IDGenerator getIDGenerator();
 

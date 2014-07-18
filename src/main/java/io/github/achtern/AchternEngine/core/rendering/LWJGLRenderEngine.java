@@ -8,6 +8,8 @@ import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
+import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter;
+import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
@@ -51,13 +54,19 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         passes = new ArrayList<RenderPass>();
         setRenderTarget(Window.getTarget());
 
-//        shadowMap = new FrameBuffer(new Texture(new Dimension(1024, 1024),
-//                GL_TEXTURE_2D, GL_NEAREST, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT), GL_DEPTH_ATTACHMENT);
-//
-//        addTexture("shadowMap", shadowMap.getTexture());
+        shadowMap = new FrameBuffer(new Dimension(1024, 1024));
+        shadowMap.setDepthTarget(new Texture(
+                new Dimension(1024, 1024),
+                GL_NEAREST, GL_NEAREST,
+                GL_DEPTH_COMPONENT,
+                Format.DEPTH,
+                false
+        ));
 
         // until FBOs work
         addTexture("shadowMap", new Texture(Window.get()));
+
+//        addTexture("shadowMap", shadowMap.getDepthTarget().getTexture());
 
         addInteger("diffuse", 0);
         addInteger("shadowMap", 1);
@@ -90,7 +99,14 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
         this.activePass = passes.get(0);
         LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
+
+        if (this.activePass instanceof AmbientLight) {
+            LOGGER.trace("First Pass not instance of AmbientLight, sorting...");
+            Collections.sort(passes, new AmbientFirstSorter());
+            this.activePass = passes.get(0);
+        }
         node.render(activePass.getShader(), this);
+
 
         boolean skip = true;
         for (RenderPass pass : this.passes) {
@@ -100,46 +116,45 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
             }
 
             this.activePass = pass;
-            /* until FBOs work!
-            if (this.activePass instanceof BaseLight) {
-                ShadowInfo shadowInfo = ((BaseLight) this.activePass).getShadowInfo();
 
-                getDataBinder().bind(shadowMap);
-                glClear(GL_DEPTH_BUFFER_BIT);
+//            if (this.activePass instanceof BaseLight && false) {
+//                ShadowInfo shadowInfo = ((BaseLight) this.activePass).getShadowInfo();
+//
+//                if (shadowInfo != null) {
+//                    getDataBinder().bindAsRenderTarget(shadowMap);
+//                    glClear(GL_DEPTH_BUFFER_BIT);
+//
+//                    Node holder = new Node();
+//
+//                    Camera shadowCamera = new Camera(shadowInfo.getMatrix());
+//                    holder.add(shadowCamera);
+//
+//                    shadowCamera.getTransform().setPosition(
+//                            ((BaseLight) this.activePass).getTransform().getTransformedPosition()
+//                    );
+//                    shadowCamera.getTransform().setRotation(
+//                            ((BaseLight) this.activePass).getTransform().getTransformedRotation()
+//                    );
+//
+//                    addMatrix("shadowMatrix", shadowCamera.getViewProjection());
+//
+//                    Camera main = getMainCamera();
+//                    setMainCamera(shadowCamera);
+//                    {
+//
+//                        node.render(ShadowGenerator.getInstance(), this);
+//
+//                    }
+//                    setMainCamera(main);
+//
+//
+//                }
+//
+//
+//                getRenderTarget().bindAsRenderTarget();
+//
+//            }
 
-                if (shadowInfo != null) {
-                    Node holder = new Node();
-
-                    Camera shadowCamera = new Camera(shadowInfo.getMatrix());
-                    holder.add(shadowCamera);
-
-                    shadowCamera.getTransform().setPosition(
-                            ((BaseLight) this.activePass).getTransform().getTransformedPosition()
-                    );
-                    shadowCamera.getTransform().setRotation(
-                            ((BaseLight) this.activePass).getTransform().getTransformedRotation()
-                    );
-
-                    addMatrix("shadowMatrix", shadowCamera.getViewProjection());
-
-                    Camera main = getMainCamera();
-                    setMainCamera(shadowCamera);
-                    {
-
-                        node.render(ShadowGenerator.getInstance(), this);
-
-                    }
-                    setMainCamera(main);
-
-
-                }
-
-
-                getRenderTarget().bindAsRenderTarget();
-
-            }
-
-            until FBOs work*/
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE);

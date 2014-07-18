@@ -1,19 +1,15 @@
 package io.github.achtern.AchternEngine.core.rendering.framebuffer;
 
-import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-
-public class FrameBuffer extends Dimension implements RenderTarget {
+public class FrameBuffer extends Dimension {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(FrameBuffer.class);
 
@@ -28,19 +24,15 @@ public class FrameBuffer extends Dimension implements RenderTarget {
 
     public FrameBuffer(Dimension texture, int samples) {
         super(texture);
-        if (samples > 0) {
+        if (samples < 1) {
             throw new IllegalArgumentException("sampler must be greater than 0");
         }
         this.samples = samples;
+        this.colorTargets = new ArrayList<RenderBuffer>();
     }
 
     public FrameBuffer(Dimension dimension) {
         this(dimension, 1);
-    }
-
-    @Deprecated
-    public void upload() {
-
     }
 
 
@@ -107,11 +99,6 @@ public class FrameBuffer extends Dimension implements RenderTarget {
 
     public int getSamples() {
         return samples;
-    }
-
-    public void bindAsRenderTarget() {
-        glBindFramebuffer(GL_FRAMEBUFFER, getID());
-        glViewport(0, 0, getWidth(), getHeight());
     }
 
     /**

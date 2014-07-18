@@ -44,14 +44,4 @@ public class LWJGLIDGenerator implements IDGenerator {
     public static void generateIt(Texture texture) {
         (new LWJGLIDGenerator()).generate(texture);
     }
-
-    @Deprecated
-    public static void generateIt(FrameBuffer fbo) {
-        (new LWJGLIDGenerator()).generate(fbo);
-    }
-
-    @Deprecated
-    public static void generateIt(RenderBuffer rbo) {
-        (new LWJGLIDGenerator()).generate(rbo);
-    }
 }
