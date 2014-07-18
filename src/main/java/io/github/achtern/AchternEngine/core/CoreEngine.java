@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core;
 
+import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
 import io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
@@ -55,6 +56,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param game The game to run.
      */
     public CoreEngine(Game game, WindowIOBindingManager.Binding binding) {
+        LOGGER.debug(BuildInfo.get());
         this.game = game;
         this.running = false;
         this.fps = new FPS();
