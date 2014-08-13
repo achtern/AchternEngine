@@ -5,33 +5,67 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 
+/**
+ * A simple Quad Mesh
+ */
 public class Quad extends Mesh {
 
     protected float width;
     protected float height;
 
+    /**
+     * Initializes a Quad with 1x1
+     */
     public Quad() {
         this(1, 1, false);
     }
 
+    /**
+     * Initializes a Quad with the given dimensions
+     * @param size Width and height
+     */
     public Quad(Dimension size) {
         this(size, false);
     }
 
+    /**
+     * Initializes a Quad with the given dimensions,
+     * if flip is set to true, the texture coordinates
+     * will get flipped
+     * @param size Width and height
+     * @param flip Whether to flip texture coordinates
+     */
     public Quad(Dimension size, boolean flip) {
         this(size.getWidth(), size.getHeight(), flip);
     }
 
+    /**
+     * Initializes a Quad with the given dimensions
+     * @param width Width
+     * @param height Height
+     */
     public Quad(float width, float height) {
         this(width, height, false);
     }
 
+    /**
+     * Initializes a Quad with the given dimensions
+     * if flip is set to true, the texture coordinates
+     * will get flipped
+     * @param width Width
+     * @param height Height
+     * @param flip Whether to flip texture coordinates
+     */
     public Quad(float width, float height, boolean flip) {
         this.width = width;
         this.height = height;
         generate(flip);
     }
 
+    /**
+     * Generates the data
+     * @param flip Whether to flip texture coordinates
+     */
     protected void generate(boolean flip) {
 
         Vector2f[] texCoords;

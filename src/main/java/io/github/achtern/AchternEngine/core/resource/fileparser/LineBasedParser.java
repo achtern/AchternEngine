@@ -1,5 +1,10 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser;
 
+/**
+ * A LineBasedParser can work on a single
+ * line of source code. Independently of the
+ * other source code.
+ */
 public interface LineBasedParser {
 
     /**

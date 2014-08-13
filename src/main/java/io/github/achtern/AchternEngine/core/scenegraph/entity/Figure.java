@@ -16,6 +16,11 @@ public class Figure extends QuickEntity {
 
     private Mesh mesh;
     private Material material;
+
+    /**
+     * Override the renderEngine supplied drawStrategy
+     * if not null
+     */
     private DrawStrategy drawStrategy;
 
     /**
@@ -65,8 +70,12 @@ public class Figure extends QuickEntity {
         this("Untitled Figure", mesh, material);
     }
 
+    /**
+     * @see QuickEntity#render(Shader, RenderEngine)
+     */
     @Override
     public void render(Shader shader, RenderEngine renderEngine) {
+        // TODO: bind the shader in the RenderEngine!
         shader.bind();
 
         Matrix4f worldMat = getTransform().getTransformation();

@@ -1,6 +1,8 @@
 package io.github.achtern.AchternEngine.core.rendering.framebuffer;
 
+import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import org.slf4j.Logger;
@@ -9,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FrameBuffer extends Dimension {
+public class FrameBuffer extends Dimension implements RenderTarget {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(FrameBuffer.class);
 
@@ -117,5 +119,16 @@ public class FrameBuffer extends Dimension {
         if (getID() != -1) {
             throw new IllegalStateException("FrameBuffer already generated!");
         }
+    }
+
+    /**
+     * Binds the object as render target.
+     * You should avoid to use this method.
+     *
+     * @param binder The binder used to bind the object
+     */
+    @Override
+    public void bindAsRenderTarget(DataBinder binder) {
+        binder.bindAsRenderTarget(this);
     }
 }

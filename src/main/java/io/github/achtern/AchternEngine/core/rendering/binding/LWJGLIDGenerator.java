@@ -10,6 +10,9 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 
+/**
+ * Generates data IDs for Objects through the LWJGL Binding
+ */
 public class LWJGLIDGenerator implements IDGenerator {
 
     @Override

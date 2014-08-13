@@ -3,6 +3,7 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -75,7 +76,7 @@ public class Window extends Dimension implements RenderTarget {
     }
 
     @Override
-    public void bindAsRenderTarget() {
+    public void bindAsRenderTarget(DataBinder binder) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDrawBuffer(drawBuffer);
         glReadBuffer(readBuffer);

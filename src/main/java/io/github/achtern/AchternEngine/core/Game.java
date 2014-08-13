@@ -37,6 +37,10 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     private GameDebugger debugger;
 
+    /**
+     * The main InputManager, used to register key/mouse actions
+     * This will get used by the Engine as well.
+     */
     private InputManager inputManager;
 
     /**
@@ -95,9 +99,17 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
         postRender(renderEngine);
     }
 
+    /**
+     * This method will get called before each render
+     * @param renderEngine The active RenderEngine instance
+     */
     public void preRender(RenderEngine renderEngine) {
     }
 
+    /**
+     * This method will get called after each render
+     * @param renderEngine The active RenderEngine instance
+     */
     public void postRender(RenderEngine renderEngine) {
     }
 

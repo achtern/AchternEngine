@@ -12,14 +12,34 @@ import java.nio.ByteBuffer;
  */
 public interface TexturableData {
 
+    /**
+     * The Texture Type
+     * @return Texture Type
+     */
     public Texture.Type getType();
 
+    /**
+     * MinFilter to use
+     * @return OpenGL int atm.
+     */
     public int getMinFilter();
 
+    /**
+     * MagFilter to use
+     * @return OpenGL int atm.
+     */
     public int getMagFilter();
 
+    /**
+     * Texture Format
+     * @return Texture Format
+     */
     public Format getFormat();
 
+    /**
+     * Internal Format
+     * @return OpenGL int atm.
+     */
     public int getInternalFormat();
 
     /**

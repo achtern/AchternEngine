@@ -4,6 +4,12 @@ import io.github.achtern.AchternEngine.core.input.MouseButton;
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
+/**
+ * A MouseEvent will be passed to the
+ * {@link io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger}
+ * or {@link io.github.achtern.AchternEngine.core.input.event.listener.MouseListener}, as
+ * data payload
+ */
 public class MouseEvent implements InputEvent {
 
     protected final InputAdapter input;
@@ -20,10 +26,18 @@ public class MouseEvent implements InputEvent {
         this.mouseDelta = mouseDelta;
     }
 
+    /**
+     * The pressed button
+     * @return null if it was a mousemoveevent
+     */
     public MouseButton getButton() {
         return button;
     }
 
+    /**
+     * Position of the mouse
+     * @return Mouse Position
+     */
     public Vector2f getPosition() {
         return position;
     }

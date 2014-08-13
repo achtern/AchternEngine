@@ -1,5 +1,10 @@
 package io.github.achtern.AchternEngine.core.contracts;
 
+/**
+ * Classes which implement this interface
+ * indicate that they have to be updated in a specific
+ * interval.
+ */
 public interface Updatable {
 
     /**

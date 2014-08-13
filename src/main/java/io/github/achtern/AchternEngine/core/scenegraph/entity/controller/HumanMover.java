@@ -32,9 +32,13 @@ public class HumanMover extends SimpleMover {
         super(speed, forwardKey, backKey, leftKey, rightKey);
     }
 
+    /**
+     * @see io.github.achtern.AchternEngine.core.input.event.listener.KeyListener#onAction(KeyEvent)
+     */
     @Override
     public void onAction(KeyEvent event) {
 
+        // Calculate the horizantal axis
         Vector3f horizontal = getTransform().getRotation().getForward().mul(Transform.X_AXIS.add(Transform.Z_AXIS)).normalized();
         float amt = getSpeed() * event.getDelta();
 

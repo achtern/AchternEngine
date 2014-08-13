@@ -25,13 +25,16 @@ public class UBuffer {
         FloatBuffer buffer = createFloatBuffer(vertices.length * Vertex.SIZE);
 
         for (Vertex vertex : vertices) {
+            // Positions
             buffer.put(vertex.getPos().getX());
             buffer.put(vertex.getPos().getY());
             buffer.put(vertex.getPos().getZ());
 
+            // Texture Coordinates
             buffer.put(vertex.getTexCor().getX());
             buffer.put(vertex.getTexCor().getY());
 
+            // Normals
             buffer.put(vertex.getNormal().getX());
             buffer.put(vertex.getNormal().getY());
             buffer.put(vertex.getNormal().getZ());

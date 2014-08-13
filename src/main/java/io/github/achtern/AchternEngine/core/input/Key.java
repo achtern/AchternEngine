@@ -1,5 +1,8 @@
 package io.github.achtern.AchternEngine.core.input;
 
+/**
+ * A Key on the Keyboard
+ */
 public enum Key {
     NONE,
     ESCAPE,

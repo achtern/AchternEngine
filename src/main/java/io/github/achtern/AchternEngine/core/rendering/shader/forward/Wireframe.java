@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * Wireframe Shader. Adds a wireframe overlay to all objects
+ */
 public class Wireframe extends Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Wireframe.class);

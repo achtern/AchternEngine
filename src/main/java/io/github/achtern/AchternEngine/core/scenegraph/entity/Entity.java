@@ -7,6 +7,12 @@ import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
+/**
+ * An Entity is the base of all things which live
+ * and do stuff in the scenegraph.
+ * The need a parent ({@link io.github.achtern.AchternEngine.core.scenegraph.Node}) to
+ * work properly.
+ */
 public interface Entity extends Updatable {
 
     /**

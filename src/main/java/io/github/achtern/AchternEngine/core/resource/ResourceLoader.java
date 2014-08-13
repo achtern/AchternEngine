@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.resource;
 
+import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
@@ -31,7 +32,7 @@ public class ResourceLoader {
     public static final String SHADER_PROGRAM_EXT = ".yaml";
 
     private static ResourceCache<MeshData> meshCache = new ResourceCache<MeshData>();
-    private static ResourceCache<Texture> textureCache = new ResourceCache<Texture>();
+    private static ResourceCache<TexturableData> textureCache = new ResourceCache<TexturableData>();
     private static ResourceCache<String> shaderCache = new ResourceCache<String>();
     private static ResourceCache<GLSLProgram> shaderProgrammCache = new ResourceCache<GLSLProgram>();
 
@@ -217,7 +218,8 @@ public class ResourceLoader {
     public static Texture getTexture(String name, Dimension dimension, boolean forceLoading) throws IOException {
 
         if (textureCache.has(name) && !forceLoading) {
-            return textureCache.get(name);
+            // We only store the TexturableData, in order to avoid a clone.
+            return new Texture(textureCache.get(name));
         }
 
         BufferedImage image = ImageIO.read(getStream(name));
@@ -294,11 +296,25 @@ public class ResourceLoader {
         return shaderSource;
     }
 
-
+    /**
+     * Reads programm file from disk and loads the stated source files
+     * (uses a internal cache if the shader has been loaded previously)
+     * @param name Name of the programm declaration
+     * @return A GLSLProgramm with loaded shader sources.
+     * @throws IOException
+     */
     public static GLSLProgram getShaderProgram(String name) throws IOException {
         return getShaderProgram(name, false, new GLSLParser());
     }
 
+    /**
+     * Reads programm file from disk and loads the stated source files
+     * @param name Name of the programm declaration
+     * @param forceLoading if set to true the file will get read again and not read from cache
+     * @param parser The optional parser to modify the shader lines.
+     * @return A GLSLProgramm with loaded shader sources.
+     * @throws IOException
+     */
     public static GLSLProgram getShaderProgram(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
 
         name = name + SHADER_PROGRAM_EXT;
