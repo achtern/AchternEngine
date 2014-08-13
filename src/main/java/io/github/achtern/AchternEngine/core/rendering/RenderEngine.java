@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
+import io.github.achtern.AchternEngine.core.contracts.PassFilter;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
@@ -41,4 +42,13 @@ public interface RenderEngine extends DataStore {
     public int getSamplerSlot(String name);
 
     public DataBinder getDataBinder();
+
+    public void addPassFilter(PassFilter filter);
+
+    /**
+     * Removes a PassFilter from the RenderEngine
+     * @param filter The filter to remove
+     * @return Whether the remove was successful.
+     */
+    public boolean removePassFilter(PassFilter filter);
 }

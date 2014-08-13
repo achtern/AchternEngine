@@ -1,16 +1,15 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.Window;
+import io.github.achtern.AchternEngine.core.contracts.PassFilter;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
+import io.github.achtern.AchternEngine.core.rendering.shadow.BasicShadowRenderer;
 import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter;
-import io.github.achtern.AchternEngine.core.rendering.texture.Format;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
@@ -41,8 +41,8 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     protected DrawStrategy drawStrategy;
 
-    // WIP
-    public FrameBuffer shadowMap;
+    //TMP will be proteceted after testing!
+    public List<PassFilter> passFilters;
 
     public LWJGLRenderEngine() {
 
@@ -52,21 +52,13 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
+        passFilters = new ArrayList<PassFilter>();
+
+        // TODO: do not hardcode this filter!
+        addPassFilter(new BasicShadowRenderer());
+
         setRenderTarget(Window.getTarget());
 
-        shadowMap = new FrameBuffer(new Dimension(1024, 1024));
-        shadowMap.setDepthTarget(new Texture(
-                new Dimension(1024, 1024),
-                GL_NEAREST, GL_NEAREST,
-                GL_DEPTH_COMPONENT,
-                Format.DEPTH,
-                false
-        ));
-
-        // until FBOs work
-        addTexture("shadowMap", new Texture(Window.get()));
-
-//        addTexture("shadowMap", shadowMap.getDepthTarget().getTexture());
 
         addInteger("diffuse", 0);
         addInteger("shadowMap", 1);
@@ -77,10 +69,11 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
 
         glEnable(GL_DEPTH_CLAMP);
 
-        glEnable(GL_TEXTURE_2D);
+        useTextures(true);
     }
 
     @Override
@@ -117,43 +110,9 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
             this.activePass = pass;
 
-//            if (this.activePass instanceof BaseLight && false) {
-//                ShadowInfo shadowInfo = ((BaseLight) this.activePass).getShadowInfo();
-//
-//                if (shadowInfo != null) {
-//                    getDataBinder().bindAsRenderTarget(shadowMap);
-//                    glClear(GL_DEPTH_BUFFER_BIT);
-//
-//                    Node holder = new Node();
-//
-//                    Camera shadowCamera = new Camera(shadowInfo.getMatrix());
-//                    holder.add(shadowCamera);
-//
-//                    shadowCamera.getTransform().setPosition(
-//                            ((BaseLight) this.activePass).getTransform().getTransformedPosition()
-//                    );
-//                    shadowCamera.getTransform().setRotation(
-//                            ((BaseLight) this.activePass).getTransform().getTransformedRotation()
-//                    );
-//
-//                    addMatrix("shadowMatrix", shadowCamera.getViewProjection());
-//
-//                    Camera main = getMainCamera();
-//                    setMainCamera(shadowCamera);
-//                    {
-//
-//                        node.render(ShadowGenerator.getInstance(), this);
-//
-//                    }
-//                    setMainCamera(main);
-//
-//
-//                }
-//
-//
-//                getRenderTarget().bindAsRenderTarget();
-//
-//            }
+            for (PassFilter filter : passFilters) {
+                filter.pre(node, pass, this);
+            }
 
 
             glEnable(GL_BLEND);
@@ -164,6 +123,10 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
                 LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
                 node.render(pass.getShader(), this);
+
+                for (PassFilter filter : passFilters) {
+                    filter.post(node, pass, this);
+                }
             }
             glDepthFunc(GL_LESS);
             glDepthMask(true);
@@ -249,6 +212,23 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     @Override
     public DataBinder getDataBinder() {
         return dataBinder;
+    }
+
+    @Override
+    public void addPassFilter(PassFilter filter) {
+        filter.init(this);
+        passFilters.add(filter);
+    }
+
+    /**
+     * Removes a PassFilter from the RenderEngine
+     *
+     * @param filter The filter to remove
+     * @return Whether the remove was successful.
+     */
+    @Override
+    public boolean removePassFilter(PassFilter filter) {
+        return passFilters.remove(filter);
     }
 
     @Override
