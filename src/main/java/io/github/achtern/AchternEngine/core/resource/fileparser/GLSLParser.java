@@ -88,6 +88,7 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     public static final String INCLUDE_DIRECTORY = "include/";
 
     /**
+     * GLSLParser currently only works on include statements
      * @see io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser#parse(String)
      */
     @Override
@@ -112,17 +113,22 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         return line;
     }
 
-    public List<GLSLStruct> getUniformStructs(String text) {
+    /**
+     * Parses all structs out of the supplied shader source
+     * @param text shader source
+     * @return List of found GLSLStructs
+     */
+    public List<GLSLStruct> getStructs(String text) {
 
+        // All structs will get stored in this List.
         List<GLSLStruct> structs = new ArrayList<GLSLStruct>();
 
+        // First struct in code
         int startLoc = text.indexOf(TOKEN_STRUCT);
-        boolean hasMore = true;
 
-        if (startLoc == -1) {
-            // No struct found.
-            hasMore = false;
-        }
+        // If we have a start position, we must have at least one struct!
+        boolean hasMore = startLoc != -1;
+
 
         while (hasMore) {
 
@@ -161,11 +167,13 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
             // Get the struct member variables
             List<Variable> variables = getVariables(body, "\t");
 
+            // create the case class and add it to the return list
             structs.add(new GLSLStruct(name, variables));
 
             // Removed already parsed code.
             text = text.substring(struct.length() + 1 + TOKEN_END_STATEMENT.length());
 
+            // check if there are any more structs left.
             if (!text.contains(TOKEN_STRUCT)) {
                 hasMore = false;
             }
@@ -174,24 +182,44 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         return structs;
     }
 
+    /**
+     * Processes a {@link GLSLScript}.
+     * Adds uniforms, expanded uniforms, attributes and all structs in the source.
+     * Marks script as processed via {@link GLSLScript#setProcessed(boolean)}
+     * @param script The script to process
+     * @return The same object as script
+     */
     public GLSLScript process(GLSLScript script) {
 
+        // Grab all uniforms as variables, to have the type as well.
         List<Variable> uniforms = getVariables(script.getSource(), TOKEN_UNIFORM);
 
+        // set as uniforms
         script.setUniformsFromVariable(uniforms);
 
-        script.setStructs(getUniformStructs(script.getSource()));
+        // inject all structs
+        script.setStructs(getStructs(script.getSource()));
 
+        // inject all attributes
         script.setAttributes(getAttributes(script.getSource()));
 
+        // now expand the uniforms for adding later on.
         script.setExpandedUniforms(getExpandedUniforms(script.getSource(), uniforms, script.getStructs()));
 
+        // marks as processed
         script.setProcessed(true);
 
         return script;
 
     }
 
+    /**
+     * Expands all uniforms for adding to the shader programm
+     * @param text shader source
+     * @param uniforms List of uniforms
+     * @param structs A list of GLSLStructs
+     * @return List of expanded Uniforms
+     */
     public List<Uniform> getExpandedUniforms(String text, List<Variable> uniforms, List<GLSLStruct> structs) {
         List<Uniform> finalUniforms = new ArrayList<Uniform>();
 
@@ -205,6 +233,8 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
             LOGGER.trace("Found the following uniforms: <{}>", sb.toString());
         }
 
+        // If the uniform is a primitive and not a custom struct,
+        // we do not need to expand it.
         List<Variable> primitives = filterPrimitives(uniforms);
 
         // We do not need a complete list anymore...
@@ -245,19 +275,24 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         // - fooThing.b.y
         // - fooThing.b.z
 
-        boolean struct = false;
+        // Cycle thru all uniforms
         for (Variable v : uniforms) {
             LOGGER.trace("Trying to match ({} {}) against struct list", v.getType(), v.getName());
+
+            // Check if the struct has been parsed already (=> exists)
             GLSLStruct match = findNameInList(v.getType(), structs);
 
             // If it is a known struct, expand it, otherwise just add it
             if (match != null) {
                 LOGGER.trace("Found a match, now expanding");
+                // Now expand this uniform. expandUniform is recursive.
+                // This means it will expand nested structs as well!
                 for (String expanded : expandUniform(v, match, structs)) {
                     finalUniforms.add(new Uniform(match.getName(), expanded));
                 }
             } else {
                 LOGGER.debug("Did not found struct specified by uniform type! ({} {})", v.getType(), v.getName());
+                // otherwise just add the unexpanded uniform
                 finalUniforms.add(new Uniform(v));
             }
         }
@@ -266,33 +301,49 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         return finalUniforms;
     }
 
+    /**
+     * Just a wrapper for getVariables(text, TOKEN_ATTRIBUTE);
+     * @param text Shader source
+     * @return List of attribute variables
+     */
     public List<Variable> getAttributes(String text) {
         return getVariables(text, TOKEN_ATTRIBUTE);
     }
 
-    public List<String> getVariableNames(String text, final String token) {
-        List<String> names = new ArrayList<String>();
-
-        for (Variable v : getVariables(text, token)) {
-            names.add(v.getName());
-        }
-
-        return names;
-
-    }
-
+    /**
+     * Scans through the shader source and extracts variables which
+     * are "flagged" with a specific token.
+     * For example:
+     *
+     * source = """
+     * TOKEN type identifyer;
+     * ANOTHERTOKEN type identifyer2;
+     * TOKEN anothertype identifyer3;
+     * """
+     *
+     * A call to this method with the arguments
+     * - source
+     * - "TOKEN"
+     *
+     * will return a List of 2 Variable objects.
+     * Variable{name="identifyer", type="type"}
+     * Variable{name="identifyer3", type="anothertype"}
+     *
+     * @param text Shader source
+     * @param token The token which will be used to filter statements of variables.
+     * @return List of variables
+     */
     public static List<Variable> getVariables(String text, final String token) {
 
-        List<Variable> vars = new ArrayList<Variable>();
+        // Final List will be returned
+        final List<Variable> vars = new ArrayList<Variable>();
 
+        // Find first position of token
         int startLoc = text.indexOf(token);
 
-        boolean hasMore = true;
+        // if we have a start position, we also have at least one variable
+        boolean hasMore = startLoc != -1;
 
-        if (startLoc == -1) {
-            // No variables found.
-            hasMore = false;
-        }
 
 
         while (hasMore) {
@@ -317,11 +368,17 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
 
 //            LOGGER.trace("VARIABLE STRING: <{}>", variable);
 
+            // Split by whitespace
             String[] parts = variable.split("\\s+");
+
+            // parts[0] would be the token again.
+            // Lets check this
+            assert parts[0].trim().equalsIgnoreCase(token.trim());
 
             String type = parts[1];
             String name = parts[2];
 
+            // Create data class and add it to the return List
             vars.add(new Variable(type, name));
 
             LOGGER.trace("<{}>{}</{}>", type, name, type);
@@ -342,7 +399,35 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         return vars;
     }
 
+    /**
+     * Expand a uniform
+     * If a uniform's type is a custom struct, OpenGL
+     * expects you to expand it.
+     *
+     * This method is a wrapper for expandVariable,
+     * but with debug statements (if TRACE is enabled)
+     *
+     * Example:
+     *
+     * struct Foo {
+     *     float var;
+     *     float another;
+     * }
+     *
+     * uniform Foo fooU;
+     *
+     * fooU should be expanded to
+     * - fooU.var
+     * - fooU.another
+     *
+     * @param uniform The uniform to expand
+     * @param main The main struct (top-level) of the uniform
+     * @param structs A list of GLSLStructs
+     * @return List of expanded uniforms
+     */
     public static List<String> expandUniform(Variable uniform, GLSLStruct main, List<GLSLStruct> structs) {
+        // If trace is enabled we enter a slightly more costly return,
+        // but equal in result
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Job: Expand <uniform {} {}>", uniform.getType(), uniform.getName());
             List<String> r = expendVariable(uniform, main, structs);
@@ -357,24 +442,54 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         return expendVariable(uniform, main, structs);
     }
 
+    /**
+     * Expand a variable
+     * If a uniform's type is a custom struct, OpenGL
+     * expects you to expand it.
+     *
+     * Example:
+     *
+     * struct Foo {
+     *     float var;
+     *     float another;
+     * }
+     *
+     * Foo fooU;
+     *
+     * fooU should be expanded to
+     * - fooU.var
+     * - fooU.another
+     *
+     * @param variable The uniform to expand
+     * @param main The main struct (top-level) of the uniform
+     * @param structs A list of GLSLStructs
+     * @return List of expanded uniforms
+     */
     public static List<String> expendVariable(Variable variable, GLSLStruct main, List<GLSLStruct> structs) {
-        List<String> r = new ArrayList<String>();
+        final List<String> r = new ArrayList<String>();
 
+        // Cycle through all member variables
         for (Variable member : main.getMembers()) {
             LOGGER.trace("Working on member:{} {}", member.getType(), member.getName());
+
+            // If it is primitive we can simply add it!
             if (isPrimitive(member)) {
                 LOGGER.trace("Just added this member. Next!");
                 r.add(member.getName());
             } else {
+
+                // Otherwise we find the type (struct) in the list
                 GLSLStruct s = findNameInList(member.getType(), structs);
 
                 // If it is a known struct, added, otherwise the name of the variable ought to be enough
                 if (s != null) {
                     LOGGER.trace("Making recursiv call to expand this member {} {} with struct provided: {}", member.getType(), member.getName(), s.getName());
+                    // Recursive call to expand this struct
                     r.addAll(expendVariable(member, s, structs));
                 } else {
                     LOGGER.trace("Missing struct for variable {} {}", variable.getType(), variable.getName());
-                    r.add(variable.getName() + "." + member.getName());
+                    // We could not find the struct => just add it.
+                    r.add(member.getName());
                 }
             }
         }
@@ -387,8 +502,9 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
         }
 
         // Add the main variable to all.
-        List<String> finalList = new ArrayList<String>(r.size());
+        final List<String> finalList = new ArrayList<String>(r.size());
         for (String expanded : r) {
+            // we need to prefix all expanded variables with the initial variable name!
             finalList.add(variable.getName() + "." + expanded);
         }
 
@@ -402,7 +518,7 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
      */
     protected static List<Variable> filterPrimitives(List<Variable> variables) {
 
-        List<Variable> primitives = new ArrayList<Variable>();
+        final List<Variable> primitives = new ArrayList<Variable>();
 
         for (Variable v : variables) {
 
