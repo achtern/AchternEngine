@@ -4,7 +4,7 @@
 
 float SampleShadowMap(sampler2D map, vec2 coords, float diff)
 {
-    return step(diff, texture(map, coords.xy).r);
+    return step(diff, texture(map, coords.xy).x);
 }
 
 float CalcShadowEffect(sampler2D map, vec4 initCoords)

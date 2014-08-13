@@ -78,12 +78,19 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     @Override
     public void render(Node node) {
+        render(node, true);
+    }
+
+    @Override
+    public void render(Node node, boolean clear) {
 
         if (target != null) {
             target.bindAsRenderTarget();
         }
 
-        clearScreen();
+        if (clear) {
+            clearScreen();
+        }
 
         if (passes.isEmpty()) {
             LOGGER.debug("No render passes. Skip render!");
@@ -93,7 +100,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         this.activePass = passes.get(0);
         LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
 
-        if (this.activePass instanceof AmbientLight) {
+        if (!(this.activePass instanceof AmbientLight)) {
             LOGGER.trace("First Pass not instance of AmbientLight, sorting...");
             Collections.sort(passes, new AmbientFirstSorter());
             this.activePass = passes.get(0);

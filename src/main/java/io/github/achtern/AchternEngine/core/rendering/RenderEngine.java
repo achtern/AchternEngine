@@ -13,6 +13,8 @@ public interface RenderEngine extends DataStore {
 
     public void render(Node node);
 
+    public void render(Node node, boolean clear);
+
     public void setRenderTarget(RenderTarget target);
 
     public RenderTarget getRenderTarget();
