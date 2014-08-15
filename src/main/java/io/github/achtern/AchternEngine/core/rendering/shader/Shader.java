@@ -16,7 +16,6 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Unif
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.*;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
-import org.lwjgl.opengl.GL32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,40 +74,6 @@ public abstract class Shader {
 
     public void setup(GLSLProgram program) {
         this.program = program;
-        this.program.setID(glCreateProgram());
-
-        if (this.program.getID() == 0) {
-            LOGGER.error("Shader Program creation failed. '0' is not a valid memory address.");
-        }
-
-        init();
-        compile();
-        addUniforms();
-    }
-
-    protected void init() {
-        for (GLSLScript script : program.getScripts()) {
-            int type;
-            switch (script.getType()) {
-                case VERTEX_SHADER:
-                    type = GL_VERTEX_SHADER;
-                    break;
-                case FRAGMENT_SHADER:
-                    type = GL_FRAGMENT_SHADER;
-                    break;
-                case GEOMETRY_SHADER:
-                    type = GL32.GL_GEOMETRY_SHADER;
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Shader type not supported.");
-            }
-
-            this.addProgram(script.getSource(), type);
-        }
-    }
-
-    public void bind() {
-        glUseProgram(this.program.getID());
     }
 
     public void addUniforms() {
@@ -245,27 +210,6 @@ public abstract class Shader {
                                    RenderEngine renderEngine, Matrix4f projection) {
     }
 
-    public void compile() {
-        int id = this.program.getID();
-        glLinkProgram(id);
-
-        if (glGetProgrami(id, GL_LINK_STATUS) == 0) {
-            LOGGER.warn("Link Status: {} @ {}", glGetProgramInfoLog(id, 1024), this.getClass().getSimpleName());
-        }
-
-        glValidateProgram(id);
-
-        if (glGetProgrami(id, GL_VALIDATE_STATUS) == 0) {
-            String error = glGetProgramInfoLog(this.program.getID(), 1024);
-            // This is a hack to prevent error message on every shader load.
-            // If we load the shaders before the mesh loading, there are not any
-            // VAO loaded. Works fine everytime, so just ignore this case specific error...
-            if (!error.contains("Validation Failed: No vertex array object bound")) {
-                LOGGER.warn("Validation Status: {} @ {}", error, this.getClass().getSimpleName());
-            }
-        }
-    }
-
     /**
      * Binds the Attribute Location (as specified in the GLSL shader sources)
      * @param name The name of the attribute
@@ -273,23 +217,6 @@ public abstract class Shader {
      */
     public void setAttribLocation(String name, int location) {
         glBindAttribLocation(this.program.getID(), location, name);
-    }
-
-    private void addProgram(String text, int type) {
-        int shader = glCreateShader(type);
-
-        if (shader == 0) {
-            LOGGER.error("Shader creation failed. '{}' is not a valid memory address.", shader);
-        }
-
-        glShaderSource(shader, text);
-        glCompileShader(shader);
-
-        if (glGetShaderi(shader, GL_COMPILE_STATUS) == 0) {
-            LOGGER.warn(glGetShaderInfoLog(shader, 1024));
-        }
-
-        glAttachShader(this.program.getID(), shader);
     }
 
     public void setUniform(String name, Vector3f vec) {

@@ -139,6 +139,9 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bind(Shader shader) {
+        if (shader.getProgram().getID() == -1) {
+            upload(shader);
+        }
         glUseProgram(shader.getProgram().getID());
     }
 
@@ -150,6 +153,7 @@ public class LWJGLDataBinder implements DataBinder {
             getIDGenerator().generate(shader);
         }
 
+        // Attach all shader sources
         for (GLSLScript script : program.getScripts()) {
 
             glShaderSource(script.getId(), script.getSource());
@@ -161,6 +165,32 @@ public class LWJGLDataBinder implements DataBinder {
 
             glAttachShader(program.getID(), script.getId());
         }
+
+        // compile
+        glLinkProgram(program.getID());
+
+        if (glGetProgrami(program.getID(), GL_LINK_STATUS) == 0) {
+            LOGGER.warn("Link Status: {} @ {}",
+                    glGetProgramInfoLog(program.getID(), 1024),
+                    shader.getClass().getSimpleName()
+            );
+        }
+
+        glValidateProgram(program.getID());
+
+        if (glGetProgrami(program.getID(), GL_VALIDATE_STATUS) == 0) {
+            String error = glGetProgramInfoLog(program.getID(), 1024);
+            // This is a hack to prevent error message on every shader load.
+            // If we load the shaders before the mesh loading, there are not any
+            // VAO loaded. Works fine everytime, so just ignore this case specific error...
+            if (!error.contains("Validation Failed: No vertex array object bound")) {
+                LOGGER.warn("Validation Status: {} @ {}", error, shader.getClass().getSimpleName());
+            }
+        }
+
+        // addUniforms
+        shader.addUniforms();
+        shader.addAttributes();
     }
 
     @Override
