@@ -6,17 +6,13 @@ import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
-import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
-import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.lwjgl.opengl.GL20.glBindAttribLocation;
 
 public abstract class Shader {
 
@@ -61,12 +57,6 @@ public abstract class Shader {
 
     public Shader(GLSLProgram program) {
         this.program = program;
-    }
-
-    public void addAttributes() {
-        for (GLSLScript s : program.getScripts()) {
-            magicAttributes(s);
-        }
     }
 
     public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
@@ -164,29 +154,6 @@ public abstract class Shader {
 
     protected void handle(Uniform uniform, Transform transform, Material material,
                                    RenderEngine renderEngine, Matrix4f projection) {
-    }
-
-    /**
-     * Binds the Attribute Location (as specified in the GLSL shader sources)
-     * @param name The name of the attribute
-     * @param location The location id
-     */
-    public void setAttribLocation(String name, int location) {
-        glBindAttribLocation(this.program.getID(), location, name);
-    }
-
-    private GLSLScript magicAttributes(GLSLScript script) {
-
-        int loc = 0;
-
-        for (Variable aName : script.getAttributes()) {
-            LOGGER.trace("{}: attribute {} got added at {}", this.getClass().getSimpleName(), aName.getName(), loc);
-            setAttribLocation(aName.getName(), loc);
-            loc++;
-        }
-
-        return script;
-
     }
 
     public GLSLProgram getProgram() {

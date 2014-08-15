@@ -12,6 +12,7 @@ import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glBindAttribLocation;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
@@ -192,7 +194,20 @@ public class LWJGLDataBinder implements DataBinder {
 
         // addUniforms
         getUniformManager().addUniforms(shader);
-        shader.addAttributes();
+
+        /*
+        We add these attributes just quickly here, no need to designate
+        a hole class for this simple step!
+         */
+        for (GLSLScript script : program.getScripts()) {
+            int loc = 0;
+
+            for (Variable attr : script.getAttributes()) {
+                LOGGER.trace("{}: attribute {} got added at {}", this.getClass().getSimpleName(), attr.getName(), loc);
+                glBindAttribLocation(program.getID(), loc, attr.getName());
+                loc++;
+            }
+        }
     }
 
     @Override
