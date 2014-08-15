@@ -17,7 +17,7 @@ public class FrameBuffer extends Dimension implements RenderTarget, Native {
     public static final Logger LOGGER = LoggerFactory.getLogger(FrameBuffer.class);
 
 
-    protected int id = -1;
+    protected int id = INVALID_ID;
 
     protected int samples = 1;
 
@@ -125,7 +125,7 @@ public class FrameBuffer extends Dimension implements RenderTarget, Native {
      * Binds the object as render target.
      * You should avoid to use this method.
      *
-     * @param binder The binder used to bind the object
+     * @param binder The binder used to set the object
      */
     @Override
     public void bindAsRenderTarget(DataBinder binder) {

@@ -7,7 +7,7 @@ import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import java.nio.ByteBuffer;
 
 /**
- * TextureableData has enough information to bind
+ * TextureableData has enough information to set
  * a {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture}.
  */
 public interface TexturableData {

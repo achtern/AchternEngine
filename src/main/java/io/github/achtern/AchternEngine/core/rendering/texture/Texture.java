@@ -23,7 +23,7 @@ public class Texture extends Dimension implements TexturableData, Native {
     }
 
 
-    protected int id = -1;
+    protected int id = INVALID_ID;
 
     protected Type type;
 

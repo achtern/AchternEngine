@@ -9,7 +9,7 @@ import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 public interface RenderPass {
 
     /**
-     * Returns the shader to get bind on draw.
+     * Returns the shader to get set on draw.
      * @return the shader
      */
     public Shader getShader();

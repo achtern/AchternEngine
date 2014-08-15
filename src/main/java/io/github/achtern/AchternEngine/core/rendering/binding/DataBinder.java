@@ -17,6 +17,8 @@ public interface DataBinder {
 
     public void upload(Mesh mesh);
 
+    public void draw(Mesh mesh);
+
     public void bind(Shader shader);
 
     public void upload(Shader shader);

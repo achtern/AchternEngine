@@ -14,7 +14,7 @@ public abstract class NativeObject implements Native {
      * set yet and has to be uploaded to the
      * Graphics Engine!
      */
-    private int id = -1;
+    private int id = INVALID_ID;
 
     public NativeObject() {
     }

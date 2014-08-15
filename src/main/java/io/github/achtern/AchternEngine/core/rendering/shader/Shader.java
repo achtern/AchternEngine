@@ -47,7 +47,7 @@ public abstract class Shader {
                 } else {
                     LOGGER.warn("{}: texture '{}' not found in material nor RenderEngine.",
                             this.getClass().getSimpleName(), n);
-                    // If the texture has not been found, bind the missing texture from
+                    // If the texture has not been found, set the missing texture from
                     // Material
                     renderEngine.getDataBinder().bind(material.getTexture(n), renderEngine.getSamplerSlot(n));
                     n = "diffuse"; // Default to diffuse!

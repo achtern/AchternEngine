@@ -2,7 +2,6 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.scenegraph.bounding.BoundingBox;
 
 public class Mesh {
@@ -38,16 +37,12 @@ public class Mesh {
             calcNormals(vertices, indices);
         }
 
-        this.data.bind(vertices, indices);
+        this.data.set(vertices, indices);
         updateBounds();
     }
 
     public void setMode(MeshData.Mode mode) {
         getData().setMode(mode);
-    }
-
-    public void draw(DrawStrategy drawStrategy) {
-        drawStrategy.draw(this.data);
     }
 
     public void updateBounds() {

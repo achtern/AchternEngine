@@ -46,7 +46,7 @@ public class LWJGLIDGenerator implements IDGenerator {
         int vbo = glGenBuffers();
         int ibo = glGenBuffers();
         int vao = glGenVertexArrays();
-        data.setBufferIDs(vbo, ibo, 0);
+        data.setBufferIDs(vbo, ibo);
         data.setID(vao);
     }
 

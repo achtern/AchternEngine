@@ -89,7 +89,7 @@ public class Figure extends QuickEntity {
             ds = DrawStrategyFactory.get("wireframe");
         }
 
-        mesh.draw(ds);
+        ds.draw(renderEngine.getDataBinder(), this.mesh);
     }
 
     /**

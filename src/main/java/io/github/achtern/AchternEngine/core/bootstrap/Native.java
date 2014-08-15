@@ -9,6 +9,8 @@ package io.github.achtern.AchternEngine.core.bootstrap;
  */
 public interface Native {
 
+    public static final int INVALID_ID = -1;
+
     /**
      * Returns the corresponding ID,
      * -1 indicates, no ID has been set

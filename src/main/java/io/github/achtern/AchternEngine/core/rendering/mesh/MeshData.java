@@ -2,22 +2,8 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 
 import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
-import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class MeshData extends NativeObject {
 
@@ -40,93 +26,32 @@ public class MeshData extends NativeObject {
 
     protected Mode mode = Mode.TRIANGLES;
 
-    protected boolean bound;
 
     public MeshData() {
-        generate();
     }
 
-    public void setBufferIDs(int vbo, int ibo, int size) {
+    public void setBufferIDs(int vbo, int ibo) {
         this.vbo = vbo;
         this.ibo = ibo;
-        this.size = size;
-        this.bound = false;
     }
 
-    protected void generate() {
-        setBufferIDs(glGenBuffers(), glGenBuffers(), 0);
-        setID(glGenVertexArrays());
+    public void set(Vertex[] vertices, int[] indices) {
+        set(vertices, indices, indices.length);
     }
 
-    public void bind(Vertex[] vertices, int[] indices) {
-        bind(vertices, indices, indices.length);
-    }
-
-    public void bind(Vertex[] vertices, int[] indices, int size) {
-        if (isBound()) {
+    public void set(Vertex[] vertices, int[] indices, int size) {
+        if (getID() != -1) {
 
             // If data is the same, ignore!
             if (getVertices() == vertices && getIndices() == indices && getSize() == size) return;
 
-
-            LOGGER.warn("Rebinding a MeshData Class with new data. You should a new instance instead. " +
-                    "Goind to bind mesh anyway master and generating new VBOs, IBOs and new VAO");
-            generate();
+            // Otherwise reset ID
+            setID(INVALID_ID);
         }
 
         this.setSize(size);
         this.setVertices(vertices);
         this.setIndices(indices);
-        this.bind();
-    }
-
-
-    public void bind() {
-
-        if (isBound()) {
-            throw new IllegalStateException("MeshData already bound to VAO " + getID());
-        }
-
-        glBindVertexArray(getID());
-
-
-        glBindBuffer(GL_ARRAY_BUFFER, getVbo());
-
-        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) UBuffer.create(vertices).flip(), GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, getIbo());
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) UBuffer.create(indices).flip(), GL_STATIC_DRAW);
-
-        // Position
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, Vertex.SIZE * 4, 0);
-        // Texture Coordinates
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, Vertex.SIZE * 4, 12);
-        // Normals
-        glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20);
-
-        // Position
-        glEnableVertexAttribArray(0);
-        // Texture Coordinates
-        glEnableVertexAttribArray(1);
-        // Normals
-        glEnableVertexAttribArray(2);
-
-
-        // Unbind
-        glBindVertexArray(0);
-
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-
-        super.finalize();
-
-        glDeleteBuffers(getVbo());
-        glDeleteBuffers(getIbo());
-        glDeleteVertexArrays(getID());
-
-
     }
 
     public int getVbo() {
@@ -171,13 +96,5 @@ public class MeshData extends NativeObject {
 
     public void setMode(Mode mode) {
         this.mode = mode;
-    }
-
-    public boolean isBound() {
-        return bound;
-    }
-
-    public void setBound(boolean bound) {
-        this.bound = bound;
     }
 }

@@ -1,24 +1,14 @@
 package io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl;
 
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
-
-import static io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLModeConverter.convert;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 
 public class LWJGLSolidDraw implements DrawStrategy {
 
     @Override
-    public void draw(MeshData data) {
-        glBindVertexArray(data.getID());
-
-        drawElements(data);
+    public void draw(DataBinder binder, Mesh mesh) {
+        binder.draw(mesh);
     }
-
-    protected void drawElements(MeshData data) {
-        glDrawElements(convert(data.getMode()), data.getSize(), GL_UNSIGNED_INT, 0);
-    }
-
 
 }

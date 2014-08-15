@@ -10,7 +10,7 @@ public interface RenderTarget {
     /**
      * Binds the object as render target.
      * You should avoid to use this method.
-     * @param binder The binder used to bind the object
+     * @param binder The binder used to set the object
      */
     public void bindAsRenderTarget(DataBinder binder);
 

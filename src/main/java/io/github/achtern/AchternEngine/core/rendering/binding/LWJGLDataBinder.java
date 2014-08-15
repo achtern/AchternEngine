@@ -20,14 +20,13 @@ import org.slf4j.LoggerFactory;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static io.github.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glBindAttribLocation;
-import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
@@ -61,7 +60,7 @@ public class LWJGLDataBinder implements DataBinder {
             throw new IllegalArgumentException("SamplerSlot MUST be a positive integer!");
         }
 
-        if (texture.getID() == -1) {
+        if (texture.getID() == INVALID_ID) {
             getIDGenerator().generate(texture);
             upload(texture);
         }
@@ -107,9 +106,11 @@ public class LWJGLDataBinder implements DataBinder {
     @Override
     public void upload(Mesh mesh) {
         MeshData data = mesh.getData();
-        if (data.isBound()) {
+        if (data.getID() != INVALID_ID) {
             LOGGER.warn("MeshData already uploaded to context. Re-uploading...");
         }
+
+        getIDGenerator().generate(mesh);
 
         glBindVertexArray(data.getID());
 
@@ -137,13 +138,20 @@ public class LWJGLDataBinder implements DataBinder {
         // Unbind
         glBindVertexArray(0);
 
-        data.setBound(true);
+    }
 
+    @Override
+    public void draw(Mesh mesh) {
+        if (mesh.getData().getID() == INVALID_ID) {
+            upload(mesh);
+        }
+        bind(mesh);
+        glDrawElements(getGLEnum(mesh.getData().getMode()), mesh.getData().getSize(), GL_UNSIGNED_INT, 0);
     }
 
     @Override
     public void bind(Shader shader) {
-        if (shader.getProgram().getID() == -1) {
+        if (shader.getProgram().getID() == INVALID_ID) {
             upload(shader);
         }
         glUseProgram(shader.getProgram().getID());
@@ -153,7 +161,7 @@ public class LWJGLDataBinder implements DataBinder {
     public void upload(Shader shader) {
         GLSLProgram program = shader.getProgram();
 
-        if (program.getID() == -1) {
+        if (program.getID() == INVALID_ID) {
             getIDGenerator().generate(shader);
         }
 
@@ -212,7 +220,7 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bindAsRenderTarget(FrameBuffer fbo) {
-        if (fbo.getID() == -1) {
+        if (fbo.getID() == INVALID_ID) {
             upload(fbo);
         }
 
@@ -263,7 +271,7 @@ public class LWJGLDataBinder implements DataBinder {
     @Override
     public void upload(FrameBuffer fbo) {
 
-        if (fbo.getID() == -1) {
+        if (fbo.getID() == INVALID_ID) {
             getIDGenerator().generate(fbo);
         }
 
@@ -298,7 +306,7 @@ public class LWJGLDataBinder implements DataBinder {
     protected void fboUploadRenderBufferSetup(FrameBuffer fbo, RenderBuffer rbo, int iFormat, int attachment) {
         if (rbo.getTexture() == null) {
             // Generate an ID for the renderbuffer
-            if (rbo.getID() == -1) {
+            if (rbo.getID() == INVALID_ID) {
                 getIDGenerator().generate(rbo);
             }
             // Bind the renderbuffer
@@ -311,7 +319,7 @@ public class LWJGLDataBinder implements DataBinder {
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo.getID());
         } else {
 
-            if (rbo.getTexture().getID() == -1) {
+            if (rbo.getTexture().getID() == INVALID_ID) {
                 // upload texture
                 upload(rbo.getTexture());
             }
@@ -384,6 +392,19 @@ public class LWJGLDataBinder implements DataBinder {
                 return GL_GEOMETRY_SHADER;
             default:
                 throw new UnsupportedOperationException("Shader type not supported.");
+        }
+    }
+
+    protected static int getGLEnum(MeshData.Mode mode) {
+        switch (mode) {
+            case TRIANGLES:
+                return GL_TRIANGLES;
+            case LINES:
+                return GL_LINES;
+            case LINE_LOOP:
+                return GL_LINE_LOOP;
+            default:
+                throw new UnsupportedOperationException("Mode not supported by LWJGL!");
         }
     }
 }
