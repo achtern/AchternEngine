@@ -5,7 +5,7 @@ import java.util.Properties;
 
 public class BuildInfo {
 
-    public static final String ENGINE_VERSION = "1.0-SNAPSHOT";
+    public static final String ENGINE_VERSION = "0.2";
 
     private static BuildInfo instance;
 
