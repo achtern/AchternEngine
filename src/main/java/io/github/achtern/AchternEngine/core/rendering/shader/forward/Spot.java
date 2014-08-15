@@ -20,7 +20,7 @@ public class Spot extends Shader {
         super();
 
         try {
-            setup(ResourceLoader.getShaderProgram("forward.spot"));
+            this.program = ResourceLoader.getShaderProgram("forward.spot");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
         }

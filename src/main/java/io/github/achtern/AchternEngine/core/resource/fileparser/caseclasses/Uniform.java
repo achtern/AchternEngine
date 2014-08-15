@@ -1,13 +1,17 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses;
 
+import io.github.achtern.AchternEngine.core.rendering.binding.UniformManager;
+
 public class Uniform extends Variable {
 
     protected int location = -1;
 
     protected Object value;
-    protected Class valueType;
 
     protected boolean shouldSet = true;
+
+    protected SetStrategy setStrategy;
+
 
     public Uniform(Variable from) {
         this(from.getType(), from.getName());
@@ -29,25 +33,34 @@ public class Uniform extends Variable {
         return value;
     }
 
-    public <T> void setValue(Class<T> type, T value) {
-        this.valueType = type;
+    public void setValue(Object value) {
         this.value = value;
     }
 
-    public Class getValueType() {
-        return valueType;
+    public SetStrategy getSetStrategy() {
+        return setStrategy;
+    }
+
+    public void setSetStrategy(SetStrategy setStrategy) {
+        this.setStrategy = setStrategy;
     }
 
     public boolean shouldSet() {
         return shouldSet;
     }
 
-    public void setShouldSet(boolean isTexture) {
-        this.shouldSet = isTexture;
+    public void setShouldSet(boolean shouldSet) {
+        this.shouldSet = shouldSet;
     }
 
     @Override
     public String toString() {
         return "[" + getType() + " " + getName() + "]";
+    }
+
+    public static interface SetStrategy {
+
+        public void set(Uniform uniform, UniformManager uniformManager);
+
     }
 }

@@ -18,7 +18,7 @@ public class BasicShader extends Shader {
 
     private BasicShader() {
         try {
-            setup(ResourceLoader.getShaderProgram("basic"));
+            this.program = ResourceLoader.getShaderProgram("basic");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Basic Shader GLSL files.", e);
         }

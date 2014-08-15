@@ -35,6 +35,7 @@ public class LWJGLDataBinder implements DataBinder {
 
     protected LWJGLRenderEngine engine;
     protected LWJGLIDGenerator idGen;
+    protected LWJGLUniformManager uniformManager;
 
     /**
      * An IntBuffer with a size of 16.
@@ -44,6 +45,7 @@ public class LWJGLDataBinder implements DataBinder {
     public LWJGLDataBinder(LWJGLRenderEngine engine) {
         this.engine = engine;
         this.idGen = new LWJGLIDGenerator();
+        this.uniformManager = new LWJGLUniformManager();
     }
 
     @Override
@@ -189,7 +191,7 @@ public class LWJGLDataBinder implements DataBinder {
         }
 
         // addUniforms
-        shader.addUniforms();
+        getUniformManager().addUniforms(shader);
         shader.addAttributes();
     }
 
@@ -271,6 +273,11 @@ public class LWJGLDataBinder implements DataBinder {
     @Override
     public IDGenerator getIDGenerator() {
         return idGen;
+    }
+
+    @Override
+    public UniformManager getUniformManager() {
+        return uniformManager;
     }
 
     protected void fboUploadRenderBufferSetup(FrameBuffer fbo, RenderBuffer rbo, int iFormat, int attachment) {

@@ -18,7 +18,7 @@ public class Directional extends Shader {
 
     private Directional() {
         try {
-            setup(ResourceLoader.getShaderProgram("forward.directional"));
+            this.program = ResourceLoader.getShaderProgram("forward.directional");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Directional Shader GLSL files.", e);
         }

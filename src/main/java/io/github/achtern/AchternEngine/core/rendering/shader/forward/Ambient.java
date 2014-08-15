@@ -18,7 +18,7 @@ public class Ambient extends Shader {
 
     private Ambient() {
         try {
-            setup(ResourceLoader.getShaderProgram("forward.ambient"));
+            this.program = ResourceLoader.getShaderProgram("forward.ambient");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Ambient Shader GLSL files.", e);
         }

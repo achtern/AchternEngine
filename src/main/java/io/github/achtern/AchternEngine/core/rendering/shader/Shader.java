@@ -2,30 +2,21 @@ package io.github.achtern.AchternEngine.core.rendering.shader;
 
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
-import io.github.achtern.AchternEngine.core.math.Vector2f;
-import io.github.achtern.AchternEngine.core.math.Vector3f;
-import io.github.achtern.AchternEngine.core.math.Vector4f;
-import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
-import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.*;
-import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glBindAttribLocation;
 
 public abstract class Shader {
 
@@ -33,7 +24,7 @@ public abstract class Shader {
 
     private GLSLParser parser = new GLSLParser();
 
-    private GLSLProgram program;
+    protected GLSLProgram program;
 
     protected static Map<Class<?>, Method> classMethodMap;
 
@@ -69,17 +60,7 @@ public abstract class Shader {
     }
 
     public Shader(GLSLProgram program) {
-        setup(program);
-    }
-
-    public void setup(GLSLProgram program) {
         this.program = program;
-    }
-
-    public void addUniforms() {
-        for (GLSLScript s : program.getScripts()) {
-          magicUniforms(s);
-        }
     }
 
     public void addAttributes() {
@@ -88,23 +69,7 @@ public abstract class Shader {
         }
     }
 
-    public void addUniform(Uniform uniform) {
-
-        int uniformLoc = glGetUniformLocation(this.program.getID(), uniform.getName());
-
-        if (uniformLoc == 0xFFFFFFFF) {
-            // Just trace, cause the uniform might be removed by the GLSL compiler, if un-used.
-            LOGGER.trace("{}: Could not find uniform location for '{}'",
-                    this.getClass().getSimpleName(), uniform.getName());
-        }
-
-        uniform.setLocation(uniformLoc);
-
-    }
-
     public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
-
-//        material.getTexture("diffuse").bind();
 
         for (Uniform u : this.program.getUniforms()) {
             String n = u.getName(); // Just a quick access to the name!
@@ -130,36 +95,36 @@ public abstract class Shader {
                 }
 
                 // and set the value of the uniform to the sampler slot
-                u.setValue(int.class, renderEngine.getSamplerSlot(n));
+                u.setValue(renderEngine.getSamplerSlot(n));
 
                 // Now common structs like DirectionalLight, PointLight, SpotLight, AmbientLight
             } else if (u.getType().equalsIgnoreCase("DirectionalLight")) {
-                u.setValue(DirectionalLight.class, (DirectionalLight) renderEngine.getActiveRenderPass());
+                u.setValue(renderEngine.getActiveRenderPass());
 
             } else if (u.getType().equalsIgnoreCase("SpotLight")) {
-                u.setValue(SpotLight.class, (SpotLight) renderEngine.getActiveRenderPass());
+                u.setValue(renderEngine.getActiveRenderPass());
 
             } else if (u.getType().equalsIgnoreCase("PointLight")) {
-                u.setValue(PointLight.class, (PointLight) renderEngine.getActiveRenderPass());
+                u.setValue(renderEngine.getActiveRenderPass());
 
             } else if (u.getType().equalsIgnoreCase("AmbientLight")) {
-                u.setValue(AmbientLight.class, (AmbientLight) renderEngine.getActiveRenderPass());
+                u.setValue(renderEngine.getActiveRenderPass());
 
 
                 // other stuff below
                 // currently supporting
                 // color, MVP, (shadowMatrix=TEMP)
             } else if (n.equalsIgnoreCase("color")) {
-                u.setValue(Color.class, material.getColor());
+                u.setValue(material.getColor());
 
             } else if (n.equalsIgnoreCase("MVP")) {
-                u.setValue(Matrix4f.class, projection);
+                u.setValue(projection);
 
             } else if (n.equalsIgnoreCase("model")) {
-                u.setValue(Matrix4f.class, transform.getTransformation());
+                u.setValue(transform.getTransformation());
 
             } else if (n.equalsIgnoreCase("eyePos")) {
-                u.setValue(Vector3f.class, renderEngine.getMainCamera().getTransform().getTransformedPosition());
+                u.setValue(renderEngine.getMainCamera().getTransform().getTransformedPosition());
 
             } else if (n.equalsIgnoreCase("shadowMatrix")) {
                 // TEMPORARAY CODE
@@ -167,19 +132,19 @@ public abstract class Shader {
                 if (renderEngine.getMatrix("shadowMatrix") != null) {
                     m = renderEngine.getMatrix("shadowMatrix");
                 }
-                u.setValue(Matrix4f.class, m);
+                u.setValue(m);
 
             } else {
                 // In the last step we try to find the value in the material,
                 // otherwise leave it to the user!
                 if (u.getType().equalsIgnoreCase("float") && material.hasFloat(n)) {
-                    u.setValue(float.class, material.getFloat(n));
+                    u.setValue(material.getFloat(n));
                 } else if ((u.getType().equalsIgnoreCase("vec3") && material.hasVector(n))) {
-                    u.setValue(Vector3f.class, material.getVector(n));
+                    u.setValue(material.getVector(n));
                 } else if ((u.getType().equalsIgnoreCase("mat4") && material.hasMatrix(n))) {
-                    u.setValue(Matrix4f.class, material.getMatrix(n));
+                    u.setValue(material.getMatrix(n));
                 } else if ((u.getType().equalsIgnoreCase("vec4") && material.hasColor(n))) {
-                    u.setValue(Vector4f.class, material.getColor(n));
+                    u.setValue(material.getColor(n));
                 }
             }
 
@@ -190,16 +155,7 @@ public abstract class Shader {
             if (!u.shouldSet()) return;
 
             if (u.getValue() != null) {
-                try {
-                    Class<?> type = u.getValueType();
-                    classMethodMap.get(type).invoke(this, u.getName(), u.getValue());
-                } catch (IllegalAccessException e) {
-                    LOGGER.error("Error invoking method on shader " + this + ";", e);
-                } catch (InvocationTargetException e) {
-                    LOGGER.error("Error invoking method on shader " + this + ";", e);
-                } catch (NullPointerException e) {
-                    LOGGER.error("Cannot set uniform of type {}.", u.getValueType().getName());
-                }
+                renderEngine.getDataBinder().getUniformManager().setUniform(this, u);
             } else {
                 throw new IllegalStateException("Uniform value cannot be null for " + u);
             }
@@ -217,78 +173,6 @@ public abstract class Shader {
      */
     public void setAttribLocation(String name, int location) {
         glBindAttribLocation(this.program.getID(), location, name);
-    }
-
-    public void setUniform(String name, Vector3f vec) {
-        glUniform3f(program.getExpandedUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ());
-    }
-
-    public void setUniform(String name, Vector4f vec) {
-        glUniform4f(program.getExpandedUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
-    }
-
-    public void setUniform(String name, Color color) {
-        setUniform(name, (Vector4f) color);
-    }
-
-    public void setUniform(String name, Vector2f vec) {
-        glUniform2f(program.getExpandedUniform(name).getLocation(), vec.getX(), vec.getY());
-    }
-
-    public void setUniform(String name, Matrix4f matrix) {
-        glUniformMatrix4(program.getExpandedUniform(name).getLocation(), true, (FloatBuffer) UBuffer.create(matrix).flip());
-    }
-
-    public void setUniform(String name, int value) {
-        glUniform1i(program.getExpandedUniform(name).getLocation(), value);
-    }
-
-    public void setUniform(String name, float value) {
-        glUniform1f(program.getExpandedUniform(name).getLocation(), value);
-    }
-
-    public void setUniform(String name, DirectionalLight directionalLight) {
-        setUniform(name + ".base", (BaseLight) directionalLight);
-        setUniform(name + ".direction", directionalLight.getDirection());
-    }
-
-    public void setUniform(String name, AmbientLight ambientLight) {
-        setUniform(name + ".color", ambientLight.getColor());
-    }
-
-    public void setUniform(String name, BaseLight baseLight) {
-        setUniform(name + ".color", baseLight.getColor().getColor());
-        setUniform(name + ".intensity", baseLight.getIntensity());
-    }
-
-    public void setUniform(String name, PointLight pointLight) {
-        setUniform(name + ".base", (BaseLight) pointLight);
-        setUniform(name + ".attenuation", pointLight.getAttenuation());
-        setUniform(name + ".position", pointLight.getTransform().getTransformedPosition());
-        setUniform(name + ".range", pointLight.getRange());
-    }
-
-    public void setUniform(String name, Attenuation attenuation) {
-        setUniform(name + ".constant", attenuation.getConstant());
-        setUniform(name + ".linear", attenuation.getLinear());
-        setUniform(name + ".exponent", attenuation.getExponent());
-    }
-
-    public void setUniform(String name, SpotLight spotLight) {
-        setUniform(name + ".pointLight", (PointLight) spotLight);
-        setUniform(name + ".direction", spotLight.getDirection());
-        setUniform(name + ".cutoff", spotLight.getCutoff());
-    }
-
-    private GLSLScript magicUniforms(GLSLScript script) {
-
-        for (Uniform u : script.getExpandedUniforms()) {
-            LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), u.getName());
-            addUniform(u);
-        }
-
-        return script;
-
     }
 
     private GLSLScript magicAttributes(GLSLScript script) {

@@ -29,4 +29,6 @@ public interface DataBinder {
 
     public IDGenerator getIDGenerator();
 
+    public UniformManager getUniformManager();
+
 }

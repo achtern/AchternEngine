@@ -20,7 +20,7 @@ public class Point extends Shader {
         super();
 
         try {
-            setup(ResourceLoader.getShaderProgram("forward.point"));
+            this.program = ResourceLoader.getShaderProgram("forward.point");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Point Shader GLSL files.", e);
         }

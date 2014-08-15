@@ -23,7 +23,7 @@ public class ShadowGenerator extends Shader {
 
     private ShadowGenerator() {
         try {
-            setup(ResourceLoader.getShaderProgram("shadow.basic"));
+            this.program = ResourceLoader.getShaderProgram("shadow.basic");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Basic Shadow Shader GLSL files.", e);
         }
