@@ -66,7 +66,7 @@ public class BuildInfo {
         return "AchternEngine v" + ENGINE_VERSION + ";\n" +
                 "Build on " + getBuildTime() +
                 " by " + getBuildUserName() +
-                " git commit = " + getDescribeShort();
+                " git commit = " + getDescribe();
     }
 
     public String getBranch() {
