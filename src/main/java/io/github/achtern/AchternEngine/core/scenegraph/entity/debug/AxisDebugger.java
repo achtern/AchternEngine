@@ -61,9 +61,9 @@ public class AxisDebugger extends Node {
         add(n);
 
         // Rotate, so they are laying on the corresponding axis
-        if (i == 0)      n.getTransform().setRotation(new Quaternion(Transform.Z_AXIS, (float) Math.toRadians(90)));
+        if (i == 0)      n.getTransform().setRotation(new Quaternion(Transform.X_AXIS, (float) Math.toRadians(90)));
         else if (i == 1) n.getTransform().setRotation(new Quaternion(Transform.Y_AXIS, (float) Math.toRadians(90)));
-        else if (i == 2) n.getTransform().setRotation(new Quaternion(Transform.X_AXIS, (float) Math.toRadians(90)));
+        else if (i == 2) n.getTransform().setRotation(new Quaternion(Transform.Z_AXIS, (float) Math.toRadians(90)));
 
     }
 }
