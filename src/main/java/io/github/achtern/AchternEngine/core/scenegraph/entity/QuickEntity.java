@@ -1,11 +1,10 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
-import io.github.achtern.AchternEngine.core.scenegraph.Node;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
-import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
 /**
  * A helper class to create an {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Entity} easily.
@@ -44,10 +43,10 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     }
 
     /**
-     * @see Entity#render(io.github.achtern.AchternEngine.core.rendering.shader.Shader, io.github.achtern.AchternEngine.core.rendering.RenderEngine)
+     * @see Entity#render(io.github.achtern.AchternEngine.core.rendering.RenderEngine)
      */
     @Override
-    public void render(Shader shader, RenderEngine renderEngine) {
+    public void render(RenderEngine renderEngine) {
 
     }
 

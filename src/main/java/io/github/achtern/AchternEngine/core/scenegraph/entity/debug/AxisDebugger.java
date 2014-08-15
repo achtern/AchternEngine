@@ -1,17 +1,16 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity.debug;
 
-import io.github.achtern.AchternEngine.core.rendering.mesh.Arrow;
-import io.github.achtern.AchternEngine.core.scenegraph.Node;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Quaternion;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.generator.ImageGenerator;
+import io.github.achtern.AchternEngine.core.rendering.mesh.Arrow;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
-import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 
 public class AxisDebugger extends Node {
 
@@ -36,8 +35,8 @@ public class AxisDebugger extends Node {
     }
 
     @Override
-    public void render(Shader shader, RenderEngine renderEngine) {
-        super.render(shader, renderEngine);
+    public void render(RenderEngine renderEngine) {
+        super.render(renderEngine);
     }
 
     private void pushFigure(Mesh mesh, Color color, int i) {

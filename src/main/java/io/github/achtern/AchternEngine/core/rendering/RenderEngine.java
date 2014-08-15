@@ -27,6 +27,11 @@ public interface RenderEngine extends DataStore {
 
     public RenderPass getActiveRenderPass();
 
+    /**
+     * internal use only
+     */
+    public void setActiveRenderPass(RenderPass active);
+
     public void setClearColor(Color color);
 
     public String getOpenGLVersion();

@@ -1,12 +1,11 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
-import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
 /**
  * A Figure represents a renderable {@link Mesh}.
@@ -71,17 +70,15 @@ public class Figure extends QuickEntity {
     }
 
     /**
-     * @see QuickEntity#render(Shader, RenderEngine)
+     * @see QuickEntity#render(RenderEngine)
      */
     @Override
-    public void render(Shader shader, RenderEngine renderEngine) {
-        // TODO: bind the shader in the RenderEngine!
-        shader.bind();
+    public void render(RenderEngine renderEngine) {
 
         Matrix4f worldMat = getTransform().getTransformation();
         Matrix4f projection = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
 
-        shader.updateUniforms(getTransform(), getMaterial(), renderEngine, projection);
+        renderEngine.getActiveRenderPass().getShader().updateUniforms(getTransform(), getMaterial(), renderEngine, projection);
 
         DrawStrategy ds = getDrawStrategy();
         if (ds == null) {

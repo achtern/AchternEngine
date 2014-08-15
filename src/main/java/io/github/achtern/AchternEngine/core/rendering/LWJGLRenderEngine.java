@@ -105,7 +105,8 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
             Collections.sort(passes, new AmbientFirstSorter());
             this.activePass = passes.get(0);
         }
-        node.render(activePass.getShader(), this);
+        getDataBinder().bind(activePass.getShader());
+        node.render(this);
 
 
         boolean skip = true;
@@ -129,7 +130,8 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
             {
 
                 LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
-                node.render(pass.getShader(), this);
+                getDataBinder().bind(pass.getShader());
+                node.render(this);
 
                 for (PassFilter filter : passFilters) {
                     filter.post(node, pass, this);
@@ -174,6 +176,14 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     @Override
     public RenderPass getActiveRenderPass() {
         return this.activePass;
+    }
+
+    /**
+     * internal use only
+     */
+    @Override
+    public void setActiveRenderPass(RenderPass active) {
+        this.activePass = active;
     }
 
     @Override

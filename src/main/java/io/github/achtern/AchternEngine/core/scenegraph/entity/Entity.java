@@ -1,11 +1,10 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
-import io.github.achtern.AchternEngine.core.scenegraph.Node;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
-import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
 /**
  * An Entity is the base of all things which live
@@ -17,10 +16,9 @@ public interface Entity extends Updatable {
 
     /**
      * Called on render, draw stuff here
-     * @param shader The active shader
      * @param renderEngine The active renderEngine (caller)
      */
-    public void render(Shader shader, RenderEngine renderEngine);
+    public void render(RenderEngine renderEngine);
 
     /**
      * Should return the current transform of the Entity

@@ -1,10 +1,9 @@
 package io.github.achtern.AchternEngine.core.scenegraph;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
-import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
 import java.util.ArrayList;
@@ -61,14 +60,14 @@ public class Node implements EngineHolder<CoreEngine> {
         }
     }
 
-    public void render(Shader shader, RenderEngine renderEngine) {
+    public void render(RenderEngine renderEngine) {
 
         for (Entity entity : getEntities()) {
-            entity.render(shader, renderEngine);
+            entity.render(renderEngine);
         }
 
         for (Node node : getChildren().values()) {
-            node.render(shader, renderEngine);
+            node.render(renderEngine);
         }
     }
 

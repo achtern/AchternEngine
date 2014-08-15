@@ -5,6 +5,7 @@ import io.github.achtern.AchternEngine.core.contracts.abstractVersion.QuickPassF
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
+import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
@@ -58,21 +59,28 @@ public class BasicShadowRenderer extends QuickPassFilter {
 
                 renderEngine.addMatrix("shadowMatrix", shadowCamera.getViewProjection());
 
-                // Store a copy of the main camera
-                Camera main = renderEngine.getMainCamera();
-
-                renderEngine.setMainCamera(shadowCamera);
+                // Store a copy of the main camera/renderpass
+                Camera mainC = renderEngine.getMainCamera();
+                RenderPass mainRP = renderEngine.getActiveRenderPass();
                 {
-
-                    node.render(ShadowGenerator.getInstance(), renderEngine);
-
+                    renderEngine.setMainCamera(shadowCamera);
+                    renderEngine.setActiveRenderPass(new RenderPass() {
+                        @Override
+                        public Shader getShader() {
+                            return ShadowGenerator.getInstance();
+                        }
+                    });
+                    renderEngine.getDataBinder().bind(ShadowGenerator.getInstance());
+                    node.render(renderEngine);
                 }
-                renderEngine.setMainCamera(main);
+                // Reset it
+                renderEngine.setMainCamera(mainC);
+                renderEngine.setActiveRenderPass(mainRP);
 
 
             }
 
-            renderEngine.getRenderTarget().bindAsRenderTarget();
+            renderEngine.getRenderTarget().bindAsRenderTarget(renderEngine.getDataBinder());
 
         }
     }
