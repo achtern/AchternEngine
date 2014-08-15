@@ -1,14 +1,13 @@
 package io.github.achtern.AchternEngine.core.rendering.framebuffer;
 
+import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 
-public class RenderBuffer {
+public class RenderBuffer extends NativeObject {
 
     private Texture texture;
     private Format format;
-
-    private int id = -1;
 
     public RenderBuffer(Format format) {
         this.format = format;
@@ -33,18 +32,6 @@ public class RenderBuffer {
 
     public void setFormat(Format format) {
         this.format = format;
-    }
-
-    public int getID() {
-        return id;
-    }
-
-    /**
-     * Internal use only!
-     * @param id The ID
-     */
-    public void setID(int id) {
-        this.id = id;
     }
 
     @Override

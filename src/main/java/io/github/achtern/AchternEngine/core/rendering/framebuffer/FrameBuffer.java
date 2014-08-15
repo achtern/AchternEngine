@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering.framebuffer;
 
+import io.github.achtern.AchternEngine.core.bootstrap.Native;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FrameBuffer extends Dimension implements RenderTarget {
+public class FrameBuffer extends Dimension implements RenderTarget, Native {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(FrameBuffer.class);
 
@@ -104,8 +105,7 @@ public class FrameBuffer extends Dimension implements RenderTarget {
     }
 
     /**
-     * Internal use only
-     * @param id The ID
+     * internal use only
      */
     public void setID(int id) {
         this.id = id;
