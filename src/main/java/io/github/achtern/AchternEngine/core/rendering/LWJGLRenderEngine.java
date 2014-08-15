@@ -85,7 +85,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     public void render(Node node, boolean clear) {
 
         if (target != null) {
-            target.bindAsRenderTarget();
+            target.bindAsRenderTarget(getDataBinder());
         }
 
         if (clear) {

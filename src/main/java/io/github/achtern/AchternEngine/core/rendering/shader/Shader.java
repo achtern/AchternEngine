@@ -378,6 +378,10 @@ public abstract class Shader {
 
     }
 
+    public GLSLProgram getProgram() {
+        return program;
+    }
+
     public GLSLParser getParser() {
         return parser;
     }

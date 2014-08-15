@@ -46,12 +46,16 @@ public class MeshData {
         generate();
     }
 
-    protected void generate() {
-        this.vbo = glGenBuffers();
-        this.ibo = glGenBuffers();
-        this.vao = glGenVertexArrays();
-        this.size = 0;
+    public void setIDs(int vbo, int ibo, int vao, int size) {
+        this.vbo = vbo;
+        this.ibo = ibo;
+        this.vao = vao;
+        this.size = size;
         this.bound = false;
+    }
+
+    protected void generate() {
+        setIDs(glGenBuffers(), glGenBuffers(), glGenVertexArrays(), 0);
     }
 
     public void bind(Vertex[] vertices, int[] indices) {
