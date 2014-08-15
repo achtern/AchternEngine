@@ -9,12 +9,24 @@ import io.github.achtern.AchternEngine.core.util.FPS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The CoreEngine is the main entry point of the
+ * AchternEngine.
+ * The Engine is running the main loop and manages Game and
+ * RenderEngine, as well as the {@link io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager}.
+ */
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CoreEngine.class);
 
+    /**
+     * Only used during bootstrap to manage the hardware/graphics/native binding
+     */
     protected WindowIOBindingManager bindingManager;
 
+    /**
+     * The Main Render Window
+     */
     protected Window window;
 
     private static boolean stopRequest = false;
