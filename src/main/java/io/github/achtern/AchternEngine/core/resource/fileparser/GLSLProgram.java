@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser;
 
+import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
@@ -11,9 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GLSLProgram {
-
-    protected int id = -1;
+public class GLSLProgram extends NativeObject {
 
     protected String name;
 
@@ -151,14 +150,6 @@ public class GLSLProgram {
 
     public String getSource() {
         return source;
-    }
-
-    public void setID(int id) {
-        this.id = id;
-    }
-
-    public int getID() {
-        return id;
     }
 
     public void setParser(LineBasedParser parser) {

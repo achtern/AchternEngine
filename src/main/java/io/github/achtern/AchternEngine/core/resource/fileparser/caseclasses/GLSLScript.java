@@ -1,17 +1,17 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses;
 
+import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GLSLScript {
+public class GLSLScript extends NativeObject {
 
     public enum Type {
         VERTEX_SHADER,
         GEOMETRY_SHADER,
         FRAGMENT_SHADER
     }
-
-    private int id;
 
     private String name;
 
@@ -109,13 +109,5 @@ public class GLSLScript {
 
     public void setProcessed(boolean processed) {
         this.processed = processed;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

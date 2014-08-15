@@ -61,7 +61,7 @@ public class LWJGLIDGenerator implements IDGenerator {
 
         for (GLSLScript script : shader.getProgram().getScripts()) {
             int sId = glCreateShader(getGLEnum(script.getType()));
-            script.setId(sId);
+            script.setID(sId);
         }
 
     }

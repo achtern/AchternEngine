@@ -160,14 +160,14 @@ public class LWJGLDataBinder implements DataBinder {
         // Attach all shader sources
         for (GLSLScript script : program.getScripts()) {
 
-            glShaderSource(script.getId(), script.getSource());
-            glCompileShader(script.getId());
+            glShaderSource(script.getID(), script.getSource());
+            glCompileShader(script.getID());
 
-            if (glGetShaderi(script.getId(), GL_COMPILE_STATUS) == 0) {
-                LOGGER.warn(glGetShaderInfoLog(script.getId(), 1024));
+            if (glGetShaderi(script.getID(), GL_COMPILE_STATUS) == 0) {
+                LOGGER.warn(glGetShaderInfoLog(script.getID(), 1024));
             }
 
-            glAttachShader(program.getID(), script.getId());
+            glAttachShader(program.getID(), script.getID());
         }
 
         // compile
