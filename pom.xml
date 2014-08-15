@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <name>AchternEngine</name>
     <artifactId>AchternEngine</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
     <url>http://achtern.github.io</url>
 
     <properties>
