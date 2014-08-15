@@ -4,28 +4,88 @@ import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.MouseButton;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 
+/**
+ * The InputAdapter is responsible for communicating between
+ * the {@link io.github.achtern.AchternEngine.core.input.InputManager}
+ * and the Hardware implementation (e.g. LWJGL)
+ */
 public interface InputAdapter {
 
+    /**
+     * The total Number of keyboard keys
+     * @return total key count
+     */
     public int keysTotal();
 
+    /**
+     * Trigger an update.
+     * Should poll the hardware and update key states
+     */
     public void update();
 
+    /**
+     * Whether the key is currently pressed
+     * @param key Key to check
+     * @return boolean
+     */
     public boolean getKey(Key key);
 
+    /**
+     * Whether the key is currently pressed.
+     * only triggers once, until the key has been
+     * released and repressed
+     * @param key Key to check
+     * @return true once per press
+     */
     public boolean getKeyDown(Key key);
 
+    /**
+     * Returns true when the key has just been released
+     * @param key Key to check
+     * @return true on release
+     */
     public boolean getKeyUp(Key key);
 
+    /**
+     * Whether the button is currently pressed
+     * @param mouseButton Button to check
+     * @return boolean
+     */
     public boolean getMouse(MouseButton mouseButton);
 
+    /**
+     * Whether the button is currently pressed.
+     * only triggers once, until the button has been
+     * released repressed
+     * @param mouseButton Button to check
+     * @return true once per click/press
+     */
     public boolean getMouseDown(MouseButton mouseButton);
 
+
+    /**
+     * Returns true when the button has just been released
+     * @param mouseButton Button to check
+     * @return true on release
+     */
     public boolean getMouseUp(MouseButton mouseButton);
 
+    /**
+     * Returns the Mouse Position on the screen.
+     * @return Vector2f
+     */
     public Vector2f getMousePosition();
 
+    /**
+     * Modifies the mouse cursor position
+     * @param position New Position
+     */
     public void setMousePosition(Vector2f position);
 
+    /**
+     * Hides the cursor, when disabled (enabled = false)
+     * @param enabled true shows cursor, false hides it
+     */
     public void setCursor(boolean enabled);
 
 }
