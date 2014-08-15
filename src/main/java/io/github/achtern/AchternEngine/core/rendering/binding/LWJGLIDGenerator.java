@@ -6,10 +6,13 @@ import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 
+import static io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder.getGLEnum;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glCreateProgram;
+import static org.lwjgl.opengl.GL20.glCreateShader;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -55,6 +58,12 @@ public class LWJGLIDGenerator implements IDGenerator {
     public void generate(Shader shader) {
         int id = glCreateProgram();
         shader.getProgram().setID(id);
+
+        for (GLSLScript script : shader.getProgram().getScripts()) {
+            int sId = glCreateShader(getGLEnum(script.getType()));
+            script.setId(sId);
+        }
+
     }
 
 

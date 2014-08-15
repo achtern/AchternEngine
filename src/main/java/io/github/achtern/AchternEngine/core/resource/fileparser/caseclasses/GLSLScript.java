@@ -11,6 +11,8 @@ public class GLSLScript {
         FRAGMENT_SHADER
     }
 
+    private int id;
+
     private String name;
 
     private Type type;
@@ -107,5 +109,13 @@ public class GLSLScript {
 
     public void setProcessed(boolean processed) {
         this.processed = processed;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

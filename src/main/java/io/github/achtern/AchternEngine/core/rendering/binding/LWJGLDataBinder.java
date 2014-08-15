@@ -1,23 +1,33 @@
 package io.github.achtern.AchternEngine.core.rendering.binding;
 
 import io.github.achtern.AchternEngine.core.rendering.LWJGLRenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.exception.FrameBufferException;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.RenderBuffer;
+import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
+import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
+import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glDrawBuffers;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class LWJGLDataBinder implements DataBinder {
 
@@ -83,6 +93,74 @@ public class LWJGLDataBinder implements DataBinder {
         glTexParameteri(type, GL_TEXTURE_BASE_LEVEL, 0);
         glTexParameteri(type, GL_TEXTURE_MAX_LEVEL, 0);
 
+    }
+
+    @Override
+    public void bind(Mesh mesh) {
+        glBindVertexArray(mesh.getData().getVao());
+    }
+
+    @Override
+    public void upload(Mesh mesh) {
+        MeshData data = mesh.getData();
+        if (data.isBound()) {
+            LOGGER.warn("MeshData already uploaded to context. Re-uploading...");
+        }
+
+        glBindVertexArray(data.getVao());
+
+        glBindBuffer(GL_ARRAY_BUFFER, data.getVbo());
+
+        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) UBuffer.create(data.getVertices()).flip(), GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data.getIbo());
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) UBuffer.create(data.getIndices()).flip(), GL_STATIC_DRAW);
+
+        // Position
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, Vertex.SIZE * 4, 0);
+        // Texture Coordinates
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, Vertex.SIZE * 4, 12);
+        // Normals
+        glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20);
+
+        // Position
+        glEnableVertexAttribArray(0);
+        // Texture Coordinates
+        glEnableVertexAttribArray(1);
+        // Normals
+        glEnableVertexAttribArray(2);
+
+        // Unbind
+        glBindVertexArray(0);
+
+        data.setBound(true);
+
+    }
+
+    @Override
+    public void bind(Shader shader) {
+        glUseProgram(shader.getProgram().getID());
+    }
+
+    @Override
+    public void upload(Shader shader) {
+        GLSLProgram program = shader.getProgram();
+
+        if (program.getID() == -1) {
+            getIDGenerator().generate(shader);
+        }
+
+        for (GLSLScript script : program.getScripts()) {
+
+            glShaderSource(script.getId(), script.getSource());
+            glCompileShader(script.getId());
+
+            if (glGetShaderi(script.getId(), GL_COMPILE_STATUS) == 0) {
+                LOGGER.warn(glGetShaderInfoLog(script.getId(), 1024));
+            }
+
+            glAttachShader(program.getID(), script.getId());
+        }
     }
 
     @Override
@@ -230,7 +308,6 @@ public class LWJGLDataBinder implements DataBinder {
         }
     }
 
-
     protected static int getGLEnum(Format format) {
         switch (format) {
             case RGBA:
@@ -242,6 +319,19 @@ public class LWJGLDataBinder implements DataBinder {
 
             default:
                 throw new UnsupportedOperationException("Format not supported");
+        }
+    }
+
+    protected static int getGLEnum(GLSLScript.Type type) {
+        switch (type) {
+            case VERTEX_SHADER:
+                return GL_VERTEX_SHADER;
+            case FRAGMENT_SHADER:
+                return GL_FRAGMENT_SHADER;
+            case GEOMETRY_SHADER:
+                return GL_GEOMETRY_SHADER;
+            default:
+                throw new UnsupportedOperationException("Shader type not supported.");
         }
     }
 }

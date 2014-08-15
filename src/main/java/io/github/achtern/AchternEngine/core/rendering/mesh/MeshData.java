@@ -180,4 +180,8 @@ public class MeshData {
     public boolean isBound() {
         return bound;
     }
+
+    public void setBound(boolean bound) {
+        this.bound = bound;
+    }
 }
