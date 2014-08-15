@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering.mesh;
 
+import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class MeshData {
+public class MeshData extends NativeObject {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MeshData.class);
 
@@ -32,7 +33,6 @@ public class MeshData {
 
     protected int vbo;
     protected int ibo;
-    protected int vao;
     protected int size;
 
     protected Vertex[] vertices;
@@ -46,16 +46,16 @@ public class MeshData {
         generate();
     }
 
-    public void setIDs(int vbo, int ibo, int vao, int size) {
+    public void setBufferIDs(int vbo, int ibo, int size) {
         this.vbo = vbo;
         this.ibo = ibo;
-        this.vao = vao;
         this.size = size;
         this.bound = false;
     }
 
     protected void generate() {
-        setIDs(glGenBuffers(), glGenBuffers(), glGenVertexArrays(), 0);
+        setBufferIDs(glGenBuffers(), glGenBuffers(), 0);
+        setID(glGenVertexArrays());
     }
 
     public void bind(Vertex[] vertices, int[] indices) {
@@ -84,10 +84,10 @@ public class MeshData {
     public void bind() {
 
         if (isBound()) {
-            throw new IllegalStateException("MeshData already bound to VAO " + getVao());
+            throw new IllegalStateException("MeshData already bound to VAO " + getID());
         }
 
-        glBindVertexArray(getVao());
+        glBindVertexArray(getID());
 
 
         glBindBuffer(GL_ARRAY_BUFFER, getVbo());
@@ -124,7 +124,7 @@ public class MeshData {
 
         glDeleteBuffers(getVbo());
         glDeleteBuffers(getIbo());
-        glDeleteVertexArrays(getVao());
+        glDeleteVertexArrays(getID());
 
 
     }
@@ -135,10 +135,6 @@ public class MeshData {
 
     public int getIbo() {
         return ibo;
-    }
-
-    public int getVao() {
-        return vao;
     }
 
     public int getSize() {

@@ -11,7 +11,7 @@ public class LWJGLSolidDraw implements DrawStrategy {
 
     @Override
     public void draw(MeshData data) {
-        glBindVertexArray(data.getVao());
+        glBindVertexArray(data.getID());
 
         drawElements(data);
     }

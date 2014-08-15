@@ -101,7 +101,7 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bind(Mesh mesh) {
-        glBindVertexArray(mesh.getData().getVao());
+        glBindVertexArray(mesh.getData().getID());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class LWJGLDataBinder implements DataBinder {
             LOGGER.warn("MeshData already uploaded to context. Re-uploading...");
         }
 
-        glBindVertexArray(data.getVao());
+        glBindVertexArray(data.getID());
 
         glBindBuffer(GL_ARRAY_BUFFER, data.getVbo());
 
