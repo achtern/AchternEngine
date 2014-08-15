@@ -1,36 +1,92 @@
 package io.github.achtern.AchternEngine.core.math;
 
+/**
+ * A Vector3f is a implementation of the mathematical
+ * Vector in R3.
+ * It is made up of 3 float variables and has the
+ * common vector manipulation methods.
+ * All methods return a new instance rather then modifying
+ * the object it self. If the modification is desired,
+ * the ...Local() method perform the modification. Careful!
+ */
 public class Vector3f implements Cloneable {
 
 
+    /**
+     * Zero Vector (0/0/0)
+     */
     public static final Vector3f ZERO   = new Vector3f(0, 0, 0);
+    /**
+     * Unit Vector of X (1/0/0)
+     */
     public static final Vector3f UNIT_X = new Vector3f(1, 0, 0);
+    /**
+     * Unit Vector of Y (0/1/0)
+     */
     public static final Vector3f UNIT_Y = new Vector3f(0, 1, 0);
+    /**
+     * Unit Vector of Z (0/0/1)
+     */
     public static final Vector3f UNIT_Z = new Vector3f(0, 0, 1);
+    /**
+     * Unit Vector (1/1/1)
+     */
     public static final Vector3f ONE    = new Vector3f(1, 1, 1);
 
     private float x;
     private float y;
     private float z;
 
+    /**
+     * Calculates the euclidean distance.
+     * Calls to this static method are equivalent
+     * to <code>p.euclidean(q);</code>
+     * @param p First Vector
+     * @param q Second Vector
+     * @return Euclidean distance
+     */
     public static float distance(Vector3f p, Vector3f q) {
         return p.euclidean(q);
     }
 
+    /**
+     * Linearly interpolates between two Vectors.
+     * Calls to this static method are equivalent
+     * to <code>p.lerp(q, factor);</code>
+     * @param p First Vector
+     * @param q Second Vector
+     * @param factor Interpolation factor
+     * @return interpolated Vector
+     */
     public static Vector3f lerp(Vector3f p, Vector3f q, float factor) {
         return p.lerp(q, factor);
     }
 
+    /**
+     * Construct a new Vector
+     * @param x X-Component
+     * @param y Y-Component
+     * @param z Z-Component
+     */
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
+    /**
+     * Copy constructor
+     * @param v copy
+     */
     public Vector3f(Vector3f v) {
         this(v.getX(), v.getY(), v.getZ());
     }
 
+    /**
+     * Calculates the euclidean distance.
+     * @param v destination
+     * @return distance
+     */
     public float euclidean(Vector3f v) {
         return (float) Math.sqrt(
                 (getX() - v.getX()) * (getX() - v.getX()) +
@@ -39,14 +95,28 @@ public class Vector3f implements Cloneable {
         );
     }
 
+    /**
+     * Calculates length a.k.a. magnitude
+     * @return length
+     */
     public float length() {
         return (float) Math.sqrt(x * x + y * y + z * z);
     }
 
+    /**
+     * Dot Product
+     * @param v other
+     * @return dot
+     */
     public float dot(Vector3f v) {
         return x * v.getX() + y * v.getY() + z * v.getZ();
     }
 
+    /**
+     * Cross Product
+     * @param v other
+     * @return cross
+     */
     public Vector3f cross(Vector3f v) {
         float _x = y * v.getZ() - z * v.getY();
         float _y = z * v.getX() - x * v.getZ();
@@ -55,6 +125,9 @@ public class Vector3f implements Cloneable {
         return new Vector3f(_x, _y, _z);
     }
 
+    /**
+     * Normalizes this object
+     */
     public void normalize() {
         float l = length();
 
@@ -63,38 +136,80 @@ public class Vector3f implements Cloneable {
         z /= l;
     }
 
+    /**
+     * Returns normalized version of this
+     * Vector. DOES NOT modify this object.
+     * Use {@link Vector3f#normalize()} for this!
+     * @return normalized Vector
+     */
     public Vector3f normalized() {
         float l = length();
 
         return new Vector3f(x / l, y / l, z / l);
     }
 
+    /**
+     * Linearly interpolates between two Vectors.
+     * @param dest Destination Vector
+     * @param factor Interpolation factor
+     * @return interpolated Vector
+     */
     public Vector3f lerp(Vector3f dest, float factor) {
         return dest.sub(this).mul(factor).add(this);
     }
 
+    /**
+     * Returns Vector of this rotated around the given axis by angle amount.
+     * @param axis Rotation Axis
+     * @param angle angle in radians!
+     * @return new instance!!
+     */
     public Vector3f rotate(Vector3f axis, float angle) {
         return this.rotate(new Quaternion().initRotation(axis, angle));
     }
 
+    /**
+     * Returns Vector of this rotated by using thw Quaternion
+     * @param q Quaternion to rotate.
+     * @return new instance!!
+     */
     public Vector3f rotate(Quaternion q) {
         Quaternion conjugate = q.conjugate();
         Quaternion w = q.mul(this).mul(conjugate);
         return new Vector3f(w.getX(), w.getY(), w.getZ());
     }
 
+    /**
+     * Returns the largest component of this Vector
+     * @return largest component
+     */
     public float max() {
         return Math.max(getX(), Math.max(getY(), getZ()));
     }
 
+    /**
+     * Add two Vectors
+     * @param v other
+     * @return Added Vectors (new instance!!)
+     */
     public Vector3f add(Vector3f v) {
         return new Vector3f(x + v.getX(), y + v.getY(), z + v.getZ());
     }
 
+    /**
+     * Add constant to Vector
+     * @param v constant
+     * @return new instance!!
+     */
     public Vector3f add(float v) {
         return new Vector3f(x + v, y + v, z + v);
     }
 
+    /**
+     * Add Vector to THIS Vector
+     * @param v other
+     * @return this
+     */
     public Vector3f addLocal(Vector3f v) {
         x += v.getX();
         y += v.getY();
@@ -103,6 +218,11 @@ public class Vector3f implements Cloneable {
         return this;
     }
 
+    /**
+     * Add constant to THIS Vector
+     * @param v constant
+     * @return this
+     */
     public Vector3f addLocal(float v) {
         x += v;
         y += v;
@@ -111,14 +231,29 @@ public class Vector3f implements Cloneable {
         return this;
     }
 
+    /**
+     * Subtract two Vectors
+     * @param v other
+     * @return Subtracted Vectors (new instance!!)
+     */
     public Vector3f sub(Vector3f v) {
         return new Vector3f(x - v.getX(), y - v.getY(), z - v.getZ());
     }
 
+    /**
+     * Subtract constant from Vector
+     * @param v constant
+     * @return new instance!!
+     */
     public Vector3f sub(float v) {
         return new Vector3f(x - v, y - v, z - v);
     }
 
+    /**
+     * Subtract Vector from THIS Vector
+     * @param v other
+     * @return this
+     */
     public Vector3f subLocal(Vector3f v) {
         x -= v.getX();
         y -= v.getY();
@@ -127,6 +262,11 @@ public class Vector3f implements Cloneable {
         return this;
     }
 
+    /**
+     * Subtract constant from THIS Vector
+     * @param v constant
+     * @return this
+     */
     public Vector3f subLocal(float v) {
         x -= v;
         y -= v;
@@ -167,16 +307,36 @@ public class Vector3f implements Cloneable {
         return new Vector3f(x / v, y / v, z / v);
     }
 
+    /**
+     * Returns the absolute version of this Vector
+     * @return new instance!!
+     */
     public Vector3f abs() {
         return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
     }
 
+    /**
+     * Returns clamped version of this vector
+     * @see Vector3f#clampLocal(float)
+     * @param c constant
+     * @return clamped version (new instance!!)
+     */
     public Vector3f clamp(float c) {
         Vector3f r = new Vector3f(this);
         r.clampLocal(c);
         return r;
     }
 
+    /**
+     * Clamp all components to the constant c.
+     * Just checks:
+     * <code>
+     *     COMPONENT > c
+     * </code>
+     * -4 will stay the same if clamped to 3!
+     * @param c constant
+     * @return this
+     */
     public Vector3f clampLocal(float c) {
         if (getX() > c) setX(c);
         if (getY() > c) setY(c);
@@ -253,6 +413,10 @@ public class Vector3f implements Cloneable {
         return x == v.getX() && y == v.getY() && z == v.getZ();
     }
 
+    /**
+     * Returns true when all 3 components are 0
+     * @return nullVector
+     */
     public boolean isNullVector() {
         return getXY().isNullVector() && getZ() == 0;
     }
@@ -267,6 +431,10 @@ public class Vector3f implements Cloneable {
         return "(" + getX() + "/" + getY() + "/" + getZ() + ")";
     }
 
+    /**
+     * Copy components into new Vector object
+     * @return new instance
+     */
     public Vector3f get() {
         return new Vector3f(this);
     }
