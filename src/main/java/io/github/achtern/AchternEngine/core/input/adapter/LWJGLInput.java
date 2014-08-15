@@ -524,36 +524,4 @@ public class LWJGLInput implements InputAdapter {
         return b;
     }
 
-
-
-    @Deprecated
-    public static boolean getMouseStatic(int mouseButton) {
-        return Mouse.isButtonDown(mouseButton);
-    }
-
-    @Deprecated
-    public static boolean getMouseDownStatic(int mouseButton) {
-        return getMouseStatic(mouseButton) && !lastMouseStatic[mouseButton];
-    }
-
-    @Deprecated
-    public static boolean getMouseUpStatic(int mouseButton) {
-        return !getMouseStatic(mouseButton) && lastMouseStatic[mouseButton];
-    }
-
-    @Deprecated
-    public static Vector2f getMousePositionStatic() {
-        return new Vector2f(Mouse.getX(), Mouse.getY());
-    }
-
-    @Deprecated
-    public static void setMousePositionStatic(Vector2f position) {
-        Mouse.setCursorPosition((int)position.getX(), (int)position.getY());
-    }
-
-    @Deprecated
-    public static void setCursorStatic(boolean enabled) {
-        Mouse.setGrabbed(!enabled);
-    }
-
 }
