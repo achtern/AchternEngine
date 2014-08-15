@@ -10,10 +10,6 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Unif
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Shader.class);
@@ -21,33 +17,6 @@ public abstract class Shader {
     private GLSLParser parser = new GLSLParser();
 
     protected GLSLProgram program;
-
-    protected static Map<Class<?>, Method> classMethodMap;
-
-    static {
-        classMethodMap = new HashMap<Class<?>, Method>();
-        /**
-         * To the future developer:
-         * I'm very sorry I've wrote the code below.
-         * It's in a static block and no error checking.
-         * It works an it only costs time during startup.
-         * and it WORKS!
-         * Feel free to improve it!
-         * Regards,
-         * Christian
-         *
-         * This code puts all setUniform methods into the hashmap,
-         * with the corresponding type. This is used in #updateUniforms()
-         * in order to dynamiclly set uniforms.
-         */
-        Class c = Shader.class;
-        for (Method m : c.getDeclaredMethods()) {
-            if (m.getName().equalsIgnoreCase("setUniform")) {
-                Class type = m.getParameterTypes()[1];
-                classMethodMap.put(type, m);
-            }
-        }
-    }
 
     /**
      * For subclasses.
@@ -88,16 +57,11 @@ public abstract class Shader {
                 u.setValue(renderEngine.getSamplerSlot(n));
 
                 // Now common structs like DirectionalLight, PointLight, SpotLight, AmbientLight
-            } else if (u.getType().equalsIgnoreCase("DirectionalLight")) {
-                u.setValue(renderEngine.getActiveRenderPass());
-
-            } else if (u.getType().equalsIgnoreCase("SpotLight")) {
-                u.setValue(renderEngine.getActiveRenderPass());
-
-            } else if (u.getType().equalsIgnoreCase("PointLight")) {
-                u.setValue(renderEngine.getActiveRenderPass());
-
-            } else if (u.getType().equalsIgnoreCase("AmbientLight")) {
+            } else if (u.getType().equalsIgnoreCase("DirectionalLight") ||
+                    u.getType().equalsIgnoreCase("SpotLight") ||
+                    u.getType().equalsIgnoreCase("PointLight") ||
+                    u.getType().equalsIgnoreCase("AmbientLight"))
+            {
                 u.setValue(renderEngine.getActiveRenderPass());
 
 
@@ -142,18 +106,13 @@ public abstract class Shader {
             // and has the change override values.
             handle(u, transform, material, renderEngine, projection);
 
-            if (!u.shouldSet()) return;
-
-            if (u.getValue() != null) {
-                renderEngine.getDataBinder().getUniformManager().setUniform(this, u);
-            } else {
-                throw new IllegalStateException("Uniform value cannot be null for " + u);
-            }
+            // Finally set it.
+            renderEngine.getDataBinder().getUniformManager().setUniform(this, u);
         }
     }
 
     protected void handle(Uniform uniform, Transform transform, Material material,
-                                   RenderEngine renderEngine, Matrix4f projection) {
+                          RenderEngine renderEngine, Matrix4f projection) {
     }
 
     public GLSLProgram getProgram() {

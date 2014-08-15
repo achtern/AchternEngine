@@ -47,6 +47,14 @@ public class LWJGLUniformManager implements UniformManager {
 
     @Override
     public void setUniform(Shader shader, Uniform uniform) {
+        if (!uniform.shouldSet()) {
+            return;
+        }
+
+        if (uniform.getValue() == null) {
+            throw new IllegalStateException("Uniform value cannot be null for " + uniform);
+        }
+
         if (uniform.getValue() instanceof Vector3f) {
             setUniform(shader, uniform.getName(), (Vector3f) uniform.getValue());
         } else if (uniform.getValue() instanceof Color) {
