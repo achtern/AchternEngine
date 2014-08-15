@@ -1,12 +1,15 @@
 package io.github.achtern.AchternEngine.core.resource;
 
+import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
-import io.github.achtern.AchternEngine.core.rendering.Texture;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
+import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.IndexedModel;
 import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.OBJModel;
@@ -26,9 +29,12 @@ public class ResourceLoader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ResourceLoader.class);
 
+    public static final String SHADER_PROGRAM_EXT = ".yaml";
+
     private static ResourceCache<MeshData> meshCache = new ResourceCache<MeshData>();
-    private static ResourceCache<Texture> textureCache = new ResourceCache<Texture>();
+    private static ResourceCache<TexturableData> textureCache = new ResourceCache<TexturableData>();
     private static ResourceCache<String> shaderCache = new ResourceCache<String>();
+    private static ResourceCache<GLSLProgram> shaderProgrammCache = new ResourceCache<GLSLProgram>();
 
     /**
      * This list contains locations to look for resources
@@ -43,6 +49,7 @@ public class ResourceLoader {
      * Bundled Textures
      * Bundled Models
      * Bundled Shaders
+     * Bundled Shader Programs
      *
      * Local File System
      */
@@ -52,6 +59,7 @@ public class ResourceLoader {
         locations.add(new BundledTextureLocation());
         locations.add(new BundledModelLocation());
         locations.add(new BundledShaderLocation());
+        locations.add(new BundledShaderProgramLocation());
 
         locations.add(new FileSystemLocation("."));
     }
@@ -89,6 +97,36 @@ public class ResourceLoader {
      */
     public static void clearResourceLocations() {
         locations.clear();
+    }
+
+    /**
+     * Pre Load a Mesh, good at startup, to allow getting the Mesh at runtime.
+     * Binds the mesh to the Graphics API.
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @throws IOException
+     */
+    public static void preLoadMesh(String name) throws IOException {
+        getMesh(name);
+    }
+
+    /**
+     * Pre Load a Texture, good at startup, to allow getting the Texture at runtime.
+     * Binds the texture to the Graphics API.
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @throws IOException
+     */
+    public static void preLoadTexture(String name) throws IOException {
+        getTexture(name);
+    }
+
+    /**
+     * Pre Load a Shader source file.
+     * Only parses the sourcefile, no binding or uniform adding at this stage!
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @throws IOException
+     */
+    public static void preLoadShader(String name) throws IOException {
+        getShader(name);
     }
 
     /**
@@ -148,30 +186,50 @@ public class ResourceLoader {
     /**
      * Loads a image file and converts it into a Texture
      * (uses a internal cache if the texture has been loaded previously)
+     * The dimensions/size will be the size of the source image.
      * @param name The relative path (to various ResourceLocations) of the filename
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
     public static Texture getTexture(String name) throws IOException {
-        return getTexture(name, false);
+        return getTexture(name, null, false);
+    }
+
+    /**
+     * Loads a image file and converts it into a Texture
+     * (uses a internal cache if the texture has been loaded previously)
+     * @param name The relative path (to various ResourceLocations) of the filename
+     * @param dimension The dimension of the new texture (if null the one of the images will get taken)
+     * @return A readable Stream | null if not exists
+     * @throws IOException if resource not found
+     */
+    public static Texture getTexture(String name, Dimension dimension) throws IOException {
+        return getTexture(name, dimension, false);
     }
 
     /**
      * Loads a image file and converts it into a Texture
      * @param name The relative path (to various ResourceLocations) of the filename
+     * @param dimension The dimension of the new texture
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    public static Texture getTexture(String name, boolean forceLoading) throws IOException {
+    public static Texture getTexture(String name, Dimension dimension, boolean forceLoading) throws IOException {
 
         if (textureCache.has(name) && !forceLoading) {
-            return textureCache.get(name);
+            // We only store the TexturableData, in order to avoid a clone.
+            return new Texture(textureCache.get(name));
         }
 
         BufferedImage image = ImageIO.read(getStream(name));
 
-        Texture texture = new Texture(image);
+        Texture texture;
+        if (dimension != null) {
+            texture = new Texture(image, dimension);
+        } else {
+            texture = new Texture(image);
+        }
 
         textureCache.add(name, texture);
 
@@ -236,6 +294,53 @@ public class ResourceLoader {
         shaderCache.add(name, shaderSource);
 
         return shaderSource;
+    }
+
+    /**
+     * Reads programm file from disk and loads the stated source files
+     * (uses a internal cache if the shader has been loaded previously)
+     * @param name Name of the programm declaration
+     * @return A GLSLProgramm with loaded shader sources.
+     * @throws IOException
+     */
+    public static GLSLProgram getShaderProgram(String name) throws IOException {
+        return getShaderProgram(name, false, new GLSLParser());
+    }
+
+    /**
+     * Reads programm file from disk and loads the stated source files
+     * @param name Name of the programm declaration
+     * @param forceLoading if set to true the file will get read again and not read from cache
+     * @param parser The optional parser to modify the shader lines.
+     * @return A GLSLProgramm with loaded shader sources.
+     * @throws IOException
+     */
+    public static GLSLProgram getShaderProgram(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
+
+        name = name + SHADER_PROGRAM_EXT;
+
+        if (shaderProgrammCache.has(name) && !forceLoading) {
+            return shaderProgrammCache.get(name);
+        }
+
+        StringBuilder programSource = new StringBuilder();
+
+        BufferedReader programReader = new BufferedReader(new InputStreamReader(getStream(name)));
+
+        String line;
+
+        while ((line = programReader.readLine()) != null) {
+            programSource.append(line).append("\n");
+        }
+
+        programReader.close();
+
+        GLSLProgram program = new GLSLProgram(name, programSource.toString());
+        program.parse(parser);
+
+        shaderProgrammCache.add(name, program);
+
+        return program;
     }
 
     /**

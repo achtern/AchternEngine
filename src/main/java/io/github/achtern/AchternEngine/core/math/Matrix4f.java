@@ -1,14 +1,27 @@
 package io.github.achtern.AchternEngine.core.math;
 
-
+/**
+ * Implementation of the mathematical Matrix
+ * with 4x4 float values
+ */
 public class Matrix4f {
 
+    /**
+     * Main Data Array
+     */
     private float[][] m;
 
+    /**
+     * Initializes with 0
+     */
     public Matrix4f() {
         m = new float[4][4];
     }
 
+    /**
+     * Initializes this matrix as identiy Matrix
+     * @return this
+     */
     public Matrix4f initIdentiy() {
 
         m[0][0] = 1;    m[0][1] = 0;    m[0][2] = 0;    m[0][3] = 0;
@@ -80,17 +93,19 @@ public class Matrix4f {
         return this;
     }
 
-    public Matrix4f initOrthographic(float left, float right, float bottom, float top, float far, float near) {
+    public Matrix4f initOrthographic(float left, float right, float bottom, float top, float near, float far) {
 
-        float width = right - left;
-        float height = top - bottom;
-        float depth = far - near;
+        float RmL = right - left;
+        float TmB = top - bottom;
+        float FmN = far - near;
+        float RpL = right + left;
+        float TpB = top + bottom;
+        float FpN = far + near;
 
-
-        m[0][0] = 2 / width;    m[0][1] = 0;            m[0][2] = 0;            m[0][3] = - (right + left) / width;
-        m[1][0] = 0;            m[1][1] = 2 / height;   m[1][2] = 0;            m[1][3] = - (top + bottom) / height;
-        m[2][0] = 0;            m[2][1] = 0;            m[2][2] = - 2 / depth;  m[2][3] = - (far + near) / depth;
-        m[3][0] = 0;            m[3][1] = 0;            m[3][2] = 0;            m[3][3] = 1;
+        m[0][0] = 2 / RmL;   m[0][1] = 0;         m[0][2] = 0;         m[0][3] = - RpL / RmL;
+        m[1][0] = 0;         m[1][1] = 2 / TmB;   m[1][2] = 0;         m[1][3] = - TpB / TmB;
+        m[2][0] = 0;         m[2][1] = 0;         m[2][2] = - 1 / FmN; m[2][3] = - near / FmN;
+        m[3][0] = 0;         m[3][1] = 0;         m[3][2] = 0;         m[3][3] = 1;
 
         return this;
     }
@@ -151,6 +166,38 @@ public class Matrix4f {
         m[x][y] = val;
     }
 
+    public void set1Line(float x1, float x2, float x3, int x4) {
+        m[0][0] = x1;
+        m[0][1] = x2;
+        m[0][2] = x3;
+        m[0][3] = x4;
+    }
+
+    public void set2Line(float x1, float x2, float x3, float x4) {
+        m[1][0] = x1;
+        m[1][1] = x2;
+        m[1][2] = x3;
+        m[1][3] = x4;
+    }
+
+    public void set3Line(float x1, float x2, float x3, float x4) {
+        m[2][0] = x1;
+        m[2][1] = x2;
+        m[2][2] = x3;
+        m[2][3] = x4;
+    }
+
+    public void set4Line(float x1, float x2, float x3, float x4) {
+        m[3][0] = x1;
+        m[3][1] = x2;
+        m[3][2] = x3;
+        m[3][3] = x4;
+    }
+
+    /**
+     * Returns a copy of the array!
+     * @return copy
+     */
     public float[][] getM() {
         float[][] res = new float[4][4];
 
@@ -159,7 +206,25 @@ public class Matrix4f {
         return res;
     }
 
+    /**
+     * Returns the array itself
+     * @return data array
+     */
+    public float[][] getMReference() {
+        return m;
+    }
+
     public void setM(float[][] m) {
         this.m = m;
+    }
+
+    @Override
+    public String toString() {
+        return "(" +
+                "(" + get(0, 0) + "/" + get(0, 1) + "/" + get(0, 2) + "/" + get(0, 3) + ")," +
+                "(" + get(1, 0) + "/" + get(1, 1) + "/" + get(1, 2) + "/" + get(1, 3) + ")," +
+                "(" + get(2, 0) + "/" + get(2, 1) + "/" + get(2, 2) + "/" + get(2, 3) + ")," +
+                "(" + get(3, 0) + "/" + get(3, 1) + "/" + get(3, 2) + "/" + get(3, 3) + ")," +
+                ")";
     }
 }

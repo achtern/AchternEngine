@@ -1,0 +1,168 @@
+package io.github.achtern.AchternEngine.core.rendering.binding;
+
+import io.github.achtern.AchternEngine.core.math.Matrix4f;
+import io.github.achtern.AchternEngine.core.math.Vector2f;
+import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.math.Vector4f;
+import io.github.achtern.AchternEngine.core.rendering.Color;
+import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
+import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.*;
+import io.github.achtern.AchternEngine.core.util.UBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL20.*;
+
+public class LWJGLUniformManager implements UniformManager {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(LWJGLUniformManager.class);
+
+    @Override
+    public void registerUniform(Shader shader, Uniform uniform) {
+        int uniformLoc = glGetUniformLocation(shader.getProgram().getID(), uniform.getName());
+
+        if (uniformLoc == 0xFFFFFFFF) {
+            // Just trace, cause the uniform might be removed by the GLSL compiler, if un-used.
+            LOGGER.trace("{}: Could not find uniform location for '{}'",
+                    shader.getClass().getSimpleName(), uniform.getName());
+        }
+
+        uniform.setLocation(uniformLoc);
+    }
+
+    @Override
+    public void addUniforms(Shader shader) {
+        for (GLSLScript script : shader.getProgram().getScripts()) {
+            for (Uniform u : script.getExpandedUniforms()) {
+                LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), u.getName());
+                registerUniform(shader, u);
+            }
+        }
+    }
+
+    @Override
+    public void setUniform(Shader shader, Uniform uniform) {
+        if (!uniform.shouldSet()) {
+            return;
+        }
+
+        if (uniform.getValue() == null) {
+            throw new IllegalStateException("Uniform value cannot be null for " + uniform);
+        }
+
+        if (uniform.getValue() instanceof Vector3f) {
+            setUniform(shader, uniform.getName(), (Vector3f) uniform.getValue());
+        } else if (uniform.getValue() instanceof Color) {
+            setUniform(shader, uniform.getName(), (Color) uniform.getValue());
+        } else if (uniform.getValue() instanceof Vector4f) {
+            setUniform(shader, uniform.getName(), (Vector4f) uniform.getValue());
+        } else if (uniform.getValue() instanceof Vector2f) {
+            setUniform(shader, uniform.getName(), (Vector2f) uniform.getValue());
+        } else if (uniform.getValue() instanceof Matrix4f) {
+            setUniform(shader, uniform.getName(), (Matrix4f) uniform.getValue());
+        } else if (uniform.getValue() instanceof Integer) {
+            setUniform(shader, uniform.getName(), (Integer) uniform.getValue());
+        } else if (uniform.getValue() instanceof Float) {
+            setUniform(shader, uniform.getName(), (Float) uniform.getValue());
+        } else if (uniform.getValue() instanceof DirectionalLight) {
+            setUniform(shader, uniform.getName(), (DirectionalLight) uniform.getValue());
+        } else if (uniform.getValue() instanceof AmbientLight) {
+            setUniform(shader, uniform.getName(), (AmbientLight) uniform.getValue());
+        } else if (uniform.getValue() instanceof SpotLight) {
+            setUniform(shader, uniform.getName(), (SpotLight) uniform.getValue());
+        } else if (uniform.getValue() instanceof PointLight) {
+            setUniform(shader, uniform.getName(), (PointLight) uniform.getValue());
+        } else if (uniform.getValue() instanceof BaseLight) {
+            setUniform(shader, uniform.getName(), (BaseLight) uniform.getValue());
+        } else if (uniform.getValue() instanceof Attenuation) {
+            setUniform(shader, uniform.getName(), (Attenuation) uniform.getValue());
+        } else {
+
+            Uniform.SetStrategy strategy = uniform.getSetStrategy();
+            if (strategy == null) {
+                throw new UnsupportedOperationException("Cannot set uniform and no SetStrategy provided");
+            }
+
+            strategy.set(uniform, this);
+        }
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Vector3f vec) {
+        glUniform3f(shader.getProgram().getExpandedUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Vector4f vec) {
+        glUniform4f(shader.getProgram().getExpandedUniform(name).getLocation(), vec.getX(), vec.getY(), vec.getZ(), vec.getW());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Color color) {
+        setUniform(shader, name, (Vector4f) color);
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Vector2f vec) {
+        glUniform2f(shader.getProgram().getExpandedUniform(name).getLocation(), vec.getX(), vec.getY());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Matrix4f matrix) {
+        glUniformMatrix4(shader.getProgram().getExpandedUniform(name).getLocation(), true, (FloatBuffer) UBuffer.create(matrix).flip());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, int value) {
+        glUniform1i(shader.getProgram().getExpandedUniform(name).getLocation(), value);
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, float value) {
+        glUniform1f(shader.getProgram().getExpandedUniform(name).getLocation(), value);
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, DirectionalLight directionalLight) {
+        setUniform(shader, name + ".base", (BaseLight) directionalLight);
+        setUniform(shader, name + ".direction", directionalLight.getDirection());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, AmbientLight ambientLight) {
+        setUniform(shader, name + ".color", ambientLight.getColor());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, BaseLight baseLight) {
+        setUniform(shader, name + ".color", baseLight.getColor().getColor());
+        setUniform(shader, name + ".intensity", baseLight.getIntensity());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, PointLight pointLight) {
+        setUniform(shader, name + ".base", (BaseLight) pointLight);
+        setUniform(shader, name + ".attenuation", pointLight.getAttenuation());
+        setUniform(shader, name + ".position", pointLight.getTransform().getTransformedPosition());
+        setUniform(shader, name + ".range", pointLight.getRange());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Attenuation attenuation) {
+        setUniform(shader, name + ".constant", attenuation.getConstant());
+        setUniform(shader, name + ".linear", attenuation.getLinear());
+        setUniform(shader, name + ".exponent", attenuation.getExponent());
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, SpotLight spotLight) {
+        setUniform(shader, name + ".pointLight", (PointLight) spotLight);
+        setUniform(shader, name + ".direction", spotLight.getDirection());
+        setUniform(shader, name + ".cutoff", spotLight.getCutoff());
+    }
+}

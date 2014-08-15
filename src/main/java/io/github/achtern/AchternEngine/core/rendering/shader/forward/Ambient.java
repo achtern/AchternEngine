@@ -1,11 +1,7 @@
 package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
-import io.github.achtern.AchternEngine.core.RenderEngine;
-import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.entity.renderpasses.light.AmbientLight;
-import io.github.achtern.AchternEngine.core.math.Matrix4f;
-import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,29 +17,10 @@ public class Ambient extends Shader {
     }
 
     private Ambient() {
-        super();
-
         try {
-            setUpFromFile("forward.ambient");
+            this.program = ResourceLoader.getShaderProgram("forward.ambient");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Ambient Shader GLSL files.", e);
         }
-    }
-
-    @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine) {
-        super.updateUniforms(transform, material, renderEngine);
-
-        Matrix4f worldMat = transform.getTransformation();
-        Matrix4f projectedMat = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
-
-
-        setUniform("MVP", projectedMat);
-        setUniform("ambientIntensity", (AmbientLight) renderEngine.getActiveRenderPass());
-
-    }
-
-    protected void setUniform(String name, AmbientLight light) {
-        setUniform(name, light.getColor());
     }
 }

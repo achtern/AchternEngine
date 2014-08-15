@@ -1,9 +1,11 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses;
 
+import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GLSLScript {
+public class GLSLScript extends NativeObject {
 
     public enum Type {
         VERTEX_SHADER,
@@ -17,22 +19,23 @@ public class GLSLScript {
 
     private List<GLSLStruct> structs;
 
-    private List<Variable> uniforms;
-
     private List<Variable> attributes;
 
-    private List<String> expandedUniforms;
+    private List<Uniform> uniforms;
+
+    private List<Uniform> expandedUniforms;
 
     private String source;
+
+    private boolean processed;
 
 
     public GLSLScript(String name, Type type) {
         this.name = name;
         this.type = type;
         this.structs = new ArrayList<GLSLStruct>();
-        this.uniforms = new ArrayList<Variable>();
+        this.uniforms = new ArrayList<Uniform>();
         this.attributes = new ArrayList<Variable>();
-        this.expandedUniforms = new ArrayList<String>();
     }
 
     public String getName() {
@@ -59,12 +62,29 @@ public class GLSLScript {
         this.structs = structs;
     }
 
-    public List<Variable> getUniforms() {
+    public List<Uniform> getUniforms() {
         return uniforms;
     }
 
-    public void setUniforms(List<Variable> uniforms) {
+    public void setUniforms(List<Uniform> uniforms) {
         this.uniforms = uniforms;
+    }
+
+    public void setUniformsFromVariable(List<Variable> uniforms) {
+        List<Uniform> u = new ArrayList<Uniform>(uniforms.size());
+        for (Variable v : uniforms) {
+            u.add(new Uniform(v));
+        }
+
+        setUniforms(u);
+    }
+
+    public List<Uniform> getExpandedUniforms() {
+        return expandedUniforms;
+    }
+
+    public void setExpandedUniforms(List<Uniform> expandedUniforms) {
+        this.expandedUniforms = expandedUniforms;
     }
 
     public List<Variable> getAttributes() {
@@ -75,19 +95,19 @@ public class GLSLScript {
         this.attributes = attributes;
     }
 
-    public List<String> getExpandedUniforms() {
-        return expandedUniforms;
-    }
-
-    public void setExpandedUniforms(List<String> expandedUniforms) {
-        this.expandedUniforms = expandedUniforms;
-    }
-
     public String getSource() {
         return source;
     }
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
     }
 }

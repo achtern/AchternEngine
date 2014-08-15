@@ -1,0 +1,4 @@
+version: 330
+vertex: shaders/debug.wireframe.gvs
+fragment: shaders/debug.wireframe.gfs
+geometry: shaders/debug.wireframe.ggs

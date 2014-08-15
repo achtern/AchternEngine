@@ -5,23 +5,25 @@ import io.github.achtern.AchternEngine.core.math.Vector4f;
 
 public class Color extends Vector4f {
 
-    public static final Color BLACK = new Color(0, 0, 0);
+    public static final Color BLACK = new Color(0, 0, 0, 1);
 
-    public static final Color WHITE = new Color(1, 1, 1);
+    public static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
 
-    public static final Color RED = new Color(1, 0, 0);
+    public static final Color WHITE = new Color(1, 1, 1, 1);
 
-    public static final Color GREEN = new Color(0, 1, 0);
+    public static final Color RED = new Color(1, 0, 0, 1);
 
-    public static final Color BLUE = new Color(0, 0, 1);
+    public static final Color GREEN = new Color(0, 1, 0, 1);
 
-    public static final Color YELLOW = new Color(1, 1, 0);
+    public static final Color BLUE = new Color(0, 0, 1, 1);
 
-    public static final Color MAGENTA = new Color(1, 0, 1);
+    public static final Color YELLOW = new Color(1, 1, 0, 1);
 
-    public static final Color TURQUOISE = new Color(1, 0, 1);
+    public static final Color MAGENTA = new Color(1, 0, 1, 1);
 
-    public static final Color ORANGE = new Color(1, 0.5f, 0);
+    public static final Color TURQUOISE = new Color(1, 0, 1, 1);
+
+    public static final Color ORANGE = new Color(1, 0.5f, 0, 1);
 
     public Color(float r, float g, float b, float a) {
         super(r, g, b, a);
@@ -31,8 +33,8 @@ public class Color extends Vector4f {
         this(r, g, b, 1);
     }
 
-    public Color(Vector4f rgb) {
-        super(rgb);
+    public Color(Vector4f rgba) {
+        super(rgba);
     }
 
     public Color(Vector3f rgb, float a) {

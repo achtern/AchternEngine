@@ -1,11 +1,7 @@
 package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
-import io.github.achtern.AchternEngine.core.RenderEngine;
-import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.entity.renderpasses.light.SpotLight;
-import io.github.achtern.AchternEngine.core.math.Matrix4f;
-import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,29 +20,9 @@ public class Spot extends Shader {
         super();
 
         try {
-            setUpFromFile("forward.spot");
+            this.program = ResourceLoader.getShaderProgram("forward.spot");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
         }
-    }
-
-    @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine) {
-
-        super.updateUniforms(transform, material, renderEngine);
-
-        Matrix4f worldMat = transform.getTransformation();
-        Matrix4f projectedMat = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
-
-
-        setUniform("model", worldMat);
-        setUniform("MVP", projectedMat);
-
-        setUniform("specularIntensity", material.getFloat("specularIntensity"));
-        setUniform("specularPower", material.getFloat("specularPower"));
-        setUniform("eyePos", renderEngine.getMainCamera().getTransform().getTransformedPosition());
-
-        setUniform("spotLight", (SpotLight) renderEngine.getActiveRenderPass());
-
     }
 }

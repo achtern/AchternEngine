@@ -10,10 +10,34 @@ public class Dimension extends Vector2f {
         return new Dimension(image.getWidth(), image.getHeight());
     }
 
-    public Dimension(int width, int height) {
-        super(width, height);
+    public Dimension(Dimension copy) {
+        this(copy.getWidth(), copy.getHeight());
     }
 
+    public Dimension(int width, int height) {
+        super(width, height);
+        if (width < 0 || height < 0) {
+            throw new IllegalArgumentException("Not valid dimension, width|height MUST be greater than 0");
+        }
+    }
+
+    public Dimension factor2() {
+        int w = 2;
+        int h = 2;
+
+        while (w < getWidth()) w *= 2;
+        while (h < getHeight()) h *= 2;
+
+        return new Dimension(w, h);
+    }
+
+    public void setHeight(int height) {
+        super.setX((int) height);
+    }
+
+    public void setWidth(int width) {
+        super.setY((int) width);
+    }
 
     public int getHeight() {
         return (int) getY();

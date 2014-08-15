@@ -61,18 +61,23 @@ public class FPS {
      */
     public void display() {
 
+        // If a second has passed print it
         if (frameCounter >= 1.0) {
+            // Set fps to frames passed
             fps = frames;
+            // If the average is 0, just set it to fps
+            // will be on first iteration the case
             if (average == 0) {
                 average = fps;
             } else {
+                // Otherwise calculate the average
                 average += fps;
                 average /= 2;
             }
 
             LOGGER.info("FPS: {} (Average: {})", fps, (float) Math.round(average * 100) / 100);
-            frames = 0;
-            frameCounter = frames;
+            // Reset frames and frameCounter
+            frameCounter = frames = 0;
         }
     }
 

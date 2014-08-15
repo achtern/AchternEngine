@@ -2,11 +2,13 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
+import io.github.achtern.AchternEngine.core.scenegraph.bounding.BoundingBox;
 
 public class Mesh {
 
     protected MeshData data;
+
+    protected BoundingBox bb;
 
     public Mesh(MeshData data) {
         this.data = data;
@@ -25,20 +27,29 @@ public class Mesh {
         this.data = new MeshData();
     }
 
+    protected void setVertices(Vertex[] vertices, int[] indices) {
+        setVertices(vertices, indices, true);
+    }
+
     protected void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals) {
 
         if (calcNormals) {
             calcNormals(vertices, indices);
         }
 
-        this.data.bind(vertices, indices);
+        this.data.set(vertices, indices);
+        updateBounds();
     }
 
-    public void draw(DrawStrategy drawStrategy) {
-        drawStrategy.draw(this.data);
+    public void setMode(MeshData.Mode mode) {
+        getData().setMode(mode);
     }
 
-    private void calcNormals(Vertex[] vertices, int[] indices) {
+    public void updateBounds() {
+        this.bb = new BoundingBox().fromVertices(getData().getVertices());
+    }
+
+    protected void calcNormals(Vertex[] vertices, int[] indices) {
 
         for (int i = 0; i < indices.length; i += 3) {
             int i0 = indices[i];
@@ -65,7 +76,20 @@ public class Mesh {
         return data;
     }
 
+    protected void setData(MeshData data) {
+        this.data = data;
+        updateBounds();
+    }
+
+    public BoundingBox getBoundingBox() {
+        return bb;
+    }
+
     public int getVertexCount() {
         return getData().getVertexCount();
+    }
+
+    public void setBoundingBox(BoundingBox boundingBox) {
+        this.bb = boundingBox;
     }
 }

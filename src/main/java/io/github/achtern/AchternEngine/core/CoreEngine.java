@@ -1,13 +1,36 @@
 package io.github.achtern.AchternEngine.core;
 
+import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
+import io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.util.FPS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The CoreEngine is the main entry point of the
+ * AchternEngine.
+ * The Engine is running the main loop and manages Game and
+ * RenderEngine, as well as the {@link io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager}.
+ */
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CoreEngine.class);
+
+    /**
+     * Only used during bootstrap to manage the hardware/graphics/native binding
+     */
+    protected WindowIOBindingManager bindingManager;
+
+    /**
+     * The Main Render Window
+     */
+    protected Window window;
+
+    private static boolean stopRequest = false;
+
     private boolean running;
 
     private Game game;
@@ -18,25 +41,51 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     private FPS fps;
 
     /**
+     * Request a force stop of the engine
+     */
+    public static void requestStop() {
+        stopRequest = true;
+    }
+
+    /**
+     * Whether a force stop was request via {@link CoreEngine#requestStop()}
+     * @return stopRequest
+     */
+    public static boolean stopRequested() {
+        return stopRequest;
+    }
+
+    /**
      * Creates a new Game Holder and runner
      * @param game The game to run.
      */
     public CoreEngine(Game game) {
+        this(game, WindowIOBindingManager.Binding.LWJGL);
+    }
+
+    /**
+     * Creates a new Game Holder and runner
+     * @param game The game to run.
+     */
+    public CoreEngine(Game game, WindowIOBindingManager.Binding binding) {
+        LOGGER.debug(BuildInfo.get());
         this.game = game;
         this.running = false;
         this.fps = new FPS();
+        this.bindingManager = new WindowIOBindingManager(binding);
+        this.bindingManager.populateDrawStrategyFactory();
     }
 
     /**
      * Creates a new Window.
      * @param title The window's title
-     * @param width The window's width
-     * @param height The window's height
+     * @param dimensions The window's dimensions
      */
-    public void createWindow(String title, int width, int height) {
-        Window.create(width, height, title);
-        this.renderEngine = new RenderEngine();
-        LOGGER.debug("OpenGL Version: {}", RenderEngine.getOpenGLVersion());
+    protected void createWindow(String title, Dimension dimensions) {
+        window = new Window(dimensions);
+        window.create(title);
+        this.renderEngine = bindingManager.getRenderEngine();
+        LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());
     }
 
     /**
@@ -55,7 +104,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Stops the game.
      */
-    public void stop() {
+    protected void stop() {
         if (!running) {
             return;
         }
@@ -73,6 +122,10 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
 
         running = true;
+
+        createWindow(game.getWindowTitle(), game.getWindowDimensions());
+
+        LoadingScreen.show(this, game.getSplashScreen());
 
         game.preInit(this);
 
@@ -100,12 +153,12 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                 unprocessedTime -= frameTime;
 
 
-                if (Window.isCloseRequested()) {
+                if (window.isCloseRequested() || stopRequested()) {
                     stop();
                 }
 
 
-                game.update((float) frameTime);
+                game.updateSceneGraph((float) frameTime);
 
                 game.getInputManager().trigger((float) frameTime);
 
@@ -114,8 +167,8 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
             }
 
             if (render) {
-                game.render(renderEngine);
-                Window.render();
+                game.renderSceneGraph(renderEngine);
+                window.render();
                 fps.rendered();
             }
 
@@ -132,7 +185,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * Destroing Mouse and Keyboard.
      */
     public void cleanUp() {
-        Window.dispose();
+        window.dispose();
     }
 
     /**
@@ -170,5 +223,17 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public Game getGame() {
         return game;
+    }
+
+    public WindowIOBindingManager getBindingManager() {
+        return bindingManager;
+    }
+
+    public void setBindingManager(WindowIOBindingManager bindingManager) {
+        this.bindingManager = bindingManager;
+    }
+
+    public Window getWindow() {
+        return window;
     }
 }

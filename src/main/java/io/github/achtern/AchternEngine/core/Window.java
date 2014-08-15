@@ -1,30 +1,47 @@
 package io.github.achtern.AchternEngine.core;
 
+import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ContextAttribs;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.opengl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glGetInteger;
+import static org.lwjgl.opengl.GL30.*;
 
-public class Window {
+public class Window extends Dimension implements RenderTarget {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Window.class);
 
-    public static void create(Dimension dimension, String title) {
-        create(dimension.getWidth(), dimension.getHeight(), title);
+    private static Window instance;
+
+    public static RenderTarget getTarget() {
+        return instance;
     }
 
-    public static void create(int width, int height, String title) {
+    public static Window get() {
+        return instance;
+    }
+
+    protected int drawBuffer, readBuffer;
+
+    public Window(Dimension copy) {
+        super(copy);
+        instance = this;
+    }
+
+    public Window(int width, int height) {
+        super(width, height);
+        instance = this;
+    }
+
+    public void create(String title) {
         Display.setTitle(title);
 
         PixelFormat pixelFormat = new PixelFormat();
@@ -33,57 +50,50 @@ public class Window {
                 .withProfileCore(true);
 
         try {
-            Display.setDisplayMode(new DisplayMode(width, height));
+            Display.setDisplayMode(new DisplayMode(getWidth(), getHeight()));
             Display.create(pixelFormat, contextAtrributes);
             Keyboard.create();
             Mouse.create();
+            drawBuffer = glGetInteger(GL_DRAW_BUFFER);
+            readBuffer = glGetInteger(GL_READ_BUFFER);
         } catch (LWJGLException e) {
             LOGGER.error("Error setting up input and window", e);
         }
     }
 
-    public static void render() {
+    public void render() {
         Display.update();
     }
 
-    public static boolean isCloseRequested() {
+    public boolean isCloseRequested() {
         return Display.isCloseRequested();
     }
 
-    public static void dispose() {
+    public void dispose() {
         Display.destroy();
         Keyboard.destroy();
         Mouse.destroy();
     }
 
-    public static void bindAsRenderTarget() {
-
+    @Override
+    public void bindAsRenderTarget(DataBinder binder) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDrawBuffer(drawBuffer);
+        glReadBuffer(readBuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         glViewport(0, 0, getWidth(), getHeight());
 
     }
 
-    public static Vector2f getCenter() {
+    public Vector2f getCenter() {
         return new Vector2f(getWidth() / 2, getHeight() / 2);
     }
 
-    public static Dimension getDimension() {
-        return new Dimension(getWidth(), getHeight());
-    }
-
-    public static int getWidth() {
-        return Display.getDisplayMode().getWidth();
-    }
-
-    public static int getHeight() {
-        return Display.getDisplayMode().getHeight();
-    }
-
-    public static String getTitle() {
+    public String getTitle() {
         return Display.getTitle();
     }
 
-    public static void setTitle(String title) {
+    public void setTitle(String title) {
         Display.setTitle(title);
     }
 

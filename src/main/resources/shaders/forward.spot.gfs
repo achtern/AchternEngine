@@ -1,18 +1,12 @@
 #version 330
 
-#include "lighting.gh"
-
-in vec2 texCoord0;
-in vec3 normal0;
-in vec3 worldPos0;
-
-out vec4 fragColor;
-
-uniform sampler2D diffuse;
+#include "lighting.gfh"
 
 uniform SpotLight spotLight;
 
-void main()
+vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-    fragColor = texture(diffuse, texCoord0.xy) * CalcSpotLight(spotLight, normalize(normal0), worldPos0);
+    return CalcSpotLight(spotLight, normal, worldPos);
 }
+
+#include "lighting-main.gfh"

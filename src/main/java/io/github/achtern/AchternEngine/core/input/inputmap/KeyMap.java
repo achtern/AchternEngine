@@ -36,31 +36,39 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
         return this;
     }
 
+    public KeyMap register(List<KeyTrigger> keys, KeyListener h) {
+
+        for (KeyTrigger t : keys) {
+            register(t, h);
+        }
+
+        return this;
+    }
+
     public void trigger(float delta) {
 
         Set<KeyTrigger> keys = this.listener.keySet();
 
         for (KeyTrigger k : keys) {
-            if (input.getKey(k.get())) {
-                cycle(KeyListener.Type.PRESS, k, delta);
+
+            if (input.getKey(k.get()) && k.getType().equals(KeyTrigger.Type.PRESS)) {
+                cycle(k, delta);
             }
 
-            if (input.getKeyDown(k.get())) {
-                cycle(KeyListener.Type.DOWN, k, delta);
+            if (input.getKeyDown(k.get()) && k.getType().equals(KeyTrigger.Type.DOWN)) {
+                cycle(k, delta);
             }
 
-            if (input.getKeyUp(k.get())) {
-                cycle(KeyListener.Type.UP, k, delta);
+            if (input.getKeyUp(k.get()) && k.getType().equals(KeyTrigger.Type.UP)) {
+                cycle(k, delta);
             }
         }
 
     }
 
-    protected void cycle(KeyListener.Type type, KeyTrigger k, float delta) {
+    protected void cycle(KeyTrigger k, float delta) {
         for (KeyListener l : this.listener.get(k)) {
-            if (l.getPressType().equals(type)) {
-                l.onAction(new KeyEvent(input, k.get(), delta));
-            }
+            l.onAction(new KeyEvent(input, k.get(), delta));
         }
     }
 

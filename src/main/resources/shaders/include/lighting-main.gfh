@@ -1,0 +1,4 @@
+void main()
+{
+    fragColor = color * texture(diffuse, texCoord0.xy) * CalcLightEffect(normalize(normal0), worldPos0);
+}

@@ -1,34 +1,22 @@
 package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 
-public class Material {
+public class Material extends CommonDataStore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
 
-    private HashMap<String, Texture> textures;
-    private HashMap<String, Vector3f> vectors;
-    private HashMap<String, Float> floats;
+    private boolean wireframe = false;
 
-    public Material() {
-        textures = new HashMap<String, Texture>();
-        vectors = new HashMap<String, Vector3f>();
-        floats = new HashMap<String, Float>();
-    }
-
-
-    public void addTexture(String name, Texture texture) {
-        textures.put(name, texture);
-    }
-
+    @Override
     public Texture getTexture(String name) {
-        Texture r = textures.get(name);
+        Texture r = super.getTexture(name);
         if (r != null) {
             return r;
         }
@@ -42,29 +30,25 @@ public class Material {
         }
     }
 
-    public void addVector(String name, Vector3f vector) {
-        vectors.put(name, vector);
+
+    public void setColor(Color color) {
+        addColor("color", color);
     }
 
-    public Vector3f getVector(String name) {
-        Vector3f r = vectors.get(name);
-        if (r != null) {
-            return r;
+    public Color getColor() {
+        Color c = getColor("color");
+        if (c == null) {
+            return Color.WHITE;
+        } else {
+            return c;
         }
-
-        return new Vector3f(0, 0, 0);
     }
 
-    public void addFloat(String name, float f) {
-        floats.put(name, f);
+    public boolean isWireframe() {
+        return wireframe;
     }
 
-    public float getFloat(String name) {
-        Float r = floats.get(name);
-        if (r != null) {
-            return r;
-        }
-
-        return 0;
+    public void asWireframe(boolean wireframe) {
+        this.wireframe = wireframe;
     }
 }

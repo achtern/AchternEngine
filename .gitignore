@@ -1,3 +1,4 @@
 target/
 .idea/
 AchternEngine.iml
+src/main/resources/git.properties

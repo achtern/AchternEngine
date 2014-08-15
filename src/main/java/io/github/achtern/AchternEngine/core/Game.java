@@ -4,9 +4,10 @@ import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.contracts.Renderable;
 import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.input.InputManager;
-import io.github.achtern.AchternEngine.core.input.adapter.LWJGLInput;
-import io.github.achtern.AchternEngine.core.input.inputmap.KeyMap;
-import io.github.achtern.AchternEngine.core.input.inputmap.MouseMap;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,27 +37,33 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     private GameDebugger debugger;
 
+    /**
+     * The main InputManager, used to register key/mouse actions
+     * This will get used by the Engine as well.
+     */
     private InputManager inputManager;
 
-    public Game() {
-        this(new InputManager(new LWJGLInput()));
-    }
+    /**
+     * Returns the dimensions of the window.
+     * @return The new window dimensions
+     */
+    public abstract Dimension getWindowDimensions();
 
-    public Game(InputManager inputManager) {
-        this.inputManager = inputManager;
-        this.inputManager.setMouseMap(new MouseMap());
-        this.inputManager.setKeyMap(new KeyMap());
-    }
+    /**
+     * Returns the title of the window.
+     * @return The window title
+     */
+    public abstract String getWindowTitle();
+
 
     /**
      * Delegates to the scenegraph and debugger
-     * ALWAYS call this methods in overwritten versions,
-     * otherwise the scenegraph won't get updated!
      * @param delta The delta time
      */
-    public void update(float delta) {
+    public void updateSceneGraph(float delta) {
         if (isDebug()) debugger.update(delta);
         getSceneGraph().update(delta);
+        update(delta);
     }
 
     /**
@@ -64,8 +71,9 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * and inits the user's game.
      * @param engine The CoreEngine instance (parent)
      */
-    public void preInit(CoreEngine engine) {
+    public final void preInit(CoreEngine engine) {
         setEngine(engine);
+        setInputManager(new InputManager(engine.getBindingManager().getInputAdapter()));
         getSceneGraph().setEngine(engine);
 
         // And init the user's game
@@ -81,13 +89,28 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
 
     /**
      * Renders the scenegraph
-     * ALWAYS call this methods in overwritten versions,
-     * otherwise the scenegraph won't get rendered!
      * @param renderEngine The active RenderEngine instance
      */
-    public void render(RenderEngine renderEngine) {
+    public final void renderSceneGraph(RenderEngine renderEngine) {
+        preRender(renderEngine);
         LOGGER.trace("Rendering SceneGraph: {}", getSceneGraph());
         renderEngine.render(getSceneGraph());
+        render(renderEngine);
+        postRender(renderEngine);
+    }
+
+    /**
+     * This method will get called before each render
+     * @param renderEngine The active RenderEngine instance
+     */
+    public void preRender(RenderEngine renderEngine) {
+    }
+
+    /**
+     * This method will get called after each render
+     * @param renderEngine The active RenderEngine instance
+     */
+    public void postRender(RenderEngine renderEngine) {
     }
 
     /**
@@ -98,6 +121,17 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     public void add(Node node) {
         getSceneGraph().add(node);
+        LOGGER.trace("Node added to scene graph: {}", node);
+    }
+
+    /**
+     * Adds a node the scenegraph.
+     * Keep a reference to it, or the node's name,
+     * in order to retrieve the node at a later point easily.
+     * @param node The node which should get added.
+     */
+    public void add(Node node, boolean forceName) {
+        getSceneGraph().add(node, forceName);
         LOGGER.trace("Node added to scene graph: {}", node);
     }
 
@@ -165,6 +199,18 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
     }
 
     /**
+     * Returns the loading/splash image.
+     * Should only do minimal stuff!
+     * FAST FAST FAST
+     * If the texture is null, the engine's
+     * default image will get shown.
+     * @return A texture | null
+     */
+    public Texture getSplashScreen() {
+        return null;
+    }
+
+    /**
      * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#getEngine()
      */
     public CoreEngine getEngine() {
@@ -201,6 +247,10 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
             debugger.disable();
             debugger = null;
         }
+    }
+
+    public GameDebugger getDebugger() {
+        return debugger;
     }
 
     public InputManager getInputManager() {

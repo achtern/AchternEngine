@@ -1,5 +1,8 @@
 package io.github.achtern.AchternEngine.core.resource;
 
+import io.github.achtern.AchternEngine.core.math.Vector2f;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
@@ -8,6 +11,15 @@ import java.nio.ByteOrder;
 import java.util.Hashtable;
 
 public class ResourceConverter {
+
+    public enum PaddingMode {
+        H_CENTER,
+        V_CENTER,
+
+        LEFT,
+        RIGHT,
+        CENTER
+    }
 
     private static final ColorModel glAlphaColorModel =
             new ComponentColorModel(
@@ -29,28 +41,40 @@ public class ResourceConverter {
                     DataBuffer.TYPE_BYTE
             );
 
-
     public static ByteBuffer toByteBuffer(BufferedImage image) {
+        return toByteBuffer(image, Dimension.fromBufferedImage(image));
+    }
+
+    public static ByteBuffer toByteBuffer(BufferedImage image, Dimension dimension) {
+        return toByteBuffer(image, dimension, PaddingMode.CENTER);
+    }
+
+    public static ByteBuffer toByteBuffer(BufferedImage image, Dimension dimension, PaddingMode mode) {
         ByteBuffer buffer = null;
         BufferedImage texture;
         WritableRaster raster;
 
-        int texW = 2;
-        int texH = 2;
+        boolean scale = true;
+        if (image.getWidth() == dimension.getWidth() && image.getHeight() == dimension.getHeight()) {
+            scale = false;
+        }
 
-        // Powers of 2 only!
-        while (texW < image.getWidth()) texW *= 2;
-        while (texH < image.getHeight()) texH *= 2;
+        Dimension textureD;
+        if (scale) {
+            textureD = dimension.factor2();
+        } else {
+            textureD = Dimension.fromBufferedImage(image).factor2();
+        }
 
         boolean alpha = image.getColorModel().hasAlpha();
 
         BufferedImage texI;
 
         if (alpha) {
-            raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texW, texH, 4, null);
+            raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, textureD.getWidth(), textureD.getHeight(), 4, null);
             texI = new BufferedImage(glAlphaColorModel, raster, false, new Hashtable());
         } else {
-            raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texW, texH, 3, null);
+            raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, textureD.getWidth(), textureD.getHeight(), 3, null);
             texI = new BufferedImage(glColorModel, raster, false, new Hashtable());
         }
 
@@ -58,10 +82,18 @@ public class ResourceConverter {
 
         if (alpha) {
             g.setColor(new Color(0, 0, 0, 0));
-            g.fillRect(0, 0, texW, texH);
+            g.fillRect(0, 0, textureD.getWidth(), textureD.getHeight());
         }
 
-        g.drawImage(image, 0, 0, null);
+        if (scale) {
+            Dimension drawScale = fit(Dimension.fromBufferedImage(image), textureD);
+
+            Vector2f drawPosition = getForPadding(textureD, drawScale, mode);
+
+            g.drawImage(image, (int) drawPosition.getX(), (int) drawPosition.getY(), drawScale.getWidth(), drawScale.getHeight(), null);
+        } else {
+            g.drawImage(image, 0, 0, null);
+        }
 
         byte[] data = ((DataBufferByte) texI.getRaster().getDataBuffer()).getData();
 
@@ -73,6 +105,58 @@ public class ResourceConverter {
 
 
         return buffer;
+    }
+
+    protected static Dimension fit(final Dimension image, final Dimension bounds) {
+
+        // If no scaling is necessary, just use the orginal bounds
+        // as "back up solution".
+        Dimension fit = new Dimension(image);
+
+        // Scale width?
+        if (image.getWidth() > bounds.getWidth()) {
+            fit.setWidth(bounds.getWidth());
+            // Scale height by same factor (preserv aspect ratio)
+            fit.setHeight((fit.getWidth() * image.getHeight()) / image.getWidth());
+        }
+
+
+        // If height is still not within bounds, scale it down even more
+        if (image.getHeight() > bounds.getHeight()) {
+            fit.setHeight(bounds.getHeight());
+            // ... while preserving aspect ratio. Again...
+            fit.setWidth((fit.getHeight() * image.getWidth()) / image.getHeight());
+        }
+
+
+        return fit;
+
+    }
+
+    protected static Vector2f getForPadding(Dimension drawSpace, Dimension size, PaddingMode mode) {
+        Vector2f drawPosition = new Vector2f(0, 0);
+
+        switch (mode) {
+            case CENTER:
+                drawPosition.set(drawSpace.getX() / 2, drawPosition.getY() / 2);
+                break;
+            case V_CENTER: /* Falls through */
+            case LEFT:
+                drawPosition.setY(drawSpace.getY() / 2);
+                break;
+            case H_CENTER:
+                drawPosition.setX(drawSpace.getX() / 2);
+                break;
+            case RIGHT:
+                drawPosition.setY(drawSpace.getY() / 2);
+                drawPosition.setX(drawSpace.getX() - size.getX());
+                break;
+
+            default:
+                throw new IllegalArgumentException("PaddingMode not supported!");
+        }
+
+        return drawPosition;
     }
 
 

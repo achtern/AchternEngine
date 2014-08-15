@@ -1,0 +1,3 @@
+version: 330
+vertex: shaders/shadow.basic.gvs
+fragment: shaders/shadow.basic.gfs

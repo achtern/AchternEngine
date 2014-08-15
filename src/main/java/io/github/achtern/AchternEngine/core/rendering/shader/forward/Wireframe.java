@@ -1,18 +1,22 @@
 package io.github.achtern.AchternEngine.core.rendering.shader.forward;
 
-import io.github.achtern.AchternEngine.core.RenderEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.Window;
-import io.github.achtern.AchternEngine.core.entity.renderpasses.WireframeDisplay;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
-import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * Wireframe Shader. Adds a wireframe overlay to all objects
+ */
 public class Wireframe extends Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Wireframe.class);
@@ -24,28 +28,25 @@ public class Wireframe extends Shader {
     }
 
     private Wireframe() {
-        super();
-
         try {
-            setUpFromFile("debug.wireframe", true, true, true);
+            this.program = ResourceLoader.getShaderProgram("debug.wireframe");
         } catch (IOException e) {
             LOGGER.warn("Error Loading Bundled Debug Wireframe Shader GLSL files.", e);
         }
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine) {
+    protected void handle(Uniform uniform, Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
+        if (uniform.getName().equalsIgnoreCase("WIN_SCALE")) {
+            uniform.setValue(Window.get());
+        }
 
-        super.updateUniforms(transform, material, renderEngine);
+        if (uniform.getName().equalsIgnoreCase("wirecolor")) {
+            uniform.setValue(((WireframeDisplay) renderEngine.getActiveRenderPass()).getWireColor());
+        }
 
-        Matrix4f worldMat = transform.getTransformation();
-        Matrix4f projectedMat = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
-
-
-        setUniform("MVP", projectedMat);
-//        setUniform("color", new Vector3f(1, 0, 0));
-        setUniform("WIN_SCALE", new Vector2f(Window.getHeight(), Window.getWidth()));
-        setUniform("wirecolor", ((WireframeDisplay) renderEngine.getActiveRenderPass()).getWireColor());
-        setUniform("fillcolor", ((WireframeDisplay) renderEngine.getActiveRenderPass()).getFillColor());
+        if (uniform.getName().equalsIgnoreCase("fillcolor")) {
+            uniform.setValue(((WireframeDisplay) renderEngine.getActiveRenderPass()).getFillColor());
+        }
     }
 }
