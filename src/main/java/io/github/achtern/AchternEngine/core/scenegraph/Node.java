@@ -3,6 +3,8 @@ package io.github.achtern.AchternEngine.core.scenegraph;
 import io.github.achtern.AchternEngine.core.CoreEngine;
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
+import io.github.achtern.AchternEngine.core.contracts.Renderable;
+import io.github.achtern.AchternEngine.core.contracts.Updatable;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
@@ -16,7 +18,7 @@ import java.util.Map;
  * This Node manages a its subnodes (children) and set
  * of {@link Entity} (entites).
  */
-public class Node implements EngineHolder<CoreEngine> {
+public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     private Map<String, Node> children;
     private ArrayList<Entity> entities;
@@ -47,8 +49,14 @@ public class Node implements EngineHolder<CoreEngine> {
         this(null);
     }
 
+    /**
+     * Trigger an update.
+     * Do you regular updating of nodes/entities in here.
+     *
+     * @param delta The delta time
+     */
+    @Override
     public void update(float delta) {
-
         transform.update();
 
         for (Entity entity : getEntities()) {
@@ -60,8 +68,14 @@ public class Node implements EngineHolder<CoreEngine> {
         }
     }
 
+    /**
+     * Trigger an render.
+     * Do rendering releated stuff here.
+     *
+     * @param renderEngine The active RenderEngine
+     */
+    @Override
     public void render(RenderEngine renderEngine) {
-
         for (Entity entity : getEntities()) {
             entity.render(renderEngine);
         }
