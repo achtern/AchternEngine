@@ -6,7 +6,7 @@ package io.github.achtern.AchternEngine.core.bootstrap;
  * on the graphics card. It has an ID associated with it
  * and maybe buffers.
  */
-public abstract class NativeObject {
+public abstract class NativeObject implements Native {
 
     /**
      * The ID is used to identify the object.
@@ -25,6 +25,7 @@ public abstract class NativeObject {
      * -1 indicates, no ID has been set
      * @return ID
      */
+    @Override
     public int getID() {
         return id;
     }
@@ -32,6 +33,7 @@ public abstract class NativeObject {
     /**
      * internal use only
      */
+    @Override
     public void setID(int id) {
         this.id = id;
     }

@@ -1,5 +1,6 @@
 package io.github.achtern.AchternEngine.core.rendering.texture;
 
+import io.github.achtern.AchternEngine.core.bootstrap.Native;
 import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
@@ -12,7 +13,7 @@ import java.nio.ByteBuffer;
 import static io.github.achtern.AchternEngine.core.resource.ResourceConverter.toByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Texture extends Dimension implements TexturableData {
+public class Texture extends Dimension implements TexturableData, Native {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Texture.class);
 
@@ -22,7 +23,7 @@ public class Texture extends Dimension implements TexturableData {
     }
 
 
-    private int id = -1;
+    protected int id = -1;
 
     protected Type type;
 
@@ -184,8 +185,7 @@ public class Texture extends Dimension implements TexturableData {
     }
 
     /**
-     * Internal use only
-     * @param id ID
+     * internal use only
      */
     public void setID(int id) {
         this.id = id;
