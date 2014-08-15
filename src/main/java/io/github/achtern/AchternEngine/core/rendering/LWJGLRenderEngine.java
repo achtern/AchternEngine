@@ -8,7 +8,6 @@ import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.shadow.BasicShadowRenderer;
 import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -55,7 +54,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         passFilters = new ArrayList<PassFilter>();
 
         // TODO: do not hardcode this filter!
-        addPassFilter(new BasicShadowRenderer());
+//        addPassFilter(new BasicShadowRenderer());
 
         setRenderTarget(Window.getTarget());
 
