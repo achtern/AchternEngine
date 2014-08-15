@@ -71,6 +71,8 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
      */
     public static final String TOKEN_END_STATEMENT = ";";
 
+    public static final String TOKEN_SINGLE_LINE_COMMENT = "//";
+
     /**
      * The parser will look into this directory, in order to include
      * files.
@@ -94,6 +96,10 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     @Override
     public String parse(String line) throws IOException {
         line = line.trim();
+
+        if (line.contains(TOKEN_SINGLE_LINE_COMMENT)) {
+            line = line.substring(0, line.indexOf(TOKEN_SINGLE_LINE_COMMENT));
+        }
 
         if (line.startsWith(CUSTOM_TOKEN_INCLUDE)) {
             /*
