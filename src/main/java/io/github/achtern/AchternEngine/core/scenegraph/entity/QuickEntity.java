@@ -51,10 +51,12 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     }
 
     /**
+     * Sets the parent to null.
      * @see Entity#removed()
      */
     @Override
     public void removed() {
+        this.parent = null;
     }
 
     /**
