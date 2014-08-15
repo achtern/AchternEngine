@@ -6,9 +6,18 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Basic Implementation of the SceneGraphRetriever, valid for all Entities.
+ */
 public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
 
+    /**
+     * Nodes found while scanning
+     */
     protected List<Node> nodes;
+    /**
+     * Entites found while scanning
+     */
     protected List<Entity> entities;
 
     public EntityRetriever() {
@@ -16,6 +25,11 @@ public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
         this.entities = new ArrayList<Entity>();
     }
 
+    /**
+     * Performs the search.
+     * @see EntityRetriever#getAll(Node, boolean)
+     * @param node Node to scan
+     */
     @Override
     public void scan(Node node) {
         this.nodes.add(node);
@@ -23,16 +37,31 @@ public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
         this.entities.addAll(getAll(node));
     }
 
+    /**
+     * Call #scan(Node) first!
+     * Returns all Entities
+     * @return flattend List of all Entities
+     */
     @Override
     public List<Entity> getAll() {
         return entities;
     }
 
+    /**
+     * Call #scan(Node) first!
+     * Returns all Nodes
+     * @return flattend List of all Nodes
+     */
     @Override
     public List<Node> getNodes() {
         return nodes;
     }
 
+    /**
+     * Should return true if at least ONE Entity has been found.
+     *
+     * @return Whether the Entity type is contained by the scanned node.
+     */
     @Override
     public boolean contained() {
         // Since this scans for entities only
@@ -41,6 +70,14 @@ public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
         return getAll().size() > 0;
     }
 
+    /**
+     * Return all Entities, which life in the scanned node
+     * and it's children. In addition to that you can apply
+     * another type filter
+     *
+     * @param filter Entity Filter
+     * @return List of filtered entities
+     */
     @Override
     public <E extends Entity> List<E> getAll(Class<E> filter) {
         List<E> filtered = new ArrayList<E>();

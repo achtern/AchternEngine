@@ -28,6 +28,14 @@ public interface SceneGraphWalker extends NodeScanner {
     }
 
     /**
+     * Scans the given Node
+     * This should scan all child nodes.
+     * @param node Node to scan
+     */
+    @Override
+    void scan(Node node);
+
+    /**
      * Add a visitor, which should be
      * called during the search.
      * @param visitor Visitor
