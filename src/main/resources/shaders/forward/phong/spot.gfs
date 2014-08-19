@@ -6,7 +6,7 @@ uniform SpotLight spotLight;
 
 vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
 {
-    return CalcSpotLight(spotLight, normal, worldPos);
+    return CalcSpotLight(spotLight, normal, worldPos, eyePos, specularIntensity, specularPower);
 }
 
 #include "lighting-main.gfh"

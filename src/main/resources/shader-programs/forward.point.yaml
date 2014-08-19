@@ -1,3 +1,3 @@
 version: 330
-vertex: shaders/forward.standardLight.gvs
-fragment: shaders/forward.point.gfs
+vertex: shaders/forward/phong/vertex.gvs
+fragment: shaders/forward/phong/point.gfs

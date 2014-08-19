@@ -1,3 +1,2 @@
 #include "lighting-uniforms.gh"
-#include "lighting-structs.gh"
-#include "lighting-methods.gh"
+#include "lighting.glib"
