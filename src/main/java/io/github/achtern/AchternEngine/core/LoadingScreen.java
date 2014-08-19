@@ -18,11 +18,21 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class LoadingScreen {
+public class LoadingScreen implements RenderPass {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadingScreen.class);
 
-    public static void show(CoreEngine engine) {
+    private static LoadingScreen instance;
+
+    public static LoadingScreen get() {
+        if (instance == null) {
+            instance = new LoadingScreen();
+        }
+
+        return instance;
+    }
+
+    public void show(CoreEngine engine) {
         try {
             show(engine, ResourceLoader.getTexture("loading.v0.0.1.png"));
         } catch (IOException e) {
@@ -30,7 +40,7 @@ public class LoadingScreen {
         }
     }
 
-    public static void show(CoreEngine engine, Texture loadingImage) {
+    public void show(CoreEngine engine, Texture loadingImage) {
         if (loadingImage == null) {
             show(engine);
             return;
@@ -66,16 +76,7 @@ public class LoadingScreen {
         // Sync the transforms
         holder.update(0);
 
-        // Store our basic RenderPass in a variable,
-        // to allow removing of it afterwards.
-        RenderPass basic;
-
-        engine.getRenderEngine().addRenderPass(basic = new RenderPass() {
-            @Override
-            public Shader getShader() {
-                return BasicShader.getInstance();
-            }
-        });
+        engine.getRenderEngine().addRenderPass(this);
 
         // Render the "scene"
         engine.getRenderEngine().render(holder);
@@ -85,11 +86,19 @@ public class LoadingScreen {
 
         // Make sure to delete this after render,
         // so the end-user doesn't see it!
-        engine.getRenderEngine().removeRenderPass(basic);
+        engine.getRenderEngine().removeRenderPass(this);
         engine.getRenderEngine().addCamera(null);
 
     }
 
 
-
+    /**
+     * Returns the shader to get set on draw.
+     *
+     * @return the shader
+     */
+    @Override
+    public Shader getShader() {
+        return BasicShader.getInstance();
+    }
 }
