@@ -86,10 +86,10 @@ public class Quad extends Mesh {
         }
 
         Vertex[] vertices = {
-                new Vertex(new Vector3f(0, height, 0), texCoords[0], new Vector3f(0, 0, 1)),
-                new Vertex(new Vector3f(width, height, 0), texCoords[1], new Vector3f(0, 0, 1)),
-                new Vertex(new Vector3f(width, 0, 0), texCoords[2], new Vector3f(0, 0, 1)),
-                new Vertex(new Vector3f(0, 0, 0), texCoords[3], new Vector3f(0, 0, 1)),
+                new Vertex(new Vector3f(0, height, 0), texCoords[0], new Vector3f(0, 0, -1)),
+                new Vertex(new Vector3f(width, height, 0), texCoords[1], new Vector3f(0, 0, -1)),
+                new Vertex(new Vector3f(width, 0, 0), texCoords[2], new Vector3f(0, 0, -1)),
+                new Vertex(new Vector3f(0, 0, 0), texCoords[3], new Vector3f(0, 0, -1)),
         };
 
         setVertices(vertices, new int[] { 0, 1, 2, 0, 2, 3 }, false);
