@@ -1,10 +1,8 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity.debug;
 
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.math.Quaternion;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.generator.ImageGenerator;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Arrow;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
@@ -22,9 +20,9 @@ public class AxisDebugger extends Node {
     public AxisDebugger(String name) {
         super(name);
 
-        pushFigure(new Arrow(), Color.RED, 0);
-        pushFigure(new Arrow(), Color.GREEN, 1);
-        pushFigure(new Arrow(), Color.BLUE, 2);
+        pushFigure(new Arrow(), Color.RED, "X-Axis");
+        pushFigure(new Arrow(), Color.GREEN, "Y-Axis");
+        pushFigure(new Arrow(), Color.BLUE, "Z-Axis");
     }
 
     /**
@@ -34,12 +32,7 @@ public class AxisDebugger extends Node {
         this("AxisDebugger");
     }
 
-    @Override
-    public void render(RenderEngine renderEngine) {
-        super.render(renderEngine);
-    }
-
-    private void pushFigure(Mesh mesh, Color color, int i) {
+    private void pushFigure(Mesh mesh, Color color, String name) {
 
         Figure f = new Figure("Axis", mesh);
         Material m = new Material();
@@ -48,22 +41,19 @@ public class AxisDebugger extends Node {
 
         f.setMaterial(m);
 
-        String name = "";
-
-        if (i == 0) name = "X-Axis";
-        else if (i == 1) name = "Y-Axis";
-        else if (i == 2) name = "Z-Axis";
-
         Node n = new Node("AxisDebugger/" + name);
 
         n.add(f);
-
         add(n);
 
         // Rotate, so they are laying on the corresponding axis
-        if (i == 0)      n.getTransform().setRotation(new Quaternion(Transform.X_AXIS, (float) Math.toRadians(90)));
-        else if (i == 1) n.getTransform().setRotation(new Quaternion(Transform.Y_AXIS, (float) Math.toRadians(90)));
-        else if (i == 2) n.getTransform().setRotation(new Quaternion(Transform.Z_AXIS, (float) Math.toRadians(90)));
+        if (name.equals("Z-Axis")) {
+            n.getTransform().rotate(Transform.Z_AXIS, -(float) Math.toRadians(90));
+        }
+        else if (name.equals("Y-Axis")) {
+            n.getTransform().rotate(Transform.X_AXIS, (float) Math.toRadians(90));
+        }
+        // Arrow Mesh is oriented on X already.
 
     }
 }
