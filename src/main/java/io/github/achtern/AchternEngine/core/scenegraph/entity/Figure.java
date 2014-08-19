@@ -6,6 +6,7 @@ import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
 /**
  * A Figure represents a renderable {@link Mesh}.
@@ -90,6 +91,14 @@ public class Figure extends QuickEntity {
         }
 
         ds.draw(renderEngine.getDataBinder(), this.mesh);
+    }
+
+    /**
+     * Returns a Node with 1 {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Entity} (this Figure)
+     * @return Node with this Figure
+     */
+    public Node boxed() {
+        return new Node(this.getName()).add(this);
     }
 
     /**
