@@ -137,12 +137,31 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
 
     /**
      * Retrives a node by it's name.
-     * Only checks the top level and NOT sup-nodes
+     * If you want to get nested nodes,
+     * sperate the {@link Node}s names with
+     * a slash (<code>/</code>).
      * @param nodeName The node's name
      * @return The node or null if not found
      */
     public Node get(String nodeName) {
-        return getSceneGraph().getChildren().get(nodeName);
+
+        // Example: nodeName = Meshes/Static/Box
+
+        Node r;
+        if (nodeName.contains("/")) {
+            String[] nodes = nodeName.split("/");
+            // -> 0: Meshes, 1: Static, 2: Box
+            r = getSceneGraph().getChildren().get(nodes[0]);
+            for (int i = 1; i < nodes.length; i++) {
+                String name = nodes[i]; // 1 = nodes[1] => Static // 2 = nodes[2] => Box
+                r = r.getChildren().get(name); // 1 = r = Node(Static) // 2 = r = Node(Box)
+            }
+
+        } else {
+            r = getSceneGraph().getChildren().get(nodeName);
+        }
+
+        return r;
     }
 
     /**
