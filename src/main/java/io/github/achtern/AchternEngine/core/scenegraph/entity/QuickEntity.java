@@ -78,6 +78,17 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
         return this.name;
     }
 
+    /**
+     * Returns a Node containing this Entity.
+     * The Name should equal the name of this Entity.
+     *
+     * @return Node with this Entity
+     */
+    @Override
+    public Node boxed() {
+        return new Node(this.getName()).add(this);
+    }
+
 
     /**
      * @see Entity#getTransform()

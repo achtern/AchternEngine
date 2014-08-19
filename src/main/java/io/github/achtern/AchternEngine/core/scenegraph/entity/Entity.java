@@ -54,4 +54,11 @@ public interface Entity extends Updatable {
      */
     public String getName();
 
+    /**
+     * Returns a Node containing this Entity.
+     * The Name should equal the name of this Entity.
+     * @return Node with this Entity
+     */
+    public Node boxed();
+
 }
