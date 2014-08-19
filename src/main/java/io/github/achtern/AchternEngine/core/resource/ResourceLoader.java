@@ -370,7 +370,7 @@ public class ResourceLoader {
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    protected static InputStream getStream(String name) throws IOException {
+    public static InputStream getStream(String name) throws IOException {
         InputStream is = null;
 
         for (ResourceLocation location : locations) {
@@ -398,7 +398,7 @@ public class ResourceLoader {
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    protected static URL getURL(String name) throws IOException {
+    public static URL getURL(String name) throws IOException {
         URL url = null;
 
         for (ResourceLocation location : locations) {

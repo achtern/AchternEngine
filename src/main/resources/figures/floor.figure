@@ -1,0 +1,28 @@
+# .figure FileFormat (c) 2014 AchternEngine (Christian Gärtner)
+
+Floor {
+
+    Mesh {
+        @Quad
+    }
+
+    Material {
+        Texture {
+            diffuse {
+                file = "checkerboard.png";
+                alpha = false;
+            }
+        }
+
+        float {
+            specularIntensity = 1;
+            specularPower = 8;
+        }
+
+        wireframe = false;
+    }
+
+    DrawStrategy {
+        @SOLID
+    }
+}
