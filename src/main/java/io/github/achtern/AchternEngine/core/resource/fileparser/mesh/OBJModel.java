@@ -36,6 +36,8 @@ public class OBJModel implements Model {
 
     public void parse(BufferedReader meshReader) throws IOException {
 
+        boolean no_mulit_object_warned = false;
+
         String line;
 
         while ((line = meshReader.readLine()) != null) {
@@ -50,10 +52,20 @@ public class OBJModel implements Model {
 
             if (tokens[0].startsWith("#")) {
                 // Comment Line
-                continue;
-            }
-
-            if (tokens[0].equalsIgnoreCase("v")) {
+                LOGGER.trace("Skipping commented line");
+            } else if (tokens[0].equalsIgnoreCase("g")){
+                // We have a multi object OBJ Model.
+                // At this point in time the parser
+                // doesn't support these files.
+                // It loads the model, but all texture coordinates
+                // are broken.
+                if (!no_mulit_object_warned) {
+                    LOGGER.warn("Multi-Object OBJ files are not fully supported. " +
+                            "Texture Coordinates may be broken. You can combine " +
+                            "the objects in the 3D Editor of your choice.");
+                    no_mulit_object_warned = true;
+                }
+            } else if (tokens[0].equalsIgnoreCase("v")) {
                 positions.add(new Vector3f(
                         Float.valueOf(tokens[1]),
                         Float.valueOf(tokens[2]),
