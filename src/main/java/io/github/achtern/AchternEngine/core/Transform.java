@@ -6,9 +6,9 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 
 public class Transform {
 
-    public static final Vector3f X_AXIS = new Vector3f(1, 0, 0);
-    public static final Vector3f Y_AXIS = new Vector3f(0, 1, 0);
-    public static final Vector3f Z_AXIS = new Vector3f(0, 0, 1);
+    public static final Vector3f X_AXIS = new Vector3f(1, 0, 0).lock();
+    public static final Vector3f Y_AXIS = new Vector3f(0, 1, 0).lock();
+    public static final Vector3f Z_AXIS = new Vector3f(0, 0, 1).lock();
 
     private Transform parent;
     private Matrix4f parentMat;

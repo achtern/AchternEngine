@@ -91,7 +91,7 @@ public abstract class Shader {
             } else {
                 // In the last step we try to find the value in the material,
                 // otherwise leave it to the user!
-                if (u.getType().equalsIgnoreCase("float") && material.hasFloat(n)) {
+                if (u.getType().equalsIgnoreCase("float")) {
                     u.setValue(material.getFloat(n));
                 } else if ((u.getType().equalsIgnoreCase("vec3") && material.hasVector(n))) {
                     u.setValue(material.getVector(n));

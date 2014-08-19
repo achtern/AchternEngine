@@ -1,3 +1,6 @@
+#if !defined(LIGHTING_INCLUDED_GLIB)
+#define LIGHTING_INCLUDED_GLIB
+
 // Structs
 struct BaseLight
 {
@@ -112,3 +115,5 @@ vec4 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 worldPos, vec3 eyePos,
 
 	return color;
 }
+
+#endif

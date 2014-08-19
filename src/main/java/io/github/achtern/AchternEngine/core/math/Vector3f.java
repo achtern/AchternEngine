@@ -33,6 +33,8 @@ public class Vector3f implements Cloneable {
      */
     public static final Vector3f ONE    = new Vector3f(1, 1, 1);
 
+    protected boolean locked = false;
+
     private float x;
     private float y;
     private float z;
@@ -80,6 +82,20 @@ public class Vector3f implements Cloneable {
      */
     public Vector3f(Vector3f v) {
         this(v.getX(), v.getY(), v.getZ());
+    }
+
+    public Vector3f lock() {
+        locked = true;
+        return this;
+    }
+
+    public Vector3f unlock() {
+        locked = false;
+        return this;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     /**
@@ -390,6 +406,9 @@ public class Vector3f implements Cloneable {
     }
 
     public void setX(float x) {
+        if (locked) {
+            throw new IllegalAccessError("Vector is locked!");
+        }
         this.x = x;
     }
 
@@ -398,6 +417,9 @@ public class Vector3f implements Cloneable {
     }
 
     public void setY(float y) {
+        if (locked) {
+            throw new IllegalAccessError("Vector is locked!");
+        }
         this.y = y;
     }
 
@@ -406,6 +428,9 @@ public class Vector3f implements Cloneable {
     }
 
     public void setZ(float z) {
+        if (locked) {
+            throw new IllegalAccessError("Vector is locked!");
+        }
         this.z = z;
     }
 

@@ -243,7 +243,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
             debugger = new GameDebugger(this);
             debugger.setEngine(getEngine());
             debugger.enable();
-        } else {
+        } else if (debugger != null) {
             debugger.disable();
             debugger = null;
         }

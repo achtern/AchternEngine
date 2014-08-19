@@ -33,6 +33,8 @@ public interface UniformManager {
 
     public void setUniform(Shader shader, String name, float value);
 
+    public void setUniform(Shader shader, String name, double value);
+
     public void setUniform(Shader shader, String name, DirectionalLight directionalLight);
 
     public void setUniform(Shader shader, String name, AmbientLight ambientLight);

@@ -51,7 +51,11 @@ public class LWJGLUniformManager implements UniformManager {
             return;
         }
 
-        if (uniform.getValue() == null) {
+        boolean primitive = uniform.getValue() instanceof Float ||
+                            uniform.getValue() instanceof Integer ||
+                            uniform.getValue() instanceof Double;
+
+        if (!primitive && uniform.getValue() == null) {
             throw new IllegalStateException("Uniform value cannot be null for " + uniform);
         }
 
@@ -69,6 +73,8 @@ public class LWJGLUniformManager implements UniformManager {
             setUniform(shader, uniform.getName(), (Integer) uniform.getValue());
         } else if (uniform.getValue() instanceof Float) {
             setUniform(shader, uniform.getName(), (Float) uniform.getValue());
+        } else if (uniform.getValue() instanceof Double) {
+            setUniform(shader, uniform.getName(), (Double) uniform.getValue());
         } else if (uniform.getValue() instanceof DirectionalLight) {
             setUniform(shader, uniform.getName(), (DirectionalLight) uniform.getValue());
         } else if (uniform.getValue() instanceof AmbientLight) {
@@ -125,6 +131,11 @@ public class LWJGLUniformManager implements UniformManager {
     @Override
     public void setUniform(Shader shader, String name, float value) {
         glUniform1f(shader.getProgram().getExpandedUniform(name).getLocation(), value);
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, double value) {
+        setUniform(shader, name, (float) value);
     }
 
     @Override

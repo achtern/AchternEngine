@@ -222,7 +222,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     @Override
     public String toString() {
-        return "Node: " + this.name + " (" + getChildren().size() + " children)";
+        return "Node: " + this.name + " (" + getChildren().size() + " children; " + getEntities().size() + " entities)";
     }
 
     /**
