@@ -50,10 +50,10 @@ public class AxisDebugger extends Node {
         if (name.equals("Z-Axis")) {
             n.getTransform().rotate(Transform.Z_AXIS, -(float) Math.toRadians(90));
         }
-        else if (name.equals("Y-Axis")) {
+        // Arrow Mesh is oriented on Y already.
+        else if (name.equals("X-Axis")) {
             n.getTransform().rotate(Transform.X_AXIS, (float) Math.toRadians(90));
         }
-        // Arrow Mesh is oriented on X already.
 
     }
 }
