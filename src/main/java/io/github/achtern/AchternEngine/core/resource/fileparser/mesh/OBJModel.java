@@ -43,6 +43,16 @@ public class OBJModel implements Model {
             String[] tokens = line.split(" ");
             tokens = UString.removeEmptyFromArray(tokens);
 
+            if (tokens.length == 0) {
+                // We found an empty line
+                continue;
+            }
+
+            if (tokens[0].startsWith("#")) {
+                // Comment Line
+                continue;
+            }
+
             if (tokens[0].equalsIgnoreCase("v")) {
                 positions.add(new Vector3f(
                         Float.valueOf(tokens[1]),
