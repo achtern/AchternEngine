@@ -5,7 +5,7 @@ import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MeshLoader extends JsonLoader<Mesh> {
+public class MeshDeclarationLoader extends JsonLoader<Mesh> {
     @Override
     public Mesh get() throws Exception {
         JSONObject json = getJsonObject();
