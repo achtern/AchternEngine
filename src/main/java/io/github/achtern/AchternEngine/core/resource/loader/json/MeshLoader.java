@@ -1,6 +1,7 @@
 package io.github.achtern.AchternEngine.core.resource.loader.json;
 
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
+import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,6 +10,19 @@ public class MeshLoader extends JsonLoader<Mesh> {
     public Mesh get() throws Exception {
         JSONObject json = getJsonObject();
 
+        if (json.has("@")) {
+            return handleClass(json);
+        } else if (json.has("file")) {
+            return ResourceLoader.getMesh(json.getString("file"));
+        } else {
+            throw new UnsupportedOperationException("Mesh declaration has to contain either" +
+                    " '@' or 'file' key!");
+        }
+
+    }
+
+
+    protected Mesh handleClass(JSONObject json) throws Exception {
         String className = json.getString("@");
 
         if (!className.contains(".")) {
@@ -22,6 +36,5 @@ public class MeshLoader extends JsonLoader<Mesh> {
         } else {
             return (Mesh) getObject(className, null);
         }
-
     }
 }
