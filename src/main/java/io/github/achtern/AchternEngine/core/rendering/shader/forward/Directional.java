@@ -5,8 +5,6 @@ import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class Directional extends Shader {
     public static final Logger LOGGER = LoggerFactory.getLogger(Directional.class);
 
@@ -19,7 +17,7 @@ public class Directional extends Shader {
     private Directional() {
         try {
             this.program = ResourceLoader.getShaderProgram("forward.directional");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("Error Loading Bundled Directional Shader GLSL files.", e);
         }
     }

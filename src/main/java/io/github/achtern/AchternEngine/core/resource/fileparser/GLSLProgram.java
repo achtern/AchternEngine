@@ -6,7 +6,6 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSL
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class GLSLProgram extends NativeObject {
 
     protected Map<String, Uniform> cachedExpandedUniforms;
 
-    protected LineBasedParser parser;
+    protected GLSLParser parser;
 
     /**
      * Instance to parse yaml
@@ -89,7 +88,7 @@ public class GLSLProgram extends NativeObject {
         return getExpandedUniforms();
     }
 
-    public void parse(LineBasedParser parser) throws IOException {
+    public void parse(GLSLParser parser) throws Exception {
         setParser(parser);
         this.parsed = (Map) yaml.load(source);
 
@@ -116,9 +115,7 @@ public class GLSLProgram extends NativeObject {
     protected void pushShader(String source, GLSLScript.Type type) {
         GLSLScript shader = new GLSLScript(this.name, type);
         shader.setSource(source);
-        if (getParser() instanceof GLSLParser) {
-            ((GLSLParser) getParser()).process(shader);
-        }
+        getParser().process(shader);
         this.scripts.add(shader);
     }
 
@@ -152,11 +149,11 @@ public class GLSLProgram extends NativeObject {
         return source;
     }
 
-    public void setParser(LineBasedParser parser) {
+    public void setParser(GLSLParser parser) {
         this.parser = parser;
     }
 
-    public LineBasedParser getParser() {
+    public GLSLParser getParser() {
         return parser;
     }
 }

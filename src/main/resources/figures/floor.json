@@ -1,0 +1,30 @@
+{
+    "name": "Floor",
+    "Mesh": {
+        "@": "Quad",
+        "args": [10, 10]
+    },
+    "Material": {
+        "Texture": {
+            "diffuse": {
+                "file": "checkerboard.png"
+            }
+        },
+        "Color": {
+            "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+            }
+        },
+        "float": {
+            "specularIntensity": 1,
+            "specularPower": 8
+        },
+        "wireframe": false
+    },
+    "DrawStrategy": {
+        "@E": "SOLID"
+    }
+}

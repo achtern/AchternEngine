@@ -5,8 +5,6 @@ import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class Ambient extends Shader {
     public static final Logger LOGGER = LoggerFactory.getLogger(Ambient.class);
 
@@ -19,7 +17,7 @@ public class Ambient extends Shader {
     private Ambient() {
         try {
             this.program = ResourceLoader.getShaderProgram("forward.ambient");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("Error Loading Bundled Ambient Shader GLSL files.", e);
         }
     }

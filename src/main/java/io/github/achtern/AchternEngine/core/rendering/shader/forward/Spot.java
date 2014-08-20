@@ -5,8 +5,6 @@ import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class Spot extends Shader {
     public static final Logger LOGGER = LoggerFactory.getLogger(Spot.class);
 
@@ -21,7 +19,7 @@ public class Spot extends Shader {
 
         try {
             this.program = ResourceLoader.getShaderProgram("forward.spot");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
         }
     }

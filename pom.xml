@@ -60,6 +60,13 @@
             <version>1.13</version>
         </dependency>
 
+        <!-- JSON Parser -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+        </dependency>
+
     </dependencies>
 
     <build>

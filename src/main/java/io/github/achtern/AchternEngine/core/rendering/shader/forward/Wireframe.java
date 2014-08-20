@@ -12,8 +12,6 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.Wiref
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * Wireframe Shader. Adds a wireframe overlay to all objects
  */
@@ -30,7 +28,7 @@ public class Wireframe extends Shader {
     private Wireframe() {
         try {
             this.program = ResourceLoader.getShaderProgram("debug.wireframe");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("Error Loading Bundled Debug Wireframe Shader GLSL files.", e);
         }
     }

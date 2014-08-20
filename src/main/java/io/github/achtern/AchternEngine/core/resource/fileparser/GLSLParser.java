@@ -8,7 +8,6 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Vari
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
      * @see io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser#parse(String)
      */
     @Override
-    public String parse(String line) throws IOException {
+    public String parse(String line) throws Exception {
         line = line.trim();
 
         if (line.contains(TOKEN_SINGLE_LINE_COMMENT)) {

@@ -48,6 +48,16 @@ public class Quad extends Mesh {
         this(width, height, false);
     }
 
+
+    /**
+     * Initializes a Quad with the given dimensions
+     * @param width Width
+     * @param height Height
+     */
+    public Quad(int width, int height) {
+        this((float) width, (float) height);
+    }
+
     /**
      * Initializes a Quad with the given dimensions
      * if flip is set to true, the texture coordinates

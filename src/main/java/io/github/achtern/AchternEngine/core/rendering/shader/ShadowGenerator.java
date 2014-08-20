@@ -9,8 +9,6 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Unif
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class ShadowGenerator extends Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ShadowGenerator.class);
@@ -24,7 +22,7 @@ public class ShadowGenerator extends Shader {
     private ShadowGenerator() {
         try {
             this.program = ResourceLoader.getShaderProgram("shadow.basic");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("Error Loading Bundled Basic Shadow Shader GLSL files.", e);
         }
 

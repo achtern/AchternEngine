@@ -1,20 +1,17 @@
 package io.github.achtern.AchternEngine.core.resource;
 
 import io.github.achtern.AchternEngine.core.contracts.TexturableData;
-import io.github.achtern.AchternEngine.core.math.Vector2f;
-import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
-import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
-import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
-import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
-import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.IndexedModel;
-import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.OBJModel;
+import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.OBJParser;
+import io.github.achtern.AchternEngine.core.resource.loader.GLSLProgramLoader;
+import io.github.achtern.AchternEngine.core.resource.loader.Loader;
+import io.github.achtern.AchternEngine.core.resource.loader.MeshLoader;
+import io.github.achtern.AchternEngine.core.resource.loader.ShaderSourceLoader;
 import io.github.achtern.AchternEngine.core.resource.locations.*;
-import io.github.achtern.AchternEngine.core.util.UInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +28,9 @@ public class ResourceLoader {
 
     public static final String SHADER_PROGRAM_EXT = ".yaml";
 
-    private static ResourceCache<MeshData> meshCache = new ResourceCache<MeshData>();
     private static ResourceCache<TexturableData> textureCache = new ResourceCache<TexturableData>();
-    private static ResourceCache<String> shaderCache = new ResourceCache<String>();
-    private static ResourceCache<GLSLProgram> shaderProgrammCache = new ResourceCache<GLSLProgram>();
+    private static ResourceCache<String> fileCache = new ResourceCache<String>();
+    private static ResourceCache<OBJParser> meshCache = new ResourceCache<OBJParser>();
 
     /**
      * This list contains locations to look for resources
@@ -48,6 +44,7 @@ public class ResourceLoader {
      *
      * Bundled Textures
      * Bundled Models
+     * Bundled Figures
      * Bundled Shaders
      * Bundled Shader Programs
      *
@@ -58,6 +55,7 @@ public class ResourceLoader {
 
         locations.add(new BundledTextureLocation());
         locations.add(new BundledModelLocation());
+        locations.add(new BundledFigureLocation());
         locations.add(new BundledShaderLocation());
         locations.add(new BundledShaderProgramLocation());
 
@@ -105,7 +103,7 @@ public class ResourceLoader {
      * @param name The relative path (to various ResourceLocations) of the filename
      * @throws IOException
      */
-    public static void preLoadMesh(String name) throws IOException {
+    public static void preLoadMesh(String name) throws Exception {
         getMesh(name);
     }
 
@@ -125,7 +123,7 @@ public class ResourceLoader {
      * @param name The relative path (to various ResourceLocations) of the filename
      * @throws IOException
      */
-    public static void preLoadShader(String name) throws IOException {
+    public static void preLoadShader(String name) throws Exception {
         getShader(name);
     }
 
@@ -136,7 +134,7 @@ public class ResourceLoader {
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    public static Mesh getMesh(String name) throws IOException {
+    public static Mesh getMesh(String name) throws Exception {
         return getMesh(name, false);
     }
 
@@ -147,40 +145,22 @@ public class ResourceLoader {
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    public static Mesh getMesh(String name, boolean forceLoading) throws IOException {
-
-        if (meshCache.has(name)) {
-            return new Mesh(meshCache.get(name));
+    public static Mesh getMesh(String name, boolean forceLoading) throws Exception {
+        // With Mesh we have to be carefull. The LineBasedParser parse,
+        // doesn't run when loading from cache. This means, the OBJParser
+        // is empty and therefor the Mesh as well.
+        // If we force load, we just can proceed as usual,
+        // and cache just the OBJParser.
+        if (!meshCache.has(name) || forceLoading) {
+            MeshLoader l = new MeshLoader();
+            Mesh m = load(name, l, true); // we do not have the mesh in the cache ALWAYS forceLoad
+            meshCache.add(name, (OBJParser) l.getPreProcessor());
+            return m;
         }
 
-        BufferedReader meshReader = new BufferedReader(new InputStreamReader(getStream(name)));
-
-        OBJModel objModel = new OBJModel();
-        objModel.parse(meshReader);
-        IndexedModel model = objModel.toIndexedModel();
-        model.calcNormals();
-
-        ArrayList<Vertex> vertices = new ArrayList<Vertex>();
-
-        for (int i = 0; i < model.getPositions().size(); i++) {
-            Vector3f position = model.getPositions().get(i);
-            Vector2f texCoord = model.getTexCoord().get(i);
-            Vector3f normal = model.getNormal().get(i);
-
-            vertices.add(new Vertex(position, texCoord, normal));
-        }
-
-        Vertex[] vData = new Vertex[vertices.size()];
-        vertices.toArray(vData);
-
-        Integer[] iData = new Integer[model.getIndices().size()];
-        model.getIndices().toArray(iData);
-
-        Mesh mesh = new Mesh(vData, UInteger.toIntArray(iData));
-
-        meshCache.add(name, mesh.getData());
-
-        return mesh;
+        // Now we are using the cached value. and do not need to load the file
+        // we can just access the MeshLoader directly.
+        return (new MeshLoader(meshCache.get(name))).get();
     }
 
     /**
@@ -244,8 +224,8 @@ public class ResourceLoader {
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    public static String getShader(String name) throws IOException {
-        return getShader(name, false, new GLSLParser());
+    public static String getShader(String name) throws Exception {
+        return load(name, new ShaderSourceLoader(), false);
     }
 
     /**
@@ -256,44 +236,8 @@ public class ResourceLoader {
      * @return A readable Stream | null if not exists
      * @throws IOException if resource not found
      */
-    public static String getShader(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
-
-        if (shaderCache.has(name) && !forceLoading) {
-            return shaderCache.get(name);
-        }
-
-        StringBuilder shaderSourceFile = new StringBuilder();
-
-        BufferedReader shaderReader = new BufferedReader(new InputStreamReader(getStream(name)));
-
-        String line;
-
-        while ((line = shaderReader.readLine()) != null) {
-
-            try {
-
-                if (parser != null) {
-                    shaderSourceFile.append(parser.parse(line)).append("\n");
-                } else {
-                    shaderSourceFile.append(line).append("\n");
-                }
-
-            } catch (Exception e) {
-                if (e instanceof IOException) {
-                    throw (IOException) e;
-                } else {
-                    LOGGER.warn("Non IOException when loading Shader file.", e);
-                }
-            }
-        }
-
-        shaderReader.close();
-
-        String shaderSource = shaderSourceFile.toString();
-
-        shaderCache.add(name, shaderSource);
-
-        return shaderSource;
+    public static String getShader(String name, boolean forceLoading, LineBasedParser parser) throws Exception {
+        return load(name, new ShaderSourceLoader(parser), forceLoading);
     }
 
     /**
@@ -303,44 +247,72 @@ public class ResourceLoader {
      * @return A GLSLProgramm with loaded shader sources.
      * @throws IOException
      */
-    public static GLSLProgram getShaderProgram(String name) throws IOException {
-        return getShaderProgram(name, false, new GLSLParser());
+    public static GLSLProgram getShaderProgram(String name) throws Exception {
+        return getShaderProgram(name, false);
     }
 
     /**
      * Reads programm file from disk and loads the stated source files
      * @param name Name of the programm declaration
      * @param forceLoading if set to true the file will get read again and not read from cache
-     * @param parser The optional parser to modify the shader lines.
      * @return A GLSLProgramm with loaded shader sources.
      * @throws IOException
      */
-    public static GLSLProgram getShaderProgram(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
+    public static GLSLProgram getShaderProgram(String name, boolean forceLoading) throws Exception {
+        return load(name + SHADER_PROGRAM_EXT, new GLSLProgramLoader(), forceLoading);
+    }
 
-        name = name + SHADER_PROGRAM_EXT;
+    public static <T> T load(String name, Loader<T> loader, boolean forceLoading) throws Exception {
+        String file = readFile(name, forceLoading, loader.getPreProcessor());
 
-        if (shaderProgrammCache.has(name) && !forceLoading) {
-            return shaderProgrammCache.get(name);
+        loader.parse(name, file);
+
+        return loader.get();
+    }
+
+    public static String readFile(String name) throws IOException {
+        return readFile(name, false);
+    }
+
+    public static String readFile(String name, boolean forceLoading) throws IOException {
+        return readFile(name, forceLoading, null);
+    }
+
+    public static String readFile(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
+        if (fileCache.has(name) && !forceLoading) {
+            return fileCache.get(name);
         }
 
-        StringBuilder programSource = new StringBuilder();
+        StringBuilder file = new StringBuilder();
 
-        BufferedReader programReader = new BufferedReader(new InputStreamReader(getStream(name)));
+        BufferedReader fileReader = new BufferedReader(new InputStreamReader(getStream(name)));
 
         String line;
 
-        while ((line = programReader.readLine()) != null) {
-            programSource.append(line).append("\n");
+        while ((line = fileReader.readLine()) != null) {
+
+            try {
+
+                if (parser != null) {
+                    file.append(parser.parse(line)).append("\n");
+                } else {
+                    file.append(line).append("\n");
+                }
+
+            } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw (IOException) e;
+                } else {
+                    LOGGER.warn("Non IOException when loading file <" + name + ">", e);
+                }
+            }
         }
 
-        programReader.close();
+        fileReader.close();
 
-        GLSLProgram program = new GLSLProgram(name, programSource.toString());
-        program.parse(parser);
+        fileCache.add(name, file.toString());
 
-        shaderProgrammCache.add(name, program);
-
-        return program;
+        return file.toString();
     }
 
     /**

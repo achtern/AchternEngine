@@ -4,8 +4,6 @@ import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class BasicShader extends Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(BasicShader.class);
@@ -19,7 +17,7 @@ public class BasicShader extends Shader {
     private BasicShader() {
         try {
             this.program = ResourceLoader.getShaderProgram("basic");
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.warn("Error Loading Bundled Basic Shader GLSL files.", e);
         }
     }

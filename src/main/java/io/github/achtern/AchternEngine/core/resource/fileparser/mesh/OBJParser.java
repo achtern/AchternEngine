@@ -2,21 +2,20 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.mesh;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
 import io.github.achtern.AchternEngine.core.util.UString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Inheritance not possible due to incompatible Indices Types...
  */
-public class OBJModel implements Model {
+public class OBJParser implements Model, LineBasedParser {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(OBJModel.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(OBJParser.class);
 
     private ArrayList<Vector3f> positions;
     private ArrayList<Vector2f> texCoord;
@@ -25,7 +24,9 @@ public class OBJModel implements Model {
     private boolean hasTexCoords;
     private boolean hasNormals;
 
-    public OBJModel() {
+    private static boolean no_mulit_object_warned = false;
+
+    public OBJParser() {
         positions = new ArrayList<Vector3f>();
         texCoord = new ArrayList<Vector2f>();
         normal = new ArrayList<Vector3f>();
@@ -34,67 +35,68 @@ public class OBJModel implements Model {
         hasNormals = false;
     }
 
-    public void parse(BufferedReader meshReader) throws IOException {
+    /**
+     * Parses the line.
+     * Should NOT add a trailing line break to the line.
+     *
+     * @param line The line to parse
+     * @return The parsed line
+     * @throws Exception
+     */
+    @Override
+    public String parse(String line) throws Exception {
+        String[] tokens = line.split(" ");
+        tokens = UString.removeEmptyFromArray(tokens);
 
-        boolean no_mulit_object_warned = false;
-
-        String line;
-
-        while ((line = meshReader.readLine()) != null) {
-
-            String[] tokens = line.split(" ");
-            tokens = UString.removeEmptyFromArray(tokens);
-
-            if (tokens.length == 0) {
-                // We found an empty line
-                continue;
-            }
-
-            if (tokens[0].startsWith("#")) {
-                // Comment Line
-                LOGGER.trace("Skipping commented line");
-            } else if (tokens[0].equalsIgnoreCase("g")){
-                // We have a multi object OBJ Model.
-                // At this point in time the parser
-                // doesn't support these files.
-                // It loads the model, but all texture coordinates
-                // are broken.
-                if (!no_mulit_object_warned) {
-                    LOGGER.warn("Multi-Object OBJ files are not fully supported. " +
-                            "Texture Coordinates may be broken. You can combine " +
-                            "the objects in the 3D Editor of your choice.");
-                    no_mulit_object_warned = true;
-                }
-            } else if (tokens[0].equalsIgnoreCase("v")) {
-                positions.add(new Vector3f(
-                        Float.valueOf(tokens[1]),
-                        Float.valueOf(tokens[2]),
-                        Float.valueOf(tokens[3])
-                ));
-            } else if (tokens[0].equalsIgnoreCase("vt")){
-                texCoord.add(new Vector2f(
-                        Float.valueOf(tokens[1]),
-                        Float.valueOf(tokens[2])
-                ));
-            } else if (tokens[0].equalsIgnoreCase("vn")){
-                normal.add(new Vector3f(
-                        Float.valueOf(tokens[1]),
-                        Float.valueOf(tokens[2]),
-                        Float.valueOf(tokens[3])
-                ));
-            } else if (tokens[0].equalsIgnoreCase("f")){
-
-                for (int i = 0; i < tokens.length - 3; i++) {
-
-                    indices.add(this.parseOBJIndex(tokens[1]));
-                    indices.add(this.parseOBJIndex(tokens[2 + i]));
-                    indices.add(this.parseOBJIndex(tokens[3 + i]));
-                }
-
-            }
+        if (tokens.length == 0) {
+            // We found an empty line
+            return line;
         }
 
-        meshReader.close();
+        if (tokens[0].startsWith("#")) {
+            // Comment Line
+            LOGGER.trace("Skipping commented line");
+        } else if (tokens[0].equalsIgnoreCase("g")){
+            // We have a multi object OBJ Model.
+            // At this point in time the parser
+            // doesn't support these files.
+            // It loads the model, but all texture coordinates
+            // are broken.
+            if (!no_mulit_object_warned) {
+                LOGGER.warn("Multi-Object OBJ files are not fully supported. " +
+                        "Texture Coordinates may be broken. You can combine " +
+                        "the objects in the 3D Editor of your choice.");
+                no_mulit_object_warned = true;
+            }
+        } else if (tokens[0].equalsIgnoreCase("v")) {
+            positions.add(new Vector3f(
+                    Float.valueOf(tokens[1]),
+                    Float.valueOf(tokens[2]),
+                    Float.valueOf(tokens[3])
+            ));
+        } else if (tokens[0].equalsIgnoreCase("vt")){
+            texCoord.add(new Vector2f(
+                    Float.valueOf(tokens[1]),
+                    Float.valueOf(tokens[2])
+            ));
+        } else if (tokens[0].equalsIgnoreCase("vn")){
+            normal.add(new Vector3f(
+                    Float.valueOf(tokens[1]),
+                    Float.valueOf(tokens[2]),
+                    Float.valueOf(tokens[3])
+            ));
+        } else if (tokens[0].equalsIgnoreCase("f")){
+
+            for (int i = 0; i < tokens.length - 3; i++) {
+
+                indices.add(this.parseOBJIndex(tokens[1]));
+                indices.add(this.parseOBJIndex(tokens[2 + i]));
+                indices.add(this.parseOBJIndex(tokens[3 + i]));
+            }
+
+        }
+
+        return line;
     }
 
     @Override
