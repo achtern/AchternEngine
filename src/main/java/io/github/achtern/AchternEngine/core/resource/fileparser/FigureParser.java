@@ -1,11 +1,17 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser;
 
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * .figure is a custom extension used by AchternEngine
+ * .figure is a custom extension used by AchternEngine.
+ * Developmented halted currently.
  */
+@Deprecated
 public class FigureParser {
 
     public static final String BLOCK_OPEN = "{";
@@ -53,15 +59,34 @@ public class FigureParser {
     public static final String TOKEN_VALUE_ASSIGNMENT = TOKEN_CUSTOM_INDICATOR + "%s(%s)";
 
 
+    public static final Pattern PATTERN_FIRST_BLOCK = Pattern.compile("\\$BLOCK_START\\(&([A-Za-z0-9]*)\\)");
+
+
     protected String source;
-    protected String tokennized;
+    protected List<String> tokens;
+
+
+    protected Figure get() throws ParsingException {
+        final Figure figure;
+
+        String name = tokens.get(0);
+        Matcher nameMater = PATTERN_FIRST_BLOCK.matcher(name);
+        if (!nameMater.find()) {
+            throw new ParsingException("Could not get Figure name from token stream");
+        }
+
+        figure = new Figure(nameMater.group());
 
 
 
-    public void tokenize() throws ParsingException {
+        return figure;
+    }
+
+
+    protected void tokenize() throws ParsingException {
 
         String[] lines = source.split("\n");
-        List<String> tokens = new ArrayList<String>(lines.length);
+        tokens = new ArrayList<String>(lines.length);
 
         int blockLevel = 0;
         String previousBlock = "";
