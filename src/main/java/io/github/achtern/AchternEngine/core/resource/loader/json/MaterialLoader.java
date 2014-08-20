@@ -17,33 +17,39 @@ public class MaterialLoader extends JsonLoader<Material> {
         }
 
         // All Floats
-        JSONObject floats = json.getJSONObject("float");
+        if (json.has("float")) {
+            JSONObject floats = json.getJSONObject("float");
 
-        for (Object oKey : floats.keySet()) {
-            String key = (String) oKey;
+            for (Object oKey : floats.keySet()) {
+                String key = (String) oKey;
 
-            material.addFloat(key, (float) floats.getDouble(key));
+                material.addFloat(key, (float) floats.getDouble(key));
 
+            }
         }
 
         // All Colors
-        JSONObject colors = json.getJSONObject("Color");
+        if (json.has("Color")) {
+            JSONObject colors = json.getJSONObject("Color");
 
-        for (Object oKey : colors.keySet()) {
-            String key = (String) oKey;
+            for (Object oKey : colors.keySet()) {
+                String key = (String) oKey;
 
-            material.addColor(key, getColor(colors.getJSONObject(key)));
+                material.addColor(key, getColor(colors.getJSONObject(key)));
 
+            }
         }
 
-        // All Textures
-        JSONObject textures = json.getJSONObject("Texture");
+        if (json.has("Texture")) {
+            // All Textures
+            JSONObject textures = json.getJSONObject("Texture");
 
-        for (Object oKey : textures.keySet()) {
-            String key = (String) oKey;
+            for (Object oKey : textures.keySet()) {
+                String key = (String) oKey;
 
-            material.addTexture(key, getTexture(textures.getJSONObject(key)));
+                material.addTexture(key, getTexture(textures.getJSONObject(key)));
 
+            }
         }
 
         return material;
