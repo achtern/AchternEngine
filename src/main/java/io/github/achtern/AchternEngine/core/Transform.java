@@ -50,8 +50,13 @@ public class Transform {
         return getParentMatrix().mul(positionMat.mul(rotationMat.mul(scaleMat)));
     }
 
+    /**
+     * Rotate around the given axis.
+     * @param axis Axis to rotate around
+     * @param angle Angle in DEGREE
+     */
     public void rotate(Vector3f axis, float angle) {
-        setRotation(new Quaternion().initRotation(axis, angle).mul(getRotation()).normalized());
+        setRotation(new Quaternion().initRotation(axis, (float) Math.toRadians(angle)).mul(getRotation()).normalized());
     }
 
     public void faceAt(Vector3f at, Vector3f up) {
