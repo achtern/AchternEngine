@@ -123,6 +123,14 @@ public class ResourceLoader {
     }
 
     /**
+     * Returns all {@link io.github.achtern.AchternEngine.core.resource.ResourceLocation}s.
+     * @return List of all ResourceLocations
+     */
+    public static List<ResourceLocation> getResourceLocations() {
+        return locations;
+    }
+
+    /**
      * Pre Load a Mesh, good at startup, to allow getting the Mesh at runtime.
      * @see #getMesh(String)
      * @param name The relative path (to various ResourceLocations) of the filename
