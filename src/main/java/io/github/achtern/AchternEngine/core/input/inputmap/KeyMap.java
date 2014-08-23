@@ -13,9 +13,13 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyMap.class);
 
-    private InputAdapter input;
+    protected InputAdapter input;
 
     protected Map<KeyTrigger, List<KeyListener>> listener;
+
+    protected Map<KeyTrigger, List<KeyListener>> delayed;
+
+    protected boolean cycle = false;
 
     public KeyMap(InputAdapter input) {
         this();
@@ -24,9 +28,19 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
 
     public KeyMap() {
         this.listener = new HashMap<KeyTrigger, List<KeyListener>>();
+        this.delayed = new HashMap<KeyTrigger, List<KeyListener>>();
     }
 
     public KeyMap register(KeyTrigger key, KeyListener h) {
+        if (cycle) {
+            if (!this.delayed.containsKey(key)) {
+                this.delayed.put(key, new ArrayList<KeyListener>());
+            }
+
+            this.delayed.get(key).add(h);
+            return this;
+        }
+
         if (!this.listener.containsKey(key)) {
             this.listener.put(key, new ArrayList<KeyListener>());
         }
@@ -37,7 +51,6 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
     }
 
     public KeyMap register(List<KeyTrigger> keys, KeyListener h) {
-
         for (KeyTrigger t : keys) {
             register(t, h);
         }
@@ -48,7 +61,7 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
     public void trigger(float delta) {
 
         Set<KeyTrigger> keys = this.listener.keySet();
-
+        cycle = true;
         for (KeyTrigger k : keys) {
 
             if (input.getKey(k.get()) && k.getType().equals(KeyTrigger.Type.PRESS)) {
@@ -62,6 +75,14 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
             if (input.getKeyUp(k.get()) && k.getType().equals(KeyTrigger.Type.UP)) {
                 cycle(k, delta);
             }
+        }
+        cycle = false;
+
+        if (!delayed.isEmpty()) {
+            this.listener.putAll(delayed);
+            delayed.clear();
+
+            assert delayed.size() == 0;
         }
 
     }
