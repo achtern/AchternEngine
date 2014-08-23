@@ -14,14 +14,14 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
  */
 public class Figure extends QuickEntity {
 
-    private Mesh mesh;
-    private Material material;
+    protected Mesh mesh;
+    protected Material material;
 
     /**
      * Override the renderEngine supplied drawStrategy
      * if not null
      */
-    private DrawStrategy drawStrategy;
+    protected DrawStrategy drawStrategy;
 
     /**
      * Create an empty Figure
