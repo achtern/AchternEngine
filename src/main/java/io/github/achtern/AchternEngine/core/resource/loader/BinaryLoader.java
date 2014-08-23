@@ -22,10 +22,10 @@ public abstract class BinaryLoader<T, C> implements Loader<T, InputStream> {
     private C cache;
 
     /**
-     * This method should construct the object {@link T} from a cached
+     * This method should construct the object from a cached
      * value provided by the ResourceLoader
      * @param value Cache
-     * @return Object {@link T}
+     * @return Object
      * @throws Exception
      */
     public abstract T fromCache(C value) throws Exception;

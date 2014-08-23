@@ -80,7 +80,7 @@ public interface DataStore {
     /**
      * Adds a Float
      * @param name key
-     * @param float value
+     * @param f value
      */
     public void addFloat(String name, float f);
 
