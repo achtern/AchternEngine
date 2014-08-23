@@ -5,7 +5,40 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactor
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * {@link io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy}s are easy
+ * to define and if not, no override will be set.
+ * In fact to not specify a DrawStrategy in the {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Figure} is
+ * the most common approach!
+ *
+ * In the DrawStrategy Declaration should only be one field.
+ * Either '@', 'name' or '@E'.
+ * If two are specified at the same time, the last one
+ * will get used.
+ *
+ * The values for the three types of keys can be in the following
+ * format:
+ *
+ * <code>@</code> specifies a classname. The classname should be fully qualified Class name.
+ *
+ * <code>name</code> specifies the key, which will be used in to retrieve a stored DrawStrategy
+ * from the {@link io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory}.
+ * The method {@link io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory#get(String)} will
+ * be used.
+ *
+ * <code>@E</code> specifies the name of one of the {@link io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory.Common}
+ * keys to use.
+ * This should just be the name in uppercase letters (e.g. <code>SOLID</code>)
+ *
+ */
 public class DrawStrategyLoader extends JsonLoader<DrawStrategy> {
+
+    /**
+     * This should used the information, generated during
+     * loading and construct an Object.
+     * @return The new object
+     * @throws Exception
+     */
     @Override
     public DrawStrategy get() throws Exception {
         final JSONObject json = getJsonObject();

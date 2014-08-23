@@ -2,6 +2,11 @@ package io.github.achtern.AchternEngine.core.resource.loader;
 
 import java.io.IOException;
 
+/**
+ * A {@link io.github.achtern.AchternEngine.core.resource.loader.LoadingException} is thrown
+ * from {@link io.github.achtern.AchternEngine.core.resource.loader.Loader} when the loading/
+ * reading fails.
+ */
 public class LoadingException extends IOException {
 
     /**
