@@ -5,14 +5,13 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
-import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
 import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.IndexedModel;
 import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.OBJParser;
 import io.github.achtern.AchternEngine.core.util.UInteger;
 
 import java.util.ArrayList;
 
-public class MeshLoader extends Loader<Mesh> {
+public class MeshLoader extends AsciiFileLoader<Mesh> {
 
     protected OBJParser objParser;
 
@@ -25,7 +24,17 @@ public class MeshLoader extends Loader<Mesh> {
     }
 
     @Override
-    public void parse(String name, String file) throws ParsingException {
+    public void load(String name, String file) throws LoadingException {
+        if (objParser.hasRun()) return;
+
+        String[] lines = file.split("\n");
+        for (String l : lines) {
+            try {
+                getPreProcessor().parse(l);
+            } catch (Exception e) {
+                throw new LoadingException("Could not load OBJ File", e);
+            }
+        }
 
     }
 

@@ -24,6 +24,8 @@ public class OBJParser implements Model, LineBasedParser {
     private boolean hasTexCoords;
     private boolean hasNormals;
 
+    protected boolean run = false;
+
     private static boolean no_mulit_object_warned = false;
 
     public OBJParser() {
@@ -39,12 +41,16 @@ public class OBJParser implements Model, LineBasedParser {
      * Parses the line.
      * Should NOT add a trailing line break to the line.
      *
-     * @param line The line to parse
+     * @param line The line to load
      * @return The parsed line
      * @throws Exception
      */
     @Override
     public String parse(String line) throws Exception {
+        if (!run) {
+            run = true;
+        }
+
         String[] tokens = line.split(" ");
         tokens = UString.removeEmptyFromArray(tokens);
 
@@ -226,5 +232,9 @@ public class OBJParser implements Model, LineBasedParser {
 
     public void setIndices(ArrayList<OBJIndex> indices) {
         this.indices = indices;
+    }
+
+    public boolean hasRun() {
+        return run;
     }
 }

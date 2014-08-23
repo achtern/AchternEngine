@@ -3,19 +3,17 @@ package io.github.achtern.AchternEngine.core.resource.loader.json;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
-import io.github.achtern.AchternEngine.core.resource.loader.Loader;
+import io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
-public abstract class JsonLoader<T> extends Loader<T> {
+public abstract class JsonLoader<T> extends AsciiFileLoader<T> {
 
     private JSONObject jsonObject;
 
     @Override
-    public void parse(String name, String file) throws JSONException {
+    public void load(String name, String file) throws JSONException {
         jsonObject = new JSONObject(file);
     }
 
@@ -58,7 +56,7 @@ public abstract class JsonLoader<T> extends Loader<T> {
         return new Color(r, g, b, a);
     }
 
-    protected Texture getTexture(JSONObject json) throws IOException {
+    protected Texture getTexture(JSONObject json) throws Exception {
         final String file = json.getString("file");
 
         return ResourceLoader.getTexture(file);

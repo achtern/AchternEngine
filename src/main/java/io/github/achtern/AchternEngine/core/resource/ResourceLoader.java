@@ -1,22 +1,17 @@
 package io.github.achtern.AchternEngine.core.resource;
 
-import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
-import io.github.achtern.AchternEngine.core.resource.fileparser.mesh.OBJParser;
-import io.github.achtern.AchternEngine.core.resource.loader.GLSLProgramLoader;
-import io.github.achtern.AchternEngine.core.resource.loader.Loader;
-import io.github.achtern.AchternEngine.core.resource.loader.MeshLoader;
-import io.github.achtern.AchternEngine.core.resource.loader.ShaderSourceLoader;
+import io.github.achtern.AchternEngine.core.resource.loader.*;
+import io.github.achtern.AchternEngine.core.resource.loader.json.FigureLoader;
 import io.github.achtern.AchternEngine.core.resource.locations.*;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,7 +28,7 @@ import java.util.List;
  * any type of String from a file.
  * You can easily load your own resources from any type of file.
  * You can get {@link java.net.URL}s and {@link java.io.InputStream}s for any filename or write your
- * own {@link io.github.achtern.AchternEngine.core.resource.loader.Loader} to load text-based files.
+ * own {@link io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader} to load text-based files.
  * The ResourceLoader looks into given {@link io.github.achtern.AchternEngine.core.resource.ResourceLocation}s in
  * order to get URLs and InputStreams for the given name.
  * By default the Classpath, Bundled Textures, Meshes, Figures, Shaders and the Local File System
@@ -55,9 +50,8 @@ public class ResourceLoader {
      */
     public static final String SHADER_PROGRAM_EXT = ".yaml";
 
-    private static ResourceCache<TexturableData> textureCache = new ResourceCache<TexturableData>();
+    private static ResourceCache binaryCache = new ResourceCache();
     private static ResourceCache<String> fileCache = new ResourceCache<String>();
-    private static ResourceCache<OBJParser> meshCache = new ResourceCache<OBJParser>();
 
     /**
      * This list contains locations to look for resources
@@ -140,7 +134,7 @@ public class ResourceLoader {
      * @param name The relative path (to various ResourceLocations) of the filename
      * @throws IOException
      */
-    public static void preLoadTexture(String name) throws IOException {
+    public static void preLoadTexture(String name) throws Exception {
         getTexture(name);
     }
 
@@ -153,6 +147,35 @@ public class ResourceLoader {
      */
     public static void preLoadShader(String name) throws Exception {
         getShader(name);
+    }
+
+    /**
+     * Loads a {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Figure} from a json
+     * declaration file. Read more about it here {@link io.github.achtern.AchternEngine.core.resource.loader.json.FigureLoader}
+     * When loading from cache, only the file itself will get reused. This returns a completely independent Figure.
+     * An IOException is thrown on read errors and other Exceptions might be
+     * thrown from the Figure itself.
+     * @param name The name of the file to load
+     * @return Figure (new instance)
+     * @throws Exception
+     */
+    public static Figure getFigure(String name) throws Exception {
+        return getFigure(name, false);
+    }
+
+    /**
+     * Loads a {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Figure} from a json
+     * declaration file. Read more about it here {@link io.github.achtern.AchternEngine.core.resource.loader.json.FigureLoader}
+     * When loading from cache, only the file itself will get reused. This returns a completely independent Figure.
+     * An IOException is thrown on read errors and other Exceptions might be
+     * thrown from the Figure itself.
+     * @param name The name of the file to load
+     * @param forceLoading if set to true the file will get read again and not read from cache
+     * @return Figure (new instance)
+     * @throws Exception
+     */
+    public static Figure getFigure(String name, boolean forceLoading) throws Exception {
+        return load(name, new FigureLoader(), forceLoading);
     }
 
     /**
@@ -181,21 +204,7 @@ public class ResourceLoader {
      * @throws Exception
      */
     public static Mesh getMesh(String name, boolean forceLoading) throws Exception {
-        // With Mesh we have to be carefull. The LineBasedParser parse,
-        // doesn't run when loading from cache. This means, the OBJParser
-        // is empty and therefor the Mesh as well.
-        // If we force load, we just can proceed as usual,
-        // and cache just the OBJParser.
-        if (!meshCache.has(name) || forceLoading) {
-            MeshLoader l = new MeshLoader();
-            Mesh m = load(name, l, true); // we do not have the mesh in the cache ALWAYS forceLoad
-            meshCache.add(name, (OBJParser) l.getPreProcessor());
-            return m;
-        }
-
-        // Now we are using the cached value. and do not need to load the file
-        // we can just access the MeshLoader directly.
-        return (new MeshLoader(meshCache.get(name))).get();
+        return load(name, new MeshLoader(), forceLoading);
     }
 
     /**
@@ -207,7 +216,7 @@ public class ResourceLoader {
      * @return A new Texture Object
      * @throws IOException if resource not found
      */
-    public static Texture getTexture(String name) throws IOException {
+    public static Texture getTexture(String name) throws Exception {
         return getTexture(name, null, false);
     }
 
@@ -223,7 +232,7 @@ public class ResourceLoader {
      * @return A new Texture Object
      * @throws IOException if resource not found
      */
-    public static Texture getTexture(String name, Dimension dimension) throws IOException {
+    public static Texture getTexture(String name, Dimension dimension) throws Exception {
         return getTexture(name, dimension, false);
     }
 
@@ -240,26 +249,8 @@ public class ResourceLoader {
      * @return A new Texture Object
      * @throws IOException if resource not found
      */
-    public static Texture getTexture(String name, Dimension dimension, boolean forceLoading) throws IOException {
-
-        if (textureCache.has(name) && !forceLoading) {
-            // We only store the TexturableData, in order to avoid a clone.
-            return new Texture(textureCache.get(name));
-        }
-
-        BufferedImage image = ImageIO.read(getStream(name));
-
-        Texture texture;
-        if (dimension != null) {
-            texture = new Texture(image, dimension);
-        } else {
-            texture = new Texture(image);
-        }
-
-        textureCache.add(name, texture);
-
-        return texture;
-
+    public static Texture getTexture(String name, Dimension dimension, boolean forceLoading) throws Exception {
+        return load(name, new TextureLoader(dimension), forceLoading);
     }
 
     /**
@@ -290,7 +281,7 @@ public class ResourceLoader {
 
     /**
      * Loads a shader File and prepares it for OpenGL.
-     * Calls {@link #load(String, io.github.achtern.AchternEngine.core.resource.loader.Loader, boolean)}
+     * Calls {@link #load(String, io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader, boolean)}
      * internally and uses the {@link io.github.achtern.AchternEngine.core.resource.loader.ShaderSourceLoader}.
      * An IOException is thrown on read errors and other Exceptions might be
      * thrown from the ShaderSourceLoader itself.
@@ -318,7 +309,7 @@ public class ResourceLoader {
 
     /**
      * Reads programm file from disk and loads the stated source files
-     * Calls {@link #load(String, io.github.achtern.AchternEngine.core.resource.loader.Loader, boolean)}
+     * Calls {@link #load(String, io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader, boolean)}
      * internally and uses the {@link io.github.achtern.AchternEngine.core.resource.loader.GLSLProgramLoader}.
      * An IOException is thrown on read errors and other Exceptions might be
      * thrown from the GLSLProgramLoader itself.
@@ -332,7 +323,7 @@ public class ResourceLoader {
     }
 
     /**
-     * Loads a Object from a text-file using a {@link io.github.achtern.AchternEngine.core.resource.loader.Loader}.
+     * Loads a Object from a text-file using a {@link io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader}.
      * Calls {@link #readFile(String)} internally.
      * An IOException is thrown on read errors and other Exceptions might be
      * thrown from the Loader itself.
@@ -343,12 +334,53 @@ public class ResourceLoader {
      * @return The loaded object
      * @throws Exception
      */
-    public static <T> T load(String name, Loader<T> loader, boolean forceLoading) throws Exception {
+    public static <T> T load(String name, AsciiFileLoader<T> loader, boolean forceLoading) throws Exception {
+        // read it
         String file = readFile(name, forceLoading, loader.getPreProcessor());
-
-        loader.parse(name, file);
-
+        // load (parse) it
+        loader.load(name, file);
+        // get & return it
         return loader.get();
+    }
+
+    /**
+     * Loads a Object from an {@link java.io.InputStream} using a {@link io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader}.
+     * Calls {@link #getStream(String)} internally.
+     * An IOException is thrown on read errors and other Exceptions might be
+     * thrown from the Loader itself.
+     * @param name The name of the file to load
+     * @param loader The loader used to convert the file into the Object
+     * @param forceLoading if set to true the file will get read again and not read from cache
+     * @param <T> The type of Object to load
+     * @param <C> The type to cache the data
+     * @return The loaded object
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public static <T, C> T load(String name, BinaryLoader<T, C> loader, boolean forceLoading) throws Exception {
+        // Check for cache
+        if (binaryCache.has(name) && !forceLoading) {
+            Object cache = binaryCache.get(name);
+
+            if (loader.getCacheType() == null) {
+                throw new IllegalStateException("Missing Cache Type. BinaryLoader invalid.");
+            }
+
+            // Check if types are matching
+            if (loader.getCacheType().isAssignableFrom(cache.getClass())) {
+                // This is an unchecked cast (but it isn't actually!)
+                return loader.fromCache((C) cache);
+            }
+        }
+
+        // Load it
+        loader.load(name, getStream(name));
+        // get it
+        T value = loader.get();
+        // cache it
+        binaryCache.add(name, loader.getCache());
+        // return it
+        return value;
     }
 
     /**

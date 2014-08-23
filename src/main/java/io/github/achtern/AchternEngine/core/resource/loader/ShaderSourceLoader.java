@@ -2,12 +2,22 @@ package io.github.achtern.AchternEngine.core.resource.loader;
 
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
-import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
 
-public class ShaderSourceLoader extends Loader<String> {
+/**
+ * A ShaderSourceLoader is just a passthrough Loader,
+ * which specifies the LineBasedParser (
+ * {@link io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser}).
+ */
+public class ShaderSourceLoader extends AsciiFileLoader<String> {
 
+    /**
+     * Stores file contents
+     */
     protected String file;
 
+    /**
+     * Parser to use, defaults to {@link io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser}
+     */
     protected LineBasedParser parser;
 
     public ShaderSourceLoader() {
@@ -24,7 +34,7 @@ public class ShaderSourceLoader extends Loader<String> {
     }
 
     @Override
-    public void parse(String name, String file) throws ParsingException {
+    public void load(String name, String file) throws LoadingException {
         this.file = file;
     }
 

@@ -137,7 +137,7 @@ public class FigureParser {
                 } else if (blockLevel == 2) {
 
                     if (previousBlock.endsWith(TOKEN_INDICATOR + MESH_BLOCK)) {
-                        // parse Mesh Block
+                        // load Mesh Block
                         // supports only Build in classes atm.
                         // TODO: allow file loading
                         if (l.startsWith(PACKAGE_SEARCH_INDICATOR)) {
@@ -185,7 +185,7 @@ public class FigureParser {
                                     TOKEN_CUSTOM_INDICATOR +
                                     "([a-z]*)")) {
 
-                        // parse custom block
+                        // load custom block
                         if (!l.contains(ASSIGNMENT_CHARACTER)) {
                             throw new ParsingException("In sub Texture Block assignments are mandatory");
                         }

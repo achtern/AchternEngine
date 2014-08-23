@@ -1,22 +1,20 @@
 package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Quad;
 import io.github.achtern.AchternEngine.core.rendering.shader.BasicShader;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class LoadingScreen implements RenderPass {
 
@@ -35,7 +33,7 @@ public class LoadingScreen implements RenderPass {
     public void show(CoreEngine engine) {
         try {
             show(engine, ResourceLoader.getTexture("loading.v0.0.1.png"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error("Error Loading bundled LoadingScreen image.");
         }
     }

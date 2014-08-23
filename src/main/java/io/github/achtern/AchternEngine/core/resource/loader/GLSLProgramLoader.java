@@ -4,17 +4,17 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
 
-public class GLSLProgramLoader extends Loader<GLSLProgram> {
+public class GLSLProgramLoader extends AsciiFileLoader<GLSLProgram> {
 
     private GLSLProgram program;
 
     @Override
-    public void parse(String name, String file) throws ParsingException {
+    public void load(String name, String file) throws LoadingException {
         program = new GLSLProgram(name, file);
         try {
             program.parse(new GLSLParser());
         } catch (Exception e) {
-            throw new ParsingException("Error parsing GLSLProgram", e);
+            throw new LoadingException("Error parsing GLSLProgram", e);
         }
     }
 

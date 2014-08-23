@@ -10,7 +10,7 @@ public interface LineBasedParser {
     /**
      * Parses the line.
      * Should NOT add a trailing line break to the line.
-     * @param line The line to parse
+     * @param line The line to load
      * @return The parsed line
      * @throws Exception
      */

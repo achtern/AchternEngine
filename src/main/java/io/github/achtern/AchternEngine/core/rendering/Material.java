@@ -6,8 +6,6 @@ import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class Material extends CommonDataStore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
@@ -23,7 +21,7 @@ public class Material extends CommonDataStore {
 
         try {
             return ResourceLoader.getTexture("missing.jpg");
-        } catch (IOException e) {
+        } catch (Exception e) {
             // WILL NEVER HAPPEN... But log it and return null.
             LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
             return null;

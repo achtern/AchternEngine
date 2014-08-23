@@ -28,7 +28,7 @@ public class GLSLProgram extends NativeObject {
     protected GLSLParser parser;
 
     /**
-     * Instance to parse yaml
+     * Instance to load yaml
      */
     private Yaml yaml;
 
