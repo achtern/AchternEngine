@@ -49,6 +49,10 @@ public class ResourceLoader {
      * Extension used by Shader Programs
      */
     public static final String SHADER_PROGRAM_EXT = ".yaml";
+    /**
+     * Extension used by Figure Declarations
+     */
+    public static final String FIGURE_DECLARATION_EXT = ".json";
 
     private static ResourceCache binaryCache = new ResourceCache();
     private static ResourceCache<String> fileCache = new ResourceCache<String>();
@@ -175,7 +179,7 @@ public class ResourceLoader {
      * @throws Exception
      */
     public static Figure getFigure(String name, boolean forceLoading) throws Exception {
-        return load(name, new FigureLoader(), forceLoading);
+        return load(name + FIGURE_DECLARATION_EXT, new FigureLoader(), forceLoading);
     }
 
     /**
