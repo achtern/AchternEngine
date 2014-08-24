@@ -57,12 +57,12 @@ vec4 CalcLight(BaseLight base, vec3 direction, vec3 normal, vec3 worldPos, vec3 
 		vec3 eyeDir = normalize(eyePos - worldPos);
 		
 		// Phong Lighting Model
-		// vec3 reflectionDir = normalize(reflect(direction, normal));
-		// float specularFactor = dot(eyeDir, reflectionDir);
+		vec3 reflectionDir = normalize(reflect(direction, normal));
+		float specularFactor = dot(eyeDir, reflectionDir);
 
 		// Almost Phong, but cheaper! ;)
-		vec3 halfDir = normalize(eyeDir - direction);
-		float specularFactor = dot(halfDir, normal);
+		// vec3 halfDir = normalize(eyeDir - direction);
+		// float specularFactor = dot(halfDir, normal);
 
 		specularFactor = pow(specularFactor, specularPower);
 
@@ -97,7 +97,7 @@ vec4 CalcPointLight(PointLight pointLight, vec3 normal, vec3 worldPos, vec3 eyeP
 
 vec4 CalcDirectionalLight(DirectionalLight directionalLight, vec3 normal, vec3 worldPos, vec3 eyePos, float specularIntensity, float specularPower)
 {
-	return CalcLight(directionalLight.base, -directionalLight.direction, normal, worldPos, eyePos, specularIntensity, specularPower);
+	return CalcLight(directionalLight.base, directionalLight.direction, normal, worldPos, eyePos, specularIntensity, specularPower);
 }
 
 vec4 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 worldPos, vec3 eyePos, float specularIntensity, float specularPower)
