@@ -15,6 +15,8 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
  */
 public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
 
+    public static final String NAME_UNTITLED_ENTITY = "Untitled Entity";
+
     protected Node parent;
     protected CoreEngine engine;
     protected String name;
@@ -23,7 +25,7 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
      * Create an "Untitled Entity"
      */
     public QuickEntity() {
-        this("Untitled Entity");
+        this(NAME_UNTITLED_ENTITY);
     }
 
     /**
@@ -86,7 +88,11 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
      */
     @Override
     public Node boxed() {
-        return new Node(this.getName()).add(this);
+        String name = this.getName();
+        if (name == null || name.equals(NAME_UNTITLED_ENTITY)) {
+            name = this.getClass().getSimpleName();
+        }
+        return new Node(name).add(this);
     }
 
 
