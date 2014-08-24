@@ -216,6 +216,7 @@ public class ResourceLoader {
      * @throws Exception
      */
     public static Mesh getMesh(String name, boolean forceLoading) throws Exception {
+        LOGGER.info("Loading Mesh {}", name);
         return load(name, new MeshLoader(), forceLoading);
     }
 
@@ -262,6 +263,7 @@ public class ResourceLoader {
      * @throws IOException if resource not found
      */
     public static Texture getTexture(String name, Dimension dimension, boolean forceLoading) throws Exception {
+        LOGGER.info("Loading Texture {}", name);
         return load(name, new TextureLoader(dimension), forceLoading);
     }
 
@@ -304,6 +306,7 @@ public class ResourceLoader {
      * @throws Exception
      */
     public static String getShader(String name, boolean forceLoading, LineBasedParser parser) throws Exception {
+        LOGGER.info("Loading Shader Source {}", name);
         return load(name, new ShaderSourceLoader(parser), forceLoading);
     }
 
@@ -331,6 +334,7 @@ public class ResourceLoader {
      * @throws Exception
      */
     public static GLSLProgram getShaderProgram(String name, boolean forceLoading) throws Exception {
+        LOGGER.info("Loading Shader Program {}", name);
         return load(name + SHADER_PROGRAM_EXT, new GLSLProgramLoader(), forceLoading);
     }
 
@@ -440,7 +444,10 @@ public class ResourceLoader {
 
         String line;
 
+        long lines = 0;
+
         while ((line = fileReader.readLine()) != null) {
+            if (LOGGER.isDebugEnabled()) lines++;
 
             try {
 
@@ -460,6 +467,7 @@ public class ResourceLoader {
         }
 
         fileReader.close();
+        LOGGER.debug("Loaded {} lines from file {}", lines, name);
 
         fileCache.add(name, file.toString());
 

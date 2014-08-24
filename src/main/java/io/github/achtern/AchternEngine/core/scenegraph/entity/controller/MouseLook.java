@@ -66,9 +66,9 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
                 return;
             }
 
-            getTransform().rotate(getTransform().getRotation().getRight(), (float) Math.toRadians(-event.getMouseDelta().getY() * sensitivity));
+            getTransform().rotate(getTransform().getRotation().getRight(), -event.getMouseDelta().getY() * sensitivity);
 
-            getTransform().rotate(Transform.Y_AXIS, (float) Math.toRadians(event.getMouseDelta().getX() * sensitivity));
+            getTransform().rotate(Transform.Y_AXIS, event.getMouseDelta().getX() * sensitivity);
 
             centerMouse(event.getInputAdapter());
         } else {

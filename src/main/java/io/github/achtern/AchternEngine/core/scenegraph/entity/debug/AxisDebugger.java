@@ -48,11 +48,11 @@ public class AxisDebugger extends Node {
 
         // Rotate, so they are laying on the corresponding axis
         if (name.equals("Z-Axis")) {
-            n.getTransform().rotate(Transform.Z_AXIS, -(float) Math.toRadians(90));
+            n.getTransform().rotate(Transform.Z_AXIS, -90);
         }
         // Arrow Mesh is oriented on Y already.
         else if (name.equals("X-Axis")) {
-            n.getTransform().rotate(Transform.X_AXIS, (float) Math.toRadians(90));
+            n.getTransform().rotate(Transform.X_AXIS, 90);
         }
 
     }
