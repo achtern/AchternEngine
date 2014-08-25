@@ -152,6 +152,9 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
             String[] nodes = nodeName.split("/");
             // -> 0: Meshes, 1: Static, 2: Box
             r = getSceneGraph().getChildren().get(nodes[0]);
+            if (r == null) {
+                return null;
+            }
             for (int i = 1; i < nodes.length; i++) {
                 String name = nodes[i]; // 1 = nodes[1] => Static // 2 = nodes[2] => Box
                 r = r.getChildren().get(name); // 1 = r = Node(Static) // 2 = r = Node(Box)
