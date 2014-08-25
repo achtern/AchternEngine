@@ -11,10 +11,6 @@ public class BaseLight extends Light {
 
     private ShadowInfo shadowInfo;
 
-    public BaseLight(Vector3f color, float intensity) {
-        this(new Color(color, 1), intensity);
-    }
-
     public BaseLight(Color color, float intensity) {
         this.color = color;
         this.intensity = intensity;
