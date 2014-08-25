@@ -8,12 +8,17 @@ import io.github.achtern.AchternEngine.core.rendering.Dimension;
 
 public class Camera extends QuickEntity {
 
+    protected float fov;
+    protected float aspect;
+    protected float zNear;
+    protected float zFar;
+
     protected Matrix4f projection;
 
 
     /**
      * For internal use only
-     * (or for really smart people out there)
+     * (or for smart people out there)
      * @param projection The view camera-projection
      */
     public Camera(Matrix4f projection) {
@@ -27,15 +32,19 @@ public class Camera extends QuickEntity {
 
 
     public Camera(Dimension screen) {
-        this((float) screen.getWidth() / (float) screen.getHeight());
+        this(70, (float) screen.getWidth() / (float) screen.getHeight());
     }
 
-    public Camera(float aspect) {
-        this((float) Math.toRadians(70), aspect, 0.1f, 1000);
+    public Camera(float fov, float aspect) {
+        this(fov, aspect, 0.1f, 1000);
     }
 
     public Camera(float fov, float aspect, float zNear, float zFar) {
-        setProjection(new Matrix4f().initPerspective(fov, aspect, zNear, zFar));
+        this.fov = fov;
+        this.aspect = aspect;
+        this.zNear = zNear;
+        this.zFar = zFar;
+        setMatrix(fov, aspect, zNear, zFar);
     }
 
     public Matrix4f getViewProjection() {
@@ -70,5 +79,45 @@ public class Camera extends QuickEntity {
     public void removed() {
         super.removed();
         getEngine().getRenderEngine().setMainCamera(null);
+    }
+
+    public float getFov() {
+        return fov;
+    }
+
+    public void setFov(float fov) {
+        this.fov = fov;
+        setMatrix(fov, aspect, zNear, zFar);
+    }
+
+    public float getAspect() {
+        return aspect;
+    }
+
+    public void setAspect(float aspect) {
+        this.aspect = aspect;
+        setMatrix(fov, aspect, zNear, zFar);
+    }
+
+    public float getzNear() {
+        return zNear;
+    }
+
+    public void setzNear(float zNear) {
+        this.zNear = zNear;
+        setMatrix(fov, aspect, zNear, zFar);
+    }
+
+    public float getzFar() {
+        return zFar;
+    }
+
+    public void setzFar(float zFar) {
+        this.zFar = zFar;
+        setMatrix(fov, aspect, zNear, zFar);
+    }
+
+    protected void setMatrix(float fov, float aspect, float zNear, float zFar) {
+        setProjection(new Matrix4f().initPerspective((float) Math.toRadians(fov), aspect, zNear, zFar));
     }
 }
