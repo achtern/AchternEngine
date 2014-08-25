@@ -15,6 +15,8 @@ public interface RenderEngine extends DataStore {
 
     public void render(Node node, boolean clear);
 
+    public void clear(boolean color, boolean depth, boolean stencil);
+
     public void setRenderTarget(RenderTarget target);
 
     public RenderTarget getRenderTarget();

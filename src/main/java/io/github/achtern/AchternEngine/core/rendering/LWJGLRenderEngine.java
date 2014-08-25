@@ -8,6 +8,7 @@ import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
+import io.github.achtern.AchternEngine.core.rendering.shadow.BasicShadowRenderer;
 import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
@@ -54,7 +55,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         passFilters = new ArrayList<PassFilter>();
 
         // TODO: do not hardcode this filter!
-//        addPassFilter(new BasicShadowRenderer());
+        addPassFilter(new BasicShadowRenderer());
 
         setRenderTarget(Window.getTarget());
 
@@ -88,7 +89,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         }
 
         if (clear) {
-            clearScreen();
+            clear(true, true, true);
         }
 
         if (passes.isEmpty()) {
@@ -143,6 +144,31 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     }
 
+    @Override
+    public void clear(boolean color, boolean depth, boolean stencil) {
+        if (!color && !depth && !stencil) {
+            // Do not clear anything?? weired.
+            throw new IllegalArgumentException("At least one target has to be cleared" +
+                    ", otherwise do not call clear()");
+        }
+
+        int mask = 0;
+
+        if (color) {
+            mask = GL_COLOR_BUFFER_BIT;
+        }
+
+        if (depth) {
+            mask |= GL_DEPTH_BUFFER_BIT;
+        }
+
+        if (stencil) {
+            mask |= GL_STENCIL_BUFFER_BIT;
+        }
+
+        glClear(mask);
+    }
+
     public void setRenderTarget(RenderTarget target) {
         this.target = target;
     }
@@ -189,10 +215,6 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     public void setClearColor(Color color) {
         this.clearColor = color;
         glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-
-    private static void clearScreen() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     private static void useTextures(boolean enabled) {

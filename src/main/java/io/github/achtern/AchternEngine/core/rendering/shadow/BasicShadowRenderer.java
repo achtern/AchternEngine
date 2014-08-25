@@ -15,7 +15,7 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class BasicShadowRenderer extends QuickPassFilter {
+public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
 
     //TMP will be proteceted after testing!
     public FrameBuffer shadowMap;
@@ -42,8 +42,7 @@ public class BasicShadowRenderer extends QuickPassFilter {
 
             if (shadowInfo != null) {
                 renderEngine.getDataBinder().bindAsRenderTarget(shadowMap);
-                // TODO: remove dependency on LWJGL!
-                glClear(GL_DEPTH_BUFFER_BIT);
+                renderEngine.clear(false, true, false);
 
                 Node holder = new Node();
 
@@ -64,12 +63,7 @@ public class BasicShadowRenderer extends QuickPassFilter {
                 RenderPass mainRP = renderEngine.getActiveRenderPass();
                 {
                     renderEngine.setMainCamera(shadowCamera);
-                    renderEngine.setActiveRenderPass(new RenderPass() {
-                        @Override
-                        public Shader getShader() {
-                            return ShadowGenerator.getInstance();
-                        }
-                    });
+                    renderEngine.setActiveRenderPass(this);
                     renderEngine.getDataBinder().bind(ShadowGenerator.getInstance());
                     node.render(renderEngine);
                 }
@@ -83,5 +77,15 @@ public class BasicShadowRenderer extends QuickPassFilter {
             renderEngine.getRenderTarget().bindAsRenderTarget(renderEngine.getDataBinder());
 
         }
+    }
+
+    /**
+     * Returns the shader to get set on draw.
+     *
+     * @return the shader
+     */
+    @Override
+    public Shader getShader() {
+        return ShadowGenerator.getInstance();
     }
 }

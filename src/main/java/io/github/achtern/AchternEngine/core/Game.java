@@ -96,7 +96,6 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
         LOGGER.trace("Rendering SceneGraph: {}", getSceneGraph());
         renderEngine.render(getSceneGraph());
         render(renderEngine);
-        postRender(renderEngine);
     }
 
     /**
@@ -104,13 +103,6 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * @param renderEngine The active RenderEngine instance
      */
     public void preRender(RenderEngine renderEngine) {
-    }
-
-    /**
-     * This method will get called after each render
-     * @param renderEngine The active RenderEngine instance
-     */
-    public void postRender(RenderEngine renderEngine) {
     }
 
     /**
