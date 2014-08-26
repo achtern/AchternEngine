@@ -89,7 +89,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         }
 
         if (clear) {
-            clear(true, true, true);
+            clear(true, true, false);
         }
 
         if (passes.isEmpty()) {
@@ -100,16 +100,22 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         this.activePass = passes.get(0);
         LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
 
+        boolean skip = true;
+
         if (!(this.activePass instanceof AmbientLight)) {
             LOGGER.trace("First Pass not instance of AmbientLight, sorting...");
             Collections.sort(passes, new AmbientFirstSorter());
             this.activePass = passes.get(0);
+            if (!(this.activePass instanceof AmbientLight)) {
+                LOGGER.info("Using own Ambient Path with Color(0.01f, 0.01f, 0.01f)");
+                this.activePass = new AmbientLight(new Color(0.01f, 0.01f, 0.01f));
+                skip = false;
+            }
         }
         getDataBinder().bind(activePass.getShader());
         node.render(this);
 
 
-        boolean skip = true;
         for (RenderPass pass : this.passes) {
             if (skip) {
                 skip = false;
