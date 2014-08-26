@@ -118,6 +118,9 @@ public class Camera extends QuickEntity {
     }
 
     protected void setMatrix(float fov, float aspect, float zNear, float zFar) {
-        setProjection(new Matrix4f().initPerspective((float) Math.toRadians(fov), aspect, zNear, zFar));
+        if (projection == null) {
+            projection = new Matrix4f();
+        }
+        setProjection(projection.initPerspective((float) Math.toRadians(fov), aspect, zNear, zFar));
     }
 }
