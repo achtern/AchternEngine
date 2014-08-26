@@ -19,8 +19,7 @@ import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT16;
 
 public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
 
-    //TMP will be proteceted after testing!
-    public FrameBuffer shadowMap;
+    protected FrameBuffer shadowMap;
 
     protected Camera camera;
 
@@ -68,6 +67,8 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
                 camera.getTransform().setRotation(
                         ((BaseLight) pass).getTransform().getTransformedRotation()
                 );
+
+                camera.getTransform().rotate(camera.getTransform().getRotation().getUp(), 180);
 
                 renderEngine.addMatrix("shadowMatrix", bias.mul(camera.getViewProjection()));
 

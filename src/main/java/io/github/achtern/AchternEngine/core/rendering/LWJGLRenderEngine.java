@@ -41,8 +41,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     protected DrawStrategy drawStrategy;
 
-    //TMP will be proteceted after testing!
-    public List<PassFilter> passFilters;
+    protected List<PassFilter> passFilters;
 
     public LWJGLRenderEngine() {
 

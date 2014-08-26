@@ -97,7 +97,7 @@ vec4 CalcPointLight(PointLight pointLight, vec3 normal, vec3 worldPos, vec3 eyeP
 
 vec4 CalcDirectionalLight(DirectionalLight directionalLight, vec3 normal, vec3 worldPos, vec3 eyePos, float specularIntensity, float specularPower)
 {
-	return CalcLight(directionalLight.base, -directionalLight.direction, normal, worldPos, eyePos, specularIntensity, specularPower);
+	return CalcLight(directionalLight.base, directionalLight.direction, normal, worldPos, eyePos, specularIntensity, specularPower);
 }
 
 vec4 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 worldPos, vec3 eyePos, float specularIntensity, float specularPower)
