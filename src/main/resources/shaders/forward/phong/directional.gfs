@@ -9,7 +9,7 @@ float SampleShadowMap(sampler2D map, vec2 coords, float diff)
 
 float CalcShadowEffect(sampler2D map, vec4 initCoords)
 {
-    vec3 coord = (initCoords.xyz / initCoords.w) * vec3(0.5) + vec3(0.5);
+    vec3 coord = (initCoords.xyz / initCoords.w);
 
     return SampleShadowMap(map, coord.xy, coord.z);
 }

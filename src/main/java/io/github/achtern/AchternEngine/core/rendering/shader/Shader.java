@@ -81,10 +81,9 @@ public abstract class Shader {
                 u.setValue(renderEngine.getMainCamera().getTransform().getTransformedPosition());
 
             } else if (n.equalsIgnoreCase("shadowMatrix")) {
-                // TEMPORARAY CODE
                 Matrix4f m = new Matrix4f().initIdentiy();
                 if (renderEngine.getMatrix("shadowMatrix") != null) {
-                    m = renderEngine.getMatrix("shadowMatrix");
+                    m = renderEngine.getMatrix("shadowMatrix").mul(transform.getTransformation());
                 }
                 u.setValue(m);
 

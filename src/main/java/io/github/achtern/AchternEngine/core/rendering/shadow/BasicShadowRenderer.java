@@ -2,6 +2,7 @@ package io.github.achtern.AchternEngine.core.rendering.shadow;
 
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.abstractVersion.QuickPassFilter;
+import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
@@ -13,12 +14,17 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT16;
 
 public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
 
     //TMP will be proteceted after testing!
     public FrameBuffer shadowMap;
+
+    protected Camera camera;
+
+    protected Matrix4f bias;
 
     @Override
     public void init(RenderEngine renderEngine) {
@@ -26,12 +32,20 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
         shadowMap.setDepthTarget(new Texture(
                 new Dimension(1024, 1024),
                 GL_NEAREST, GL_NEAREST,
-                GL_DEPTH_COMPONENT,
+                GL_DEPTH_COMPONENT16,
                 Format.DEPTH,
                 false
         ));
 
         renderEngine.addTexture("shadowMap", shadowMap.getDepthTarget().getTexture());
+
+        Node holder = new Node();
+        camera = new Camera();
+        holder.add(camera);
+
+        bias = new Matrix4f().initScale(0.5f, 0.5f, 0.5f);
+        bias = bias.mul(new Matrix4f().initTranslation(1, 1, 1));
+
     }
 
     @Override
@@ -41,28 +55,27 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
             ShadowInfo shadowInfo = ((BaseLight) pass).getShadowInfo();
 
             if (shadowInfo != null) {
+
                 renderEngine.getDataBinder().bindAsRenderTarget(shadowMap);
+
                 renderEngine.clear(false, true, false);
 
-                Node holder = new Node();
+                camera.setProjection(shadowInfo.getMatrix());
 
-                Camera shadowCamera = new Camera(shadowInfo.getMatrix());
-                holder.add(shadowCamera);
-
-                shadowCamera.getTransform().setPosition(
+                camera.getTransform().setPosition(
                         ((BaseLight) pass).getTransform().getTransformedPosition()
                 );
-                shadowCamera.getTransform().setRotation(
+                camera.getTransform().setRotation(
                         ((BaseLight) pass).getTransform().getTransformedRotation()
                 );
 
-                renderEngine.addMatrix("shadowMatrix", shadowCamera.getViewProjection());
+                renderEngine.addMatrix("shadowMatrix", bias.mul(camera.getViewProjection()));
 
                 // Store a copy of the main camera/renderpass
                 Camera mainC = renderEngine.getMainCamera();
                 RenderPass mainRP = renderEngine.getActiveRenderPass();
                 {
-                    renderEngine.setMainCamera(shadowCamera);
+                    renderEngine.setMainCamera(camera);
                     renderEngine.setActiveRenderPass(this);
                     renderEngine.getDataBinder().bind(ShadowGenerator.getInstance());
                     node.render(renderEngine);
