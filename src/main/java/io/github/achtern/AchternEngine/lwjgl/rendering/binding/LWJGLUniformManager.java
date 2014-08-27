@@ -1,10 +1,11 @@
-package io.github.achtern.AchternEngine.core.rendering.binding;
+package io.github.achtern.AchternEngine.lwjgl.rendering.binding;
 
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.math.Vector4f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
+import io.github.achtern.AchternEngine.core.rendering.binding.UniformManager;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;

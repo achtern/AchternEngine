@@ -1,11 +1,13 @@
-package io.github.achtern.AchternEngine.core.rendering;
+package io.github.achtern.AchternEngine.lwjgl.rendering;
 
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.contracts.PassFilter;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.rendering.Color;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder;
+import io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.shadow.BasicShadowRenderer;

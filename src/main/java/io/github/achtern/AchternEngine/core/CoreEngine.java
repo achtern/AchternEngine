@@ -1,7 +1,7 @@
 package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
-import io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager;
+import io.github.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * The CoreEngine is the main entry point of the
  * AchternEngine.
  * The Engine is running the main loop and manages Game and
- * RenderEngine, as well as the {@link io.github.achtern.AchternEngine.core.bootstrap.WindowIOBindingManager}.
+ * RenderEngine, as well as the {@link io.github.achtern.AchternEngine.core.bootstrap.MainBindingProvider}.
  */
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
@@ -22,7 +22,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Only used during bootstrap to manage the hardware/graphics/native binding
      */
-    protected WindowIOBindingManager bindingManager;
+    protected MainBindingProvider bindingManager;
 
     /**
      * The Main Render Window
@@ -60,19 +60,20 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param game The game to run.
      */
     public CoreEngine(Game game) {
-        this(game, WindowIOBindingManager.Binding.LWJGL);
+        this(game, new MainBindingProvider(MainBindingProvider.Bindings.LWJGL));
     }
 
     /**
      * Creates a new Game Holder and runner
      * @param game The game to run.
+     * @param binding Binding Manager
      */
-    public CoreEngine(Game game, WindowIOBindingManager.Binding binding) {
+    public CoreEngine(Game game, MainBindingProvider binding) {
         LOGGER.debug(BuildInfo.get());
         this.game = game;
         this.running = false;
         this.fps = new FPS();
-        this.bindingManager = new WindowIOBindingManager(binding);
+        this.bindingManager = binding;
         this.bindingManager.populateDrawStrategyFactory();
     }
 
@@ -225,11 +226,11 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
         return game;
     }
 
-    public WindowIOBindingManager getBindingManager() {
+    public MainBindingProvider getBindingManager() {
         return bindingManager;
     }
 
-    public void setBindingManager(WindowIOBindingManager bindingManager) {
+    public void setBindingManager(MainBindingProvider bindingManager) {
         this.bindingManager = bindingManager;
     }
 

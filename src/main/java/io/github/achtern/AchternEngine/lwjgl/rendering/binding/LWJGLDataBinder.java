@@ -1,6 +1,9 @@
-package io.github.achtern.AchternEngine.core.rendering.binding;
+package io.github.achtern.AchternEngine.lwjgl.rendering.binding;
 
-import io.github.achtern.AchternEngine.core.rendering.LWJGLRenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
+import io.github.achtern.AchternEngine.core.rendering.binding.IDGenerator;
+import io.github.achtern.AchternEngine.core.rendering.binding.UniformManager;
+import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLRenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.exception.FrameBufferException;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;

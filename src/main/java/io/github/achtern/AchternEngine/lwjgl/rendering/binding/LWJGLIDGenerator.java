@@ -1,5 +1,6 @@
-package io.github.achtern.AchternEngine.core.rendering.binding;
+package io.github.achtern.AchternEngine.lwjgl.rendering.binding;
 
+import io.github.achtern.AchternEngine.core.rendering.binding.IDGenerator;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.RenderBuffer;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
@@ -8,7 +9,7 @@ import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 
-import static io.github.achtern.AchternEngine.core.rendering.binding.LWJGLDataBinder.getGLEnum;
+import static io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder.getGLEnum;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glCreateProgram;

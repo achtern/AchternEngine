@@ -10,7 +10,6 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
@@ -65,7 +64,9 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     public void onAction(KeyEvent event) {
         if (event.getKey().equals(Key.Z)) {
             if (!getGame().isDebug()) return;
-            if (getEngine().getRenderEngine().getDrawStrategy() instanceof LWJGLWireframeDraw) {
+            Class<? extends DrawStrategy> current = getEngine().getRenderEngine().getDrawStrategy().getClass();
+            Class<? extends DrawStrategy> wireframe = DrawStrategyFactory.get(DrawStrategyFactory.Common.WIREFRAME).getClass();
+            if (current.isAssignableFrom(wireframe)) {
                 getEngine().getRenderEngine().setDrawStrategy(sD);
             } else {
                 getEngine().getRenderEngine().setDrawStrategy(wD);

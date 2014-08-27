@@ -1,4 +1,4 @@
-package io.github.achtern.AchternEngine.core.rendering.drawing.implementations.lwjgl;
+package io.github.achtern.AchternEngine.lwjgl.rendering;
 
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
