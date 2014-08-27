@@ -1,3 +1,0 @@
-uniform vec3 eyePos;
-uniform float specularIntensity;
-uniform float specularPower;

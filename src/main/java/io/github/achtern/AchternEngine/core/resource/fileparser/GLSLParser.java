@@ -45,6 +45,16 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     public static final String CUSTOM_TOKEN_INCLUDE = "#include";
 
     /**
+     * CUSTOM TOKEN. NOT PART OF THE GLSL LANGUAGE!
+     * #import MUST be first statement in the line
+     * Is at this point the same as include, but
+     * behaviour might change soon. Should be used
+     * for .glib files!
+     * @see #CUSTOM_TOKEN_INCLUDE
+     */
+    public static final String CUSTOM_TOKEN_IMPORT = "#import";
+
+    /**
      * The uniform token used in the GLSL language
      * (uniform type name)
      */
@@ -108,6 +118,18 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
             #include "file.ext"
              */
             String filename = line.substring(CUSTOM_TOKEN_INCLUDE.length() + 2, line.length() - 1);
+
+            line = ResourceLoader.getShader(INCLUDE_DIRECTORY + filename);
+
+
+        } else if (line.startsWith(CUSTOM_TOKEN_IMPORT)) {
+            /*
+            Looks like this:
+            #include "file.ext"
+            or
+            #include "file.ext"
+             */
+            String filename = line.substring(CUSTOM_TOKEN_IMPORT.length() + 2, line.length() - 1);
 
             line = ResourceLoader.getShader(INCLUDE_DIRECTORY + filename);
 

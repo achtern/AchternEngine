@@ -9,4 +9,4 @@ vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
     return ambientLight.color;
 }
 
-#include "lighting-main.gfh"
+#include "fragment-main.gfh"

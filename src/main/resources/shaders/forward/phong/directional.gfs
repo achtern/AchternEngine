@@ -11,7 +11,7 @@ float CalcShadowEffect(sampler2D map, vec4 initCoords)
 {
     vec3 coord = (initCoords.xyz / initCoords.w);
 
-    return SampleShadowMap(map, coord.xy, coord.z);
+    return SampleShadowMap(map, coord.xy, coord.z - (1.0 / 1024.0));
 }
 
 uniform DirectionalLight directionalLight;
@@ -22,4 +22,4 @@ vec4 CalcLightEffect(vec3 normal, vec3 worldPos)
     return lightAmount;
 }
 
-#include "lighting-main.gfh"
+#include "fragment-main.gfh"

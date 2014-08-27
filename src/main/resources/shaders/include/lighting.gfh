@@ -1,4 +1,4 @@
-#include "lighting.gh"
+#import "lighting.glib"
 
 in vec2 texCoord0;
 in vec3 normal0;
@@ -7,6 +7,9 @@ in vec4 shadowMapCoords0;
 
 out vec4 fragColor;
 
+uniform vec3 eyePos;
+uniform float specularIntensity;
+uniform float specularPower;
 
 uniform vec4 color;
 uniform sampler2D diffuse;

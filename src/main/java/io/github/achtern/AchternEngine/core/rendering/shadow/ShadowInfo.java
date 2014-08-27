@@ -4,8 +4,7 @@ import io.github.achtern.AchternEngine.core.math.Matrix4f;
 
 public class ShadowInfo {
 
-
-    private Matrix4f matrix;
+    protected Matrix4f matrix;
 
     public ShadowInfo(Matrix4f matrix) {
         this.matrix = matrix;
