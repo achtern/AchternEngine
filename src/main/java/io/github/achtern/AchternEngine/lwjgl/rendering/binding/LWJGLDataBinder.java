@@ -1,22 +1,21 @@
 package io.github.achtern.AchternEngine.lwjgl.rendering.binding;
 
+import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.binding.IDGenerator;
 import io.github.achtern.AchternEngine.core.rendering.binding.UniformManager;
-import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLRenderEngine;
-import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.exception.FrameBufferException;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.RenderBuffer;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
-import io.github.achtern.AchternEngine.core.rendering.texture.Format;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.rendering.texture.*;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
+import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLRenderEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +25,8 @@ import java.nio.IntBuffer;
 import static io.github.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -80,14 +79,14 @@ public class LWJGLDataBinder implements DataBinder {
 
         glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(type, GL_TEXTURE_MIN_FILTER, texture.getMinFilter());
-        glTexParameteri(type, GL_TEXTURE_MAG_FILTER, texture.getMagFilter());
+        glTexParameteri(type, GL_TEXTURE_MIN_FILTER, getGLEnum(texture.getMinFilter()));
+        glTexParameteri(type, GL_TEXTURE_MAG_FILTER, getGLEnum(texture.getMagFilter()));
 
 
         glTexImage2D(
                 type,
                 0,
-                texture.getInternalFormat(),
+                getGLEnum(texture.getInternalFormat()),
                 texture.getDimension().getWidth(),
                 texture.getDimension().getHeight(),
                 0,
@@ -359,12 +358,27 @@ public class LWJGLDataBinder implements DataBinder {
         }
     }
 
-    protected static int getGLEnum(Texture.Type type) {
+    protected static int getGLEnum(Filter minFilter) {
+        switch (minFilter) {
+            case NEAREST:
+                return GL_NEAREST;
+            case LINEAR:
+                return GL_LINEAR;
+            default:
+                throw new UnsupportedOperationException("Filter " + minFilter + "is not supported in this LWJGL Binding");
+        }
+    }
+
+    protected static int getGLEnum(Type type) {
         switch (type) {
+            case ONE_DIMENSIONAL:
+                return GL_TEXTURE_1D;
             case TWO_DIMENSIONAL:
                 return GL_TEXTURE_2D;
             case THREE_DIMENSIONAL:
                 return GL_TEXTURE_3D;
+            case CUBE_MAP:
+                return GL_TEXTURE_CUBE_MAP;
             default:
                 // TODO: implement the other types
                 throw new UnsupportedOperationException("Texture type " + type + " not supported by LWJGL!");
@@ -381,7 +395,25 @@ public class LWJGLDataBinder implements DataBinder {
                 return GL_DEPTH_COMPONENT;
 
             default:
-                throw new UnsupportedOperationException("Format not supported");
+                throw new UnsupportedOperationException("Format " + format + "not supported");
+        }
+    }
+
+    protected static int getGLEnum(InternalFormat format) {
+        switch (format) {
+            case RGBA8:
+                return GL_RGBA8;
+            case DEPTH_COMPONENT:
+                return GL_DEPTH_COMPONENT;
+            case DEPTH_COMPONENT16:
+                return GL_DEPTH_COMPONENT16;
+            case DEPTH_COMPONENT24:
+                return GL_DEPTH_COMPONENT24;
+            case DEPTH_COMPONENT32:
+                return GL_DEPTH_COMPONENT32;
+
+            default:
+                throw new UnsupportedOperationException("Format " + format + "not supported");
         }
     }
 

@@ -11,27 +11,20 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 import static io.github.achtern.AchternEngine.core.resource.ResourceConverter.toByteBuffer;
-import static org.lwjgl.opengl.GL11.*;
 
 public class Texture extends Dimension implements TexturableData, Native {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Texture.class);
 
-    public enum Type {
-        TWO_DIMENSIONAL,
-        THREE_DIMENSIONAL
-    }
-
-
     protected int id = INVALID_ID;
 
     protected Type type;
 
-    protected int minFilter;
+    protected Filter minFilter;
 
-    protected int magFilter;
+    protected Filter magFilter;
 
-    protected int internalFormat;
+    protected InternalFormat internalFormat;
 
     protected Format format;
 
@@ -43,9 +36,9 @@ public class Texture extends Dimension implements TexturableData, Native {
     public Texture(
             Dimension dimension,
             Type type,
-            int minFilter,
-            int magFilter,
-            int internalFormat,
+            Filter minFilter,
+            Filter magFilter,
+            InternalFormat internalFormat,
             Format format,
             boolean alpha,
             ByteBuffer data) {
@@ -63,7 +56,7 @@ public class Texture extends Dimension implements TexturableData, Native {
         this.data = data;
     }
 
-    public Texture(Dimension dimension, int minFilter, int magFilter, int internalFormat, Format format, boolean alpha) {
+    public Texture(Dimension dimension, Filter minFilter, Filter magFilter, InternalFormat internalFormat, Format format, boolean alpha) {
         this(
                 dimension,
                 Type.TWO_DIMENSIONAL,
@@ -79,9 +72,9 @@ public class Texture extends Dimension implements TexturableData, Native {
     public Texture(Dimension dimension) {
         this(
                 dimension,
-                GL_NEAREST,
-                GL_NEAREST,
-                GL_RGBA8,
+                Filter.NEAREST,
+                Filter.NEAREST,
+                InternalFormat.RGBA8,
                 Format.RGBA,
                 true
         );
@@ -91,9 +84,9 @@ public class Texture extends Dimension implements TexturableData, Native {
         this(
                 Dimension.fromBufferedImage(image),
                 Type.TWO_DIMENSIONAL,
-                GL_NEAREST,
-                GL_NEAREST,
-                GL_RGBA8,
+                Filter.NEAREST,
+                Filter.NEAREST,
+                InternalFormat.RGBA8,
                 null,
                 image.getColorModel().hasAlpha(),
                 toByteBuffer(image)
@@ -104,9 +97,9 @@ public class Texture extends Dimension implements TexturableData, Native {
         this(
                 Dimension.fromBufferedImage(image),
                 Type.TWO_DIMENSIONAL,
-                GL_NEAREST,
-                GL_NEAREST,
-                GL_RGBA8,
+                Filter.NEAREST,
+                Filter.NEAREST,
+                InternalFormat.RGBA8,
                 null,
                 image.getColorModel().hasAlpha(),
                 toByteBuffer(image, dimension)
@@ -135,12 +128,12 @@ public class Texture extends Dimension implements TexturableData, Native {
     }
 
     @Override
-    public int getMinFilter() {
+    public Filter getMinFilter() {
         return minFilter;
     }
 
     @Override
-    public int getMagFilter() {
+    public Filter getMagFilter() {
         return magFilter;
     }
 
@@ -150,7 +143,7 @@ public class Texture extends Dimension implements TexturableData, Native {
     }
 
     @Override
-    public int getInternalFormat() {
+    public InternalFormat getInternalFormat() {
         return internalFormat;
     }
 

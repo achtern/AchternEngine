@@ -1,26 +1,26 @@
 package io.github.achtern.AchternEngine.core.contracts.abstractVersion;
 
 import io.github.achtern.AchternEngine.core.contracts.TexturableData;
+import io.github.achtern.AchternEngine.core.rendering.texture.Filter;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
-
-import static org.lwjgl.opengl.GL11.*;
+import io.github.achtern.AchternEngine.core.rendering.texture.InternalFormat;
+import io.github.achtern.AchternEngine.core.rendering.texture.Type;
 
 public abstract class CommonTexturableData implements TexturableData {
 
     @Override
-    public Texture.Type getType() {
-        return Texture.Type.TWO_DIMENSIONAL;
+    public Type getType() {
+        return Type.TWO_DIMENSIONAL;
     }
 
     @Override
-    public int getMinFilter() {
-        return GL_NEAREST;
+    public Filter getMinFilter() {
+        return Filter.NEAREST;
     }
 
     @Override
-    public int getMagFilter() {
-        return GL_NEAREST;
+    public Filter getMagFilter() {
+        return Filter.NEAREST;
     }
 
 
@@ -30,7 +30,7 @@ public abstract class CommonTexturableData implements TexturableData {
     }
 
     @Override
-    public int getInternalFormat() {
-        return GL_RGBA8;
+    public InternalFormat getInternalFormat() {
+        return InternalFormat.RGBA8;
     }
 }

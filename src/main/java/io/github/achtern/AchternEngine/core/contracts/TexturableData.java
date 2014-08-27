@@ -1,8 +1,10 @@
 package io.github.achtern.AchternEngine.core.contracts;
 
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.texture.Filter;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
-import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
+import io.github.achtern.AchternEngine.core.rendering.texture.InternalFormat;
+import io.github.achtern.AchternEngine.core.rendering.texture.Type;
 
 import java.nio.ByteBuffer;
 
@@ -16,19 +18,19 @@ public interface TexturableData {
      * The Texture Type
      * @return Texture Type
      */
-    public Texture.Type getType();
+    public Type getType();
 
     /**
      * MinFilter to use
-     * @return OpenGL int atm.
+     * @return Filter
      */
-    public int getMinFilter();
+    public Filter getMinFilter();
 
     /**
      * MagFilter to use
-     * @return OpenGL int atm.
+     * @return Filter
      */
-    public int getMagFilter();
+    public Filter getMagFilter();
 
     /**
      * Texture Format
@@ -38,9 +40,9 @@ public interface TexturableData {
 
     /**
      * Internal Format
-     * @return OpenGL int atm.
+     * @return InternalFormat
      */
-    public int getInternalFormat();
+    public InternalFormat getInternalFormat();
 
     /**
      * Width & Height

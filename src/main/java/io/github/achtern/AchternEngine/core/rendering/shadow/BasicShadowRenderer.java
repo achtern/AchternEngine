@@ -8,14 +8,13 @@ import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
+import io.github.achtern.AchternEngine.core.rendering.texture.Filter;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
+import io.github.achtern.AchternEngine.core.rendering.texture.InternalFormat;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
-
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT16;
 
 public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
 
@@ -30,8 +29,8 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
         shadowMap = new FrameBuffer(new Dimension(1024, 1024));
         shadowMap.setDepthTarget(new Texture(
                 new Dimension(1024, 1024),
-                GL_NEAREST, GL_NEAREST,
-                GL_DEPTH_COMPONENT16,
+                Filter.NEAREST, Filter.NEAREST,
+                InternalFormat.DEPTH_COMPONENT,
                 Format.DEPTH,
                 false
         ));
