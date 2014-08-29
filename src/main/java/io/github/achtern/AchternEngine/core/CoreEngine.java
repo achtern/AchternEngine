@@ -108,7 +108,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param dimensions The window's dimensions
      */
     protected void createWindow(String title, Dimension dimensions) {
-        window = new Window(dimensions);
+        window = bindingManager.getWindow(dimensions);
         window.create(title);
         this.renderEngine = new BasicRenderEngine(bindingManager);
         LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());

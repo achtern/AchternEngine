@@ -24,7 +24,9 @@
 
 package io.github.achtern.AchternEngine.core.bootstrap;
 
+import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
@@ -33,6 +35,8 @@ import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import java.util.Map;
 
 public interface BindingProvider {
+
+    public Window getWindow(Dimension dimension);
 
     public RenderEngineState getRenderEngineState();
 

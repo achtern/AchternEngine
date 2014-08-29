@@ -24,12 +24,15 @@
 
 package io.github.achtern.AchternEngine.lwjgl.bootstrap;
 
+import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
+import io.github.achtern.AchternEngine.lwjgl.LWJGLWindow;
 import io.github.achtern.AchternEngine.lwjgl.input.LWJGLInput;
 import io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.lwjgl.rendering.state.LWJGLRenderEngineState;
@@ -47,6 +50,11 @@ public class LWJGLProvider implements BindingProvider {
         this.state = new LWJGLRenderEngineState(false);
         this.dataBinder = new LWJGLDataBinder(state);
         this.inputAdapter = new LWJGLInput();
+    }
+
+    @Override
+    public Window getWindow(Dimension dimension) {
+        return new LWJGLWindow(dimension);
     }
 
     @Override

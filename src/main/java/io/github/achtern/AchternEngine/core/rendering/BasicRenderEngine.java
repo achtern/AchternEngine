@@ -81,7 +81,7 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
         // TODO: do not hardcode this filter!
         addPassFilter(new BasicShadowRenderer());
 
-        setRenderTarget(Window.getTarget());
+        setRenderTarget(Window.get());
 
 
         addInteger("diffuse", 0);

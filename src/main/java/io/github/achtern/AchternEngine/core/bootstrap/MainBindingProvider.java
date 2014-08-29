@@ -24,7 +24,9 @@
 
 package io.github.achtern.AchternEngine.core.bootstrap;
 
+import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
@@ -60,6 +62,11 @@ public class MainBindingProvider implements BindingProvider {
         for (DrawStrategyFactory.Common k : getDrawStrategies().keySet()) {
             DrawStrategyFactory.put(k, getDrawStrategies().get(k));
         }
+    }
+
+    @Override
+    public Window getWindow(Dimension dimension) {
+        return binding.getWindow(dimension);
     }
 
     @Override
