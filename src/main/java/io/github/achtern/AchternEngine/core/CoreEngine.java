@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
