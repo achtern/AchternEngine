@@ -93,6 +93,10 @@ public class LWJGLWindow extends Window {
 
     @Override
     public void bindAsRenderTarget(DataBinder binder) {
+        if (binder.getState().getBoundFbo() == null) {
+            // Window is already bound.
+            return;
+        }
         binder.bindAsRenderTarget(null);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDrawBuffer(drawBuffer);
