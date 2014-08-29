@@ -263,6 +263,12 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bindAsRenderTarget(FrameBuffer fbo) {
+        if (fbo == null) {
+            state.setBound((FrameBuffer) null);
+            glDrawBuffer(GL_NONE);
+            glReadBuffer(GL_NONE);
+            return;
+        }
         if (state.getBoundFbo() != null && state.getBoundFbo().getID() == fbo.getID()) {
             return;
         }

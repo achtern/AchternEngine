@@ -49,7 +49,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
 
     protected DepthFunction depthFunction = DepthFunction.LESS;
 
-    protected CullFace cullFace = CullFace.BACK;
+    protected Face cullFace = Face.BACK;
 
     protected Color clearColor = Color.BLACK;
 
@@ -61,6 +61,8 @@ public class LWJGLRenderEngineState implements RenderEngineState {
         BlendFunction.ONE,
         BlendFunction.ZERO
     };
+
+    protected FillMode polygonMode;
 
     protected FrameBuffer boundFbo;
 
@@ -148,7 +150,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     }
 
     @Override
-    public void cullFace(CullFace face) {
+    public void cullFace(Face face) {
         if (!isEnabled(Feature.CULL_FACE)) {
             throw new IllegalStateException("Cull Face is not enabled!");
         }
@@ -166,7 +168,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     }
 
     @Override
-    public CullFace getCullFace() {
+    public Face getCullFace() {
         if (!isEnabled(Feature.CULL_FACE)) {
             throw new IllegalStateException("Cull Face is not enabled!");
         }
@@ -273,6 +275,27 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     @Override
     public boolean isDepthWrite() {
         return depthWrite;
+    }
+
+    @Override
+    public void setPolygonMode(FillMode mode) {
+        if (polygonMode.equals(mode)) {
+            if (throwUnchanged) {
+                throw new IllegalStateException("PolygonMode is already " + mode);
+            } else {
+                return;
+            }
+        }
+        /*
+        Only GL_FRONT_AND_BACK is allowed here!
+         */
+        glPolygonMode(GL_FRONT_AND_BACK, getGLEnum(mode));
+        polygonMode = mode;
+    }
+
+    @Override
+    public FillMode getPolygonMode() {
+        return polygonMode;
     }
 
     @Override

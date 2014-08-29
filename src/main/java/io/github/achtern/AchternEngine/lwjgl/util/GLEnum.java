@@ -262,7 +262,7 @@ public class GLEnum {
         }
     }
 
-    public static int getGLEnum(CullFace face) {
+    public static int getGLEnum(Face face) {
         switch (face) {
             case BACK:
                 return GL_BACK;
@@ -271,7 +271,7 @@ public class GLEnum {
             case ALL:
                 return GL_FRONT_AND_BACK;
             default:
-                throw new UnsupportedOperationException("CullFace " + face + " not supported in LWJGLRenderEngine");
+                throw new UnsupportedOperationException("Face " + face + " not supported in LWJGLRenderEngine");
         }
     }
 
@@ -346,6 +346,19 @@ public class GLEnum {
             default:
                 throw new UnsupportedOperationException("BlendFunction "
                         + function + " not supported in LWJGLRenderEngine");
+        }
+    }
+
+    public static int getGLEnum(FillMode mode) {
+        switch (mode) {
+            case POINT:
+                return GL_POINT;
+            case LINE:
+                return GL_LINE;
+            case FILL:
+                return GL_FILL;
+            default:
+                throw new UnsupportedOperationException("FillMode " + mode + " not supported in LWJGLRenderEngine");
         }
     }
 

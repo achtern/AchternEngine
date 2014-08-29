@@ -22,10 +22,23 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.rendering.state;
+package io.github.achtern.AchternEngine.core.rendering.drawing;
 
-public enum CullFace {
-    FRONT,
-    BACK,
-    ALL
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
+import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
+import io.github.achtern.AchternEngine.core.rendering.state.FillMode;
+
+public class WireframeDraw extends SolidDraw {
+
+    @Override
+    public void draw(DataBinder binder, Mesh mesh) {
+
+        FillMode mode = binder.getState().getPolygonMode();
+        binder.getState().setPolygonMode(FillMode.LINE);
+
+        super.draw(binder, mesh);
+
+        binder.getState().setPolygonMode(mode);
+
+    }
 }

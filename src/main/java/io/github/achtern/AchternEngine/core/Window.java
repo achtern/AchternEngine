@@ -101,6 +101,7 @@ public class Window extends Dimension implements RenderTarget {
 
     @Override
     public void bindAsRenderTarget(DataBinder binder) {
+        binder.bindAsRenderTarget(null);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDrawBuffer(drawBuffer);
         glReadBuffer(readBuffer);

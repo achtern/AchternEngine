@@ -47,9 +47,9 @@ public interface RenderEngineState {
 
     public boolean isEnabled(Feature feature);
 
-    public void cullFace(CullFace face);
+    public void cullFace(Face face);
 
-    public CullFace getCullFace();
+    public Face getCullFace();
 
     public void setFrontFace(FrontFaceMethod face);
 
@@ -71,6 +71,9 @@ public interface RenderEngineState {
 
     public boolean isDepthWrite();
 
+    public void setPolygonMode(FillMode mode);
+
+    public FillMode getPolygonMode();
 
     public void setBound(FrameBuffer fbo);
 

@@ -91,7 +91,7 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
         state.setFrontFace(FrontFaceMethod.CLOCKWISE);
         state.enable(Feature.CULL_FACE);
-        state.cullFace(CullFace.BACK);
+        state.cullFace(Face.BACK);
         state.enable(Feature.DEPTH_TEST);
         state.setDepthFunction(DepthFunction.LESS);
 

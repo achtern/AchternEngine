@@ -29,6 +29,7 @@ import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
+import io.github.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
 import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.lwjgl.bootstrap.LWJGLProvider;
 
@@ -55,6 +56,7 @@ public class MainBindingProvider implements BindingProvider {
 
     public void populateDrawStrategyFactory() {
         DrawStrategyFactory.put(DrawStrategyFactory.Common.SOLID, new SolidDraw());
+        DrawStrategyFactory.put(DrawStrategyFactory.Common.WIREFRAME, new WireframeDraw());
         for (DrawStrategyFactory.Common k : getDrawStrategies().keySet()) {
             DrawStrategyFactory.put(k, getDrawStrategies().get(k));
         }

@@ -31,7 +31,6 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.lwjgl.input.LWJGLInput;
-import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.lwjgl.rendering.state.LWJGLRenderEngineState;
 
@@ -67,10 +66,10 @@ public class LWJGLProvider implements BindingProvider {
 
     @Override
     public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies() {
-        final Map<DrawStrategyFactory.Common, DrawStrategy> r = new HashMap<DrawStrategyFactory.Common, DrawStrategy>(2);
-
-        r.put(DrawStrategyFactory.Common.WIREFRAME, new LWJGLWireframeDraw());
-
-        return r;
+        /*
+        We do not have LWJGL specific DrawStrategies,
+        just return an empty map.
+         */
+        return new HashMap<DrawStrategyFactory.Common, DrawStrategy>(0);
     }
 }
