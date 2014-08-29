@@ -22,9 +22,20 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core.scenegraph;
 
-import java.util.Comparator;
+/**
+ * Classes which implement this interface
+ * indicate that they have to be updated in a specific
+ * interval.
+ */
+public interface Updatable {
 
-public interface RenderPassSorter extends Comparator<RenderPass> {
+    /**
+     * Trigger an update.
+     * Do you regular updating of nodes/entities in here.
+     * @param delta The delta time
+     */
+    public void update(float delta);
+
 }

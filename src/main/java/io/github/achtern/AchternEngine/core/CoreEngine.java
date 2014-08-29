@@ -26,7 +26,6 @@ package io.github.achtern.AchternEngine.core;
 
 import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
 import io.github.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
-import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
@@ -232,7 +231,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#getEngine()
+     * @see EngineHolder#getEngine()
      */
     @Override
     public void setEngine(RenderEngine engine) {
@@ -240,7 +239,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#setEngine(Object)
+     * @see EngineHolder#setEngine(Object)
      */
     @Override
     public RenderEngine getEngine() {

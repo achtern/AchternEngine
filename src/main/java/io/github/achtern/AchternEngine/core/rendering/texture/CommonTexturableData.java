@@ -22,21 +22,39 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core.rendering.texture;
 
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.texture.TexturableData;
+import io.github.achtern.AchternEngine.core.rendering.texture.Filter;
+import io.github.achtern.AchternEngine.core.rendering.texture.Format;
+import io.github.achtern.AchternEngine.core.rendering.texture.InternalFormat;
+import io.github.achtern.AchternEngine.core.rendering.texture.Type;
 
-/**
- * Classes which implement this interface
- * indicate that they do render related things.
- */
-public interface Renderable {
+public abstract class CommonTexturableData implements TexturableData {
 
-    /**
-     * Trigger an render.
-     * Do rendering releated stuff here.
-     * @param renderEngine The active RenderEngine
-     */
-    public void render(RenderEngine renderEngine);
+    @Override
+    public Type getType() {
+        return Type.TWO_DIMENSIONAL;
+    }
 
+    @Override
+    public Filter getMinFilter() {
+        return Filter.NEAREST;
+    }
+
+    @Override
+    public Filter getMagFilter() {
+        return Filter.NEAREST;
+    }
+
+
+    @Override
+    public Format getFormat() {
+        return null;
+    }
+
+    @Override
+    public InternalFormat getInternalFormat() {
+        return InternalFormat.RGBA8;
+    }
 }

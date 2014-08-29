@@ -26,9 +26,6 @@ package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import io.github.achtern.AchternEngine.core.contracts.PassFilter;
-import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;

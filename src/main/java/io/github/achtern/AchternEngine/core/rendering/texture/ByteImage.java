@@ -22,39 +22,49 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts.abstractVersion;
+package io.github.achtern.AchternEngine.core.rendering.texture;
 
-import io.github.achtern.AchternEngine.core.contracts.TexturableData;
-import io.github.achtern.AchternEngine.core.rendering.texture.Filter;
-import io.github.achtern.AchternEngine.core.rendering.texture.Format;
-import io.github.achtern.AchternEngine.core.rendering.texture.InternalFormat;
-import io.github.achtern.AchternEngine.core.rendering.texture.Type;
+import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.texture.CommonTexturableData;
 
-public abstract class CommonTexturableData implements TexturableData {
+import java.nio.ByteBuffer;
 
-    @Override
-    public Type getType() {
-        return Type.TWO_DIMENSIONAL;
+public class ByteImage extends CommonTexturableData {
+
+    protected ByteBuffer data;
+    protected boolean alpha;
+    protected Dimension dimension;
+
+    public ByteImage(ByteBuffer data, boolean alpha, Dimension dimension) {
+        this.data = data;
+        this.alpha = alpha;
+        this.dimension = dimension;
     }
 
     @Override
-    public Filter getMinFilter() {
-        return Filter.NEAREST;
+    public ByteBuffer getData() {
+        return data;
+    }
+
+    public void setData(ByteBuffer data) {
+        this.data = data;
     }
 
     @Override
-    public Filter getMagFilter() {
-        return Filter.NEAREST;
+    public boolean hasAlpha() {
+        return alpha;
     }
 
-
-    @Override
-    public Format getFormat() {
-        return null;
+    public void setAlpha(boolean alpha) {
+        this.alpha = alpha;
     }
 
     @Override
-    public InternalFormat getInternalFormat() {
-        return InternalFormat.RGBA8;
+    public Dimension getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension = dimension;
     }
 }

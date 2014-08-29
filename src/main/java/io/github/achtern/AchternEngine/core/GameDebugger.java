@@ -24,8 +24,7 @@
 
 package io.github.achtern.AchternEngine.core;
 
-import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
-import io.github.achtern.AchternEngine.core.contracts.Updatable;
+import io.github.achtern.AchternEngine.core.scenegraph.Updatable;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.util.KeyTriggerList;

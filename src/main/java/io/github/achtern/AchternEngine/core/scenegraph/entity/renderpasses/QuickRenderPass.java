@@ -26,7 +26,7 @@ package io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
-import io.github.achtern.AchternEngine.core.contracts.RenderPass;
+import io.github.achtern.AchternEngine.core.rendering.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 
 public class QuickRenderPass extends QuickEntity implements RenderPass {

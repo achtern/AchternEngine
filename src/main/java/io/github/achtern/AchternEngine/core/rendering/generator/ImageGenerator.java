@@ -25,10 +25,10 @@
 package io.github.achtern.AchternEngine.core.rendering.generator;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
-import io.github.achtern.AchternEngine.core.rendering.ByteImage;
+import io.github.achtern.AchternEngine.core.rendering.texture.ByteImage;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
-import io.github.achtern.AchternEngine.core.contracts.TexturableData;
+import io.github.achtern.AchternEngine.core.rendering.texture.TexturableData;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 
 import java.awt.*;

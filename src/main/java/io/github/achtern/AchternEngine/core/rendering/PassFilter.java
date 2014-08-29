@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
 /**

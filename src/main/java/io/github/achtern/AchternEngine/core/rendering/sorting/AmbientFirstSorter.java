@@ -24,8 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.rendering.sorting;
 
-import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.contracts.RenderPassSorter;
+import io.github.achtern.AchternEngine.core.rendering.RenderPass;
+import io.github.achtern.AchternEngine.core.rendering.RenderPassSorter;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
 
 /**

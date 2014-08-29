@@ -24,7 +24,7 @@
 
 package io.github.achtern.AchternEngine.core.resource.loader;
 
-import io.github.achtern.AchternEngine.core.contracts.TexturableData;
+import io.github.achtern.AchternEngine.core.rendering.texture.TexturableData;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 
@@ -99,10 +99,10 @@ public class TextureLoader extends BinaryLoader<Texture, TexturableData> {
     }
 
     /**
-     * This method should construct the {@link io.github.achtern.AchternEngine.core.contracts.TexturableData} from a cached
+     * This method should construct the {@link io.github.achtern.AchternEngine.core.rendering.texture.TexturableData} from a cached
      * value provided by the ResourceLoader
      * @param value Cache
-     * @return Object {@link io.github.achtern.AchternEngine.core.contracts.TexturableData}
+     * @return Object {@link io.github.achtern.AchternEngine.core.rendering.texture.TexturableData}
      * @throws Exception
      */
     @Override

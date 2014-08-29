@@ -24,8 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.rendering.shadow;
 
-import io.github.achtern.AchternEngine.core.contracts.RenderPass;
-import io.github.achtern.AchternEngine.core.contracts.abstractVersion.QuickPassFilter;
+import io.github.achtern.AchternEngine.core.rendering.RenderPass;
+import io.github.achtern.AchternEngine.core.rendering.QuickPassFilter;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;

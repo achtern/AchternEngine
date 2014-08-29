@@ -22,20 +22,26 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core;
 
 /**
- * Classes which implement this interface
- * indicate that they have to be updated in a specific
- * interval.
+ * Indicates that a class holdes an engine
+ * In AchternEngine this will be CoreEngine or RenderEngine
+ * in most cases.
+ * @param <T> A Engine to hold
  */
-public interface Updatable {
+public interface EngineHolder<T> {
 
     /**
-     * Trigger an update.
-     * Do you regular updating of nodes/entities in here.
-     * @param delta The delta time
+     * Inject the engine
+     * @param engine The engine to store
      */
-    public void update(float delta);
+    public void setEngine(T engine);
+
+    /**
+     * Retrieves the stored engine
+     * @return The stored engine
+     */
+    public T getEngine();
 
 }

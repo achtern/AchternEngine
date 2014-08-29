@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core.rendering.texture;
 
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.texture.Filter;

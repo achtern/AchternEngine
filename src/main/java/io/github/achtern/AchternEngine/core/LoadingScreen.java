@@ -24,7 +24,7 @@
 
 package io.github.achtern.AchternEngine.core;
 
-import io.github.achtern.AchternEngine.core.contracts.RenderPass;
+import io.github.achtern.AchternEngine.core.rendering.RenderPass;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Color;

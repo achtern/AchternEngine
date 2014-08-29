@@ -24,7 +24,7 @@
 
 package io.github.achtern.AchternEngine.core;
 
-import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.rendering.RenderTarget;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import org.slf4j.Logger;

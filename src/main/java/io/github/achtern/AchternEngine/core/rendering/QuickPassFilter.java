@@ -22,20 +22,27 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
+import io.github.achtern.AchternEngine.core.rendering.PassFilter;
+import io.github.achtern.AchternEngine.core.rendering.RenderPass;
+import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
-/**
- * Indicates that the class can be bound as render target.
- */
-public interface RenderTarget {
+public abstract class QuickPassFilter implements PassFilter {
 
-    /**
-     * Binds the object as render target.
-     * You should avoid to use this method.
-     * @param binder The binder used to set the object
-     */
-    public void bindAsRenderTarget(DataBinder binder);
+    @Override
+    public void init(RenderEngine renderEngine) {
 
+    }
+
+    @Override
+    public void pre(Node node, RenderPass pass, RenderEngine renderEngine) {
+
+    }
+
+    @Override
+    public void post(Node node, RenderPass pass, RenderEngine renderEngine) {
+
+    }
 }

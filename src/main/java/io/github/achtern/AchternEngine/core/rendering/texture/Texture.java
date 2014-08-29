@@ -25,7 +25,6 @@
 package io.github.achtern.AchternEngine.core.rendering.texture;
 
 import io.github.achtern.AchternEngine.core.bootstrap.Native;
-import io.github.achtern.AchternEngine.core.contracts.TexturableData;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
 import org.slf4j.Logger;

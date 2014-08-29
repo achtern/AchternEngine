@@ -26,7 +26,7 @@ package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
 import io.github.achtern.AchternEngine.core.Transform;
-import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
+import io.github.achtern.AchternEngine.core.EngineHolder;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
@@ -141,7 +141,7 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#setEngine(Object)
+     * @see io.github.achtern.AchternEngine.core.EngineHolder#setEngine(Object)
      */
     @Override
     public void setEngine(CoreEngine engine) {
@@ -149,7 +149,7 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#getEngine()
+     * @see io.github.achtern.AchternEngine.core.EngineHolder#getEngine()
      */
     @Override
     public CoreEngine getEngine() {

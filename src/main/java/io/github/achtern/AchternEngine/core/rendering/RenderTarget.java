@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts;
+package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 
 /**
- * A RenderPass is basically a wrapper for a shader.
- * It allows to render the scene with a specific pass.
+ * Indicates that the class can be bound as render target.
  */
-public interface RenderPass {
+public interface RenderTarget {
 
     /**
-     * Returns the shader to get set on draw.
-     * @return the shader
+     * Binds the object as render target.
+     * You should avoid to use this method.
+     * @param binder The binder used to set the object
      */
-    public Shader getShader();
+    public void bindAsRenderTarget(DataBinder binder);
+
 }

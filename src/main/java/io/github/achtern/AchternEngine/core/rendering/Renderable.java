@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.contracts.abstractVersion;
+package io.github.achtern.AchternEngine.core.rendering;
 
-import io.github.achtern.AchternEngine.core.contracts.PassFilter;
-import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
-import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
-public abstract class QuickPassFilter implements PassFilter {
+/**
+ * Classes which implement this interface
+ * indicate that they do render related things.
+ */
+public interface Renderable {
 
-    @Override
-    public void init(RenderEngine renderEngine) {
+    /**
+     * Trigger an render.
+     * Do rendering releated stuff here.
+     * @param renderEngine The active RenderEngine
+     */
+    public void render(RenderEngine renderEngine);
 
-    }
-
-    @Override
-    public void pre(Node node, RenderPass pass, RenderEngine renderEngine) {
-
-    }
-
-    @Override
-    public void post(Node node, RenderPass pass, RenderEngine renderEngine) {
-
-    }
 }

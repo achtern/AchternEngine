@@ -24,9 +24,8 @@
 
 package io.github.achtern.AchternEngine.core;
 
-import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
-import io.github.achtern.AchternEngine.core.contracts.Renderable;
-import io.github.achtern.AchternEngine.core.contracts.Updatable;
+import io.github.achtern.AchternEngine.core.rendering.Renderable;
+import io.github.achtern.AchternEngine.core.scenegraph.Updatable;
 import io.github.achtern.AchternEngine.core.input.InputManager;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
@@ -249,14 +248,14 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#getEngine()
+     * @see EngineHolder#getEngine()
      */
     public CoreEngine getEngine() {
         return engine;
     }
 
     /**
-     * @see io.github.achtern.AchternEngine.core.contracts.EngineHolder#setEngine(Object)
+     * @see EngineHolder#setEngine(Object)
      */
     public void setEngine(CoreEngine engine) {
         this.engine = engine;

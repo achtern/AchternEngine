@@ -247,7 +247,7 @@ public class ResourceLoader {
     /**
      * Loads a image file and converts it into a {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture}.
      * If the same image has been loaded previously the
-     * {@link io.github.achtern.AchternEngine.core.contracts.TexturableData} will be
+     * {@link io.github.achtern.AchternEngine.core.rendering.texture.TexturableData} will be
      * used to create the new {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture} object.
      * @param name The relative path (to various ResourceLocations) of the filename
      * @return A new Texture Object
@@ -260,7 +260,7 @@ public class ResourceLoader {
     /**
      * Loads a image file and converts it into a {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture}.
      * If the same image has been loaded previously the
-     * {@link io.github.achtern.AchternEngine.core.contracts.TexturableData} will be
+     * {@link io.github.achtern.AchternEngine.core.rendering.texture.TexturableData} will be
      * used to create the new {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture} object.
      * The {@link io.github.achtern.AchternEngine.core.rendering.Dimension} can be used to modify the width and height
      * of the Texture. The image will get resized.
@@ -276,7 +276,7 @@ public class ResourceLoader {
     /**
      * Loads a image file and converts it into a {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture}.
      * If the same image has been loaded previously the
-     * {@link io.github.achtern.AchternEngine.core.contracts.TexturableData} will be
+     * {@link io.github.achtern.AchternEngine.core.rendering.texture.TexturableData} will be
      * used to create the new {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture} object.
      * The {@link io.github.achtern.AchternEngine.core.rendering.Dimension} can be used to modify the width and height
      * of the Texture. The image will get resized.

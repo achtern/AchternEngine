@@ -25,7 +25,7 @@
 package io.github.achtern.AchternEngine.core.rendering.framebuffer;
 
 import io.github.achtern.AchternEngine.core.bootstrap.Native;
-import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
+import io.github.achtern.AchternEngine.core.rendering.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
