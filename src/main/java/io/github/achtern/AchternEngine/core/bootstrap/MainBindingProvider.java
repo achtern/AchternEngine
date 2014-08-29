@@ -25,9 +25,10 @@
 package io.github.achtern.AchternEngine.core.bootstrap;
 
 import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
+import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.lwjgl.bootstrap.LWJGLProvider;
 
 import java.util.Map;
@@ -58,8 +59,13 @@ public class MainBindingProvider implements BindingProvider {
     }
 
     @Override
-    public RenderEngine getRenderEngine() {
-        return binding.getRenderEngine();
+    public RenderEngineState getRenderEngineState() {
+        return binding.getRenderEngineState();
+    }
+
+    @Override
+    public DataBinder getDataBinder() {
+        return binding.getDataBinder();
     }
 
     @Override

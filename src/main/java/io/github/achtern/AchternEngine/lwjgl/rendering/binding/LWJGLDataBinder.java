@@ -39,7 +39,6 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
 import io.github.achtern.AchternEngine.core.util.UBuffer;
-import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLRenderEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,6 @@ public class LWJGLDataBinder implements DataBinder {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(DataBinder.class);
 
-    protected LWJGLRenderEngine engine;
     protected LWJGLIDGenerator idGen;
     protected LWJGLUniformManager uniformManager;
 
@@ -69,8 +67,7 @@ public class LWJGLDataBinder implements DataBinder {
      */
     private IntBuffer intBuffer = UBuffer.createIntBuffer(16);
 
-    public LWJGLDataBinder(LWJGLRenderEngine engine) {
-        this.engine = engine;
+    public LWJGLDataBinder() {
         this.idGen = new LWJGLIDGenerator();
         this.uniformManager = new LWJGLUniformManager();
     }

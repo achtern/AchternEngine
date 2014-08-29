@@ -117,15 +117,15 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     }
 
     public void enable() {
-        prevClearColor = getEngine().getRenderEngine().getClearColor();
-        getEngine().getRenderEngine().setClearColor(new Color(0, 0.3f, 0, 1));
+        prevClearColor = getEngine().getRenderEngine().getState().getClearColor();
+        getEngine().getRenderEngine().getState().setClearColor(new Color(0, 0.3f, 0, 1));
         for (DebugStateListener l : hooks) {
             l.changed(true);
         }
     }
 
     public void disable() {
-        getEngine().getRenderEngine().setClearColor(prevClearColor);
+        getEngine().getRenderEngine().getState().setClearColor(prevClearColor);
         for (DebugStateListener l : hooks) {
             l.changed(false);
         }

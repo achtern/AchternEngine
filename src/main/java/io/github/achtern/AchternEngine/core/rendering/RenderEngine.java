@@ -29,6 +29,7 @@ import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
+import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.util.DataStore;
@@ -39,7 +40,7 @@ public interface RenderEngine extends DataStore {
 
     public void render(Node node, boolean clear);
 
-    public void clear(boolean color, boolean depth, boolean stencil);
+    public RenderEngineState getState();
 
     public void setRenderTarget(RenderTarget target);
 
@@ -58,15 +59,11 @@ public interface RenderEngine extends DataStore {
      */
     public void setActiveRenderPass(RenderPass active);
 
-    public void setClearColor(Color color);
-
     public String getOpenGLVersion();
 
     public Camera getMainCamera();
 
     public void setMainCamera(Camera mainCamera);
-
-    public Color getClearColor();
 
     public DrawStrategy getDrawStrategy();
 

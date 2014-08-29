@@ -22,20 +22,19 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.lwjgl.rendering;
+package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.Window;
+import io.github.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import io.github.achtern.AchternEngine.core.contracts.PassFilter;
 import io.github.achtern.AchternEngine.core.contracts.RenderPass;
 import io.github.achtern.AchternEngine.core.contracts.RenderTarget;
-import io.github.achtern.AchternEngine.core.rendering.Color;
-import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.shadow.BasicShadowRenderer;
 import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter;
+import io.github.achtern.AchternEngine.core.rendering.state.*;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
@@ -47,16 +46,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
-
-public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
+public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
     protected Camera mainCamera;
 
-    protected LWJGLDataBinder dataBinder;
+    protected DataBinder dataBinder;
+
+    protected RenderEngineState state;
 
     protected ArrayList<RenderPass> passes;
     protected RenderPass activePass;
@@ -69,9 +67,10 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
 
     protected List<PassFilter> passFilters;
 
-    public LWJGLRenderEngine() {
+    public BasicRenderEngine(BindingProvider provider) {
 
-        dataBinder = new LWJGLDataBinder(this);
+        dataBinder = provider.getDataBinder();
+        state = provider.getRenderEngineState();
 
         drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
         clearColor = new Color(0, 0, 0, 0);
@@ -88,17 +87,17 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         addInteger("diffuse", 0);
         addInteger("shadowMap", 1);
 
-        setClearColor(clearColor);
+        state.setClearColor(clearColor);
 
-        glFrontFace(GL_CW);
-        glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        state.setFrontFace(FrontFaceMethod.CLOCKWISE);
+        state.enable(Feature.CULL_FACE);
+        state.cullFace(CullFace.BACK);
+        state.enable(Feature.DEPTH_TEST);
+        state.setDepthFunction(DepthFunction.LESS);
 
-        glEnable(GL_DEPTH_CLAMP);
+        state.enable(Feature.DEPTH_CLAMP);
 
-        useTextures(true);
+        state.enable(Feature.TEXTURE_2D);
     }
 
     @Override
@@ -114,7 +113,7 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
         }
 
         if (clear) {
-            clear(true, true, false);
+            state.clear(true, true, false);
         }
 
         if (passes.isEmpty()) {
@@ -154,10 +153,10 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
             }
 
 
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE);
-            glDepthMask(false);
-            glDepthFunc(GL_EQUAL);
+            state.enable(Feature.BLEND);
+            state.setBlendFunction(BlendFunction.ONE, BlendFunction.ONE);
+            state.enableDepthWrite(false);
+            state.setDepthFunction(DepthFunction.EQUAL);
             {
 
                 LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
@@ -168,36 +167,16 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
                     filter.post(node, pass, this);
                 }
             }
-            glDepthFunc(GL_LESS);
-            glDepthMask(true);
-            glDisable(GL_BLEND);
+            state.setDepthFunction(DepthFunction.LESS);
+            state.enableDepthWrite(true);
+            state.disable(Feature.BLEND);
         }
 
     }
 
     @Override
-    public void clear(boolean color, boolean depth, boolean stencil) {
-        if (!color && !depth && !stencil) {
-            // Do not clear anything?? weired.
-            throw new IllegalArgumentException("At least one target has to be cleared" +
-                    ", otherwise do not call clear()");
-        }
-
-        int mask = 0;
-
-        if (color) {
-            mask = GL_COLOR_BUFFER_BIT;
-        }
-
-        if (depth) {
-            mask |= GL_DEPTH_BUFFER_BIT;
-        }
-
-        if (stencil) {
-            mask |= GL_STENCIL_BUFFER_BIT;
-        }
-
-        glClear(mask);
+    public RenderEngineState getState() {
+        return state;
     }
 
     public void setRenderTarget(RenderTarget target) {
@@ -243,26 +222,8 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     }
 
     @Override
-    public void setClearColor(Color color) {
-        this.clearColor = color;
-        glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-
-    private static void useTextures(boolean enabled) {
-        if (enabled) {
-            glEnable(GL_TEXTURE_2D);
-        } else {
-            glDisable(GL_TEXTURE_2D);
-        }
-    }
-
-    private static void unbindTextures() {
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
-    @Override
     public String getOpenGLVersion() {
-        return glGetString(GL_VERSION);
+        return state.getVersion();
     }
 
     @Override
@@ -306,11 +267,6 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     }
 
     @Override
-    public Color getClearColor() {
-        return clearColor;
-    }
-
-    @Override
     public DrawStrategy getDrawStrategy() {
         return drawStrategy;
     }
@@ -319,4 +275,5 @@ public class LWJGLRenderEngine extends CommonDataStore implements RenderEngine {
     public void setDrawStrategy(DrawStrategy drawStrategy) {
         this.drawStrategy = drawStrategy;
     }
+
 }

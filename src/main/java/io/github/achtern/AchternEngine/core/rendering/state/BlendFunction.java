@@ -22,24 +22,24 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.bootstrap;
+package io.github.achtern.AchternEngine.core.rendering.state;
 
-import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
-import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
+public enum BlendFunction {
 
-import java.util.Map;
-
-public interface BindingProvider {
-
-    public RenderEngineState getRenderEngineState();
-
-    public DataBinder getDataBinder();
-
-    public InputAdapter getInputAdapter();
-
-    public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies();
+    ZERO,
+    ONE,
+    SRC_COLOR,
+    ONE_MINUS_SRC_COLOR,
+    DST_COLOR,
+    ONE_MINUS_DST_COLOR,
+    SRC_ALPHA,
+    ONE_MINUS_SRC_ALPHA,
+    DST_ALPHA,
+    ONE_MINUS_DST_ALPHA,
+    CONSTANT_COLOR,
+    ONE_MINUS_CONSTANT_COLOR,
+    CONSTANT_ALPHA,
+    ONE_MINUS_CONSTANT_ALPHA,
+    SRC_ALPHA_SATURATE
 
 }

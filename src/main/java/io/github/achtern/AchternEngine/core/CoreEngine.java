@@ -27,6 +27,7 @@ package io.github.achtern.AchternEngine.core;
 import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
 import io.github.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
 import io.github.achtern.AchternEngine.core.contracts.EngineHolder;
+import io.github.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.util.FPS;
@@ -109,7 +110,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     protected void createWindow(String title, Dimension dimensions) {
         window = new Window(dimensions);
         window.create(title);
-        this.renderEngine = bindingManager.getRenderEngine();
+        this.renderEngine = new BasicRenderEngine(bindingManager);
         LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());
     }
 

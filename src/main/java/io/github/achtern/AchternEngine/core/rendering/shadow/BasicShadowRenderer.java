@@ -80,7 +80,7 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
 
                 renderEngine.getDataBinder().bindAsRenderTarget(shadowMap);
 
-                renderEngine.clear(false, true, false);
+                renderEngine.getState().clear(false, true, false);
 
                 camera.setProjection(shadowInfo.getMatrix());
 

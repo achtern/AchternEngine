@@ -22,24 +22,9 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.bootstrap;
+package io.github.achtern.AchternEngine.core.rendering.state;
 
-import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
-import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
-
-import java.util.Map;
-
-public interface BindingProvider {
-
-    public RenderEngineState getRenderEngineState();
-
-    public DataBinder getDataBinder();
-
-    public InputAdapter getInputAdapter();
-
-    public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies();
-
+public enum FrontFaceMethod {
+    CLOCKWISE,
+    COUNTER_CLOCKWISE
 }
