@@ -24,14 +24,16 @@
 
 package io.github.achtern.AchternEngine.core.rendering.shadow;
 
-import io.github.achtern.AchternEngine.core.rendering.RenderPass;
-import io.github.achtern.AchternEngine.core.rendering.QuickPassFilter;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.rendering.QuickPassFilter;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.shader.ShadowGenerator;
+import io.github.achtern.AchternEngine.core.rendering.state.Face;
+import io.github.achtern.AchternEngine.core.rendering.state.Feature;
 import io.github.achtern.AchternEngine.core.rendering.texture.Filter;
 import io.github.achtern.AchternEngine.core.rendering.texture.Format;
 import io.github.achtern.AchternEngine.core.rendering.texture.InternalFormat;
@@ -95,16 +97,26 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
 
                 renderEngine.addMatrix("shadowMatrix", bias.mul(camera.getViewProjection()));
 
-                // Store a copy of the main camera/renderpass
+                // Store a copy of the main camera/renderpass/cullface
                 Camera mainC = renderEngine.getMainCamera();
                 RenderPass mainRP = renderEngine.getActiveRenderPass();
-                {
-                    renderEngine.setMainCamera(camera);
-                    renderEngine.setActiveRenderPass(this);
-                    renderEngine.getDataBinder().bind(ShadowGenerator.getInstance());
-                    node.render(renderEngine);
+
+                Face cullFace = null;
+                if (renderEngine.getState().isEnabled(Feature.CULL_FACE)) {
+                    cullFace = renderEngine.getState().getCullFace();
+                    renderEngine.getState().cullFace(Face.FRONT);
                 }
+
+
+                renderEngine.setMainCamera(camera);
+                renderEngine.setActiveRenderPass(this);
+                renderEngine.getDataBinder().bind(ShadowGenerator.getInstance());
+                node.render(renderEngine);
+
                 // Reset it
+                if (cullFace != null) {
+                    renderEngine.getState().cullFace(cullFace);
+                }
                 renderEngine.setMainCamera(mainC);
                 renderEngine.setActiveRenderPass(mainRP);
 
