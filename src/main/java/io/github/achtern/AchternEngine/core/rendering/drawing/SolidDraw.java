@@ -22,13 +22,12 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.lwjgl.rendering;
+package io.github.achtern.AchternEngine.core.rendering.drawing;
 
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 
-public class LWJGLSolidDraw implements DrawStrategy {
+public class SolidDraw implements DrawStrategy {
 
     @Override
     public void draw(DataBinder binder, Mesh mesh) {

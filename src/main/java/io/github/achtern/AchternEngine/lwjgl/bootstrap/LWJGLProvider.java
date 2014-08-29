@@ -31,7 +31,6 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.lwjgl.input.LWJGLInput;
-import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLSolidDraw;
 import io.github.achtern.AchternEngine.lwjgl.rendering.LWJGLWireframeDraw;
 import io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder;
 import io.github.achtern.AchternEngine.lwjgl.rendering.state.LWJGLRenderEngineState;
@@ -41,26 +40,35 @@ import java.util.Map;
 
 public class LWJGLProvider implements BindingProvider {
 
+    protected LWJGLRenderEngineState state;
+    protected LWJGLDataBinder dataBinder;
+    protected LWJGLInput inputAdapter;
+
+    public LWJGLProvider() {
+        this.state = new LWJGLRenderEngineState(false);
+        this.dataBinder = new LWJGLDataBinder(state);
+        this.inputAdapter = new LWJGLInput();
+    }
+
     @Override
     public RenderEngineState getRenderEngineState() {
-        return new LWJGLRenderEngineState(false);
+        return state;
     }
 
     @Override
     public DataBinder getDataBinder() {
-        return new LWJGLDataBinder();
+        return dataBinder;
     }
 
     @Override
     public InputAdapter getInputAdapter() {
-        return new LWJGLInput();
+        return inputAdapter;
     }
 
     @Override
     public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies() {
         final Map<DrawStrategyFactory.Common, DrawStrategy> r = new HashMap<DrawStrategyFactory.Common, DrawStrategy>(2);
 
-        r.put(DrawStrategyFactory.Common.SOLID, new LWJGLSolidDraw());
         r.put(DrawStrategyFactory.Common.WIREFRAME, new LWJGLWireframeDraw());
 
         return r;

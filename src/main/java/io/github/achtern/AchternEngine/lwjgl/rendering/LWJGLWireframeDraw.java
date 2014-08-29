@@ -25,11 +25,12 @@
 package io.github.achtern.AchternEngine.lwjgl.rendering;
 
 import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
+import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class LWJGLWireframeDraw extends LWJGLSolidDraw {
+public class LWJGLWireframeDraw extends SolidDraw {
 
     @Override
     public void draw(DataBinder binder, Mesh mesh) {

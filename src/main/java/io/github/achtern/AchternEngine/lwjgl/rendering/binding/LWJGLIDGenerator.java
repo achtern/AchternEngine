@@ -33,7 +33,7 @@ import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 
-import static io.github.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder.getGLEnum;
+import static io.github.achtern.AchternEngine.lwjgl.util.GLEnum.getGLEnum;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glCreateProgram;

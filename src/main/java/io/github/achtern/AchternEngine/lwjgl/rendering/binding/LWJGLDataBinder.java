@@ -34,7 +34,8 @@ import io.github.achtern.AchternEngine.core.rendering.framebuffer.RenderBuffer;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
-import io.github.achtern.AchternEngine.core.rendering.texture.*;
+import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
+import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Variable;
@@ -46,14 +47,14 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static io.github.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
+import static io.github.achtern.AchternEngine.lwjgl.util.GLEnum.getGLEnum;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class LWJGLDataBinder implements DataBinder {
 
@@ -61,13 +62,15 @@ public class LWJGLDataBinder implements DataBinder {
 
     protected LWJGLIDGenerator idGen;
     protected LWJGLUniformManager uniformManager;
+    protected RenderEngineState state;
 
     /**
      * An IntBuffer with a size of 16.
      */
     private IntBuffer intBuffer = UBuffer.createIntBuffer(16);
 
-    public LWJGLDataBinder() {
+    public LWJGLDataBinder(RenderEngineState state) {
+        this.state = state;
         this.idGen = new LWJGLIDGenerator();
         this.uniformManager = new LWJGLUniformManager();
     }
@@ -88,8 +91,12 @@ public class LWJGLDataBinder implements DataBinder {
             upload(texture);
         }
 
+        if (state.getBoundTexture() != null && state.getBoundTexture().getID() == texture.getID()) {
+            return;
+        }
         glActiveTexture(GL_TEXTURE0 + samplerslot);
         glBindTexture(getGLEnum(texture.getType()), texture.getID());
+        state.setBound(texture);
     }
 
     @Override
@@ -123,7 +130,16 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bind(Mesh mesh) {
-        glBindVertexArray(mesh.getData().getID());
+        if (mesh == null) {
+            glBindVertexArray(0);
+        } else {
+            int id = mesh.getData().getID();
+            if (state.getBoundMesh() != null && state.getBoundMesh().getData().getID() == id) {
+                return;
+            }
+            glBindVertexArray(id);
+        }
+        state.setBound(mesh);
     }
 
     @Override
@@ -135,7 +151,7 @@ public class LWJGLDataBinder implements DataBinder {
 
         getIDGenerator().generate(mesh);
 
-        glBindVertexArray(data.getID());
+        bind(mesh);
 
         glBindBuffer(GL_ARRAY_BUFFER, data.getVbo());
 
@@ -159,7 +175,7 @@ public class LWJGLDataBinder implements DataBinder {
         glEnableVertexAttribArray(2);
 
         // Unbind
-        glBindVertexArray(0);
+        bind((Mesh) null);
 
     }
 
@@ -177,7 +193,11 @@ public class LWJGLDataBinder implements DataBinder {
         if (shader.getProgram().getID() == INVALID_ID) {
             upload(shader);
         }
+        if (state.getBoundShader() != null && state.getBoundShader().getProgram().getID() == shader.getProgram().getID()) {
+            return;
+        }
         glUseProgram(shader.getProgram().getID());
+        state.setBound(shader);
     }
 
     @Override
@@ -243,6 +263,10 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bindAsRenderTarget(FrameBuffer fbo) {
+        if (state.getBoundFbo() != null && state.getBoundFbo().getID() == fbo.getID()) {
+            return;
+        }
+
         if (fbo.getID() == INVALID_ID) {
             upload(fbo);
         }
@@ -287,8 +311,12 @@ public class LWJGLDataBinder implements DataBinder {
 
     @Override
     public void bind(FrameBuffer fbo) {
+        if (state.getBoundFbo() != null && state.getBoundFbo().getID() == fbo.getID()) {
+            return;
+        }
         glBindFramebuffer(GL_FRAMEBUFFER, fbo.getID());
         glViewport(0, 0, fbo.getWidth(), fbo.getHeight());
+        state.setBound(fbo);
     }
 
     @Override
@@ -324,6 +352,11 @@ public class LWJGLDataBinder implements DataBinder {
     @Override
     public UniformManager getUniformManager() {
         return uniformManager;
+    }
+
+    @Override
+    public RenderEngineState getState() {
+        return state;
     }
 
     protected void fboUploadRenderBufferSetup(FrameBuffer fbo, RenderBuffer rbo, int iFormat, int attachment) {
@@ -376,91 +409,6 @@ public class LWJGLDataBinder implements DataBinder {
                 throw new FrameBufferException("Incomplete ReadBuffer setup");
             default:
                 throw new UnsupportedOperationException("Unknown FBO status Code " + status);
-        }
-    }
-
-    protected static int getGLEnum(Filter minFilter) {
-        switch (minFilter) {
-            case NEAREST:
-                return GL_NEAREST;
-            case LINEAR:
-                return GL_LINEAR;
-            default:
-                throw new UnsupportedOperationException("Filter " + minFilter + "is not supported in this LWJGL Binding");
-        }
-    }
-
-    protected static int getGLEnum(Type type) {
-        switch (type) {
-            case ONE_DIMENSIONAL:
-                return GL_TEXTURE_1D;
-            case TWO_DIMENSIONAL:
-                return GL_TEXTURE_2D;
-            case THREE_DIMENSIONAL:
-                return GL_TEXTURE_3D;
-            case CUBE_MAP:
-                return GL_TEXTURE_CUBE_MAP;
-            default:
-                // TODO: implement the other types
-                throw new UnsupportedOperationException("Texture type " + type + " not supported by LWJGL!");
-        }
-    }
-
-    protected static int getGLEnum(Format format) {
-        switch (format) {
-            case RGBA:
-                return GL_RGBA;
-            case RGB:
-                return GL_RGB;
-            case DEPTH:
-                return GL_DEPTH_COMPONENT;
-
-            default:
-                throw new UnsupportedOperationException("Format " + format + "not supported");
-        }
-    }
-
-    protected static int getGLEnum(InternalFormat format) {
-        switch (format) {
-            case RGBA8:
-                return GL_RGBA8;
-            case DEPTH_COMPONENT:
-                return GL_DEPTH_COMPONENT;
-            case DEPTH_COMPONENT16:
-                return GL_DEPTH_COMPONENT16;
-            case DEPTH_COMPONENT24:
-                return GL_DEPTH_COMPONENT24;
-            case DEPTH_COMPONENT32:
-                return GL_DEPTH_COMPONENT32;
-
-            default:
-                throw new UnsupportedOperationException("Format " + format + "not supported");
-        }
-    }
-
-    protected static int getGLEnum(GLSLScript.Type type) {
-        switch (type) {
-            case VERTEX_SHADER:
-                return GL_VERTEX_SHADER;
-            case FRAGMENT_SHADER:
-                return GL_FRAGMENT_SHADER;
-            case GEOMETRY_SHADER:
-                return GL_GEOMETRY_SHADER;
-            default:
-                throw new UnsupportedOperationException("Shader type not supported.");
-        }
-    }
-
-    protected static int getGLEnum(MeshData.Mode mode) {
-        switch (mode) {
-            case TRIANGLES:
-                return GL_TRIANGLES;
-            case LINES:
-                return GL_LINES;
-            case LINE_LOOP:
-                return GL_LINE_LOOP;
-            default:
-                throw new UnsupportedOperationException("Mode not supported by LWJGL!");
         }
     }
 }

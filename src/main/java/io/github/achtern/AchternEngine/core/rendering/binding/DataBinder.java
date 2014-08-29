@@ -27,6 +27,7 @@ package io.github.achtern.AchternEngine.core.rendering.binding;
 import io.github.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 
 public interface DataBinder {
@@ -56,5 +57,7 @@ public interface DataBinder {
     public IDGenerator getIDGenerator();
 
     public UniformManager getUniformManager();
+
+    public RenderEngineState getState();
 
 }
