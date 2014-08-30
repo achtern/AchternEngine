@@ -35,6 +35,32 @@
     <version>0.3-SNAPSHOT</version>
     <url>http://achtern.github.io</url>
 
+    <description>
+        AchternEngine is a 3D graphics engine built on top of OpenGL.
+    </description>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Christian Gärtner</name>
+            <email>chrisdagardner@gmail.com</email>
+            <organization>Achtern</organization>
+            <organizationUrl>http://achtern.github.io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:achtern/AchternEngine.git</connection>
+        <developerConnection>scm:git:git@github.com:achtern/AchternEngine.git</developerConnection>
+        <url>git@github.com:achtern/AchternEngine.git</url>
+    </scm>
+
     <properties>
         <main.class>io.github.achtern.AchternEngine.core.CoreEngine</main.class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
