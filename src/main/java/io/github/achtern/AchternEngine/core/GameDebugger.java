@@ -88,8 +88,8 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
         if (event.getKey().equals(Key.Z)) {
             if (!getGame().isDebug()) return;
             Class<? extends DrawStrategy> current = getEngine().getRenderEngine().getDrawStrategy().getClass();
-            Class<? extends DrawStrategy> wireframe = DrawStrategyFactory.get(DrawStrategyFactory.Common.WIREFRAME).getClass();
-            if (current.isAssignableFrom(wireframe)) {
+            Class<? extends DrawStrategy> wireframe = wD.getClass();
+            if (current.equals(wireframe)) {
                 getEngine().getRenderEngine().setDrawStrategy(sD);
             } else {
                 getEngine().getRenderEngine().setDrawStrategy(wD);
