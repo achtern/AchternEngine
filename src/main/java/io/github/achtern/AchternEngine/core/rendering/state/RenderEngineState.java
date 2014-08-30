@@ -75,6 +75,10 @@ public interface RenderEngineState {
 
     public FillMode getPolygonMode();
 
+    public void setColorWrite(boolean r, boolean g, boolean b, boolean a);
+
+    public boolean[] isColorWrite();
+
     public void setBound(FrameBuffer fbo);
 
     public FrameBuffer getBoundFbo();

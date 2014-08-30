@@ -32,6 +32,7 @@ import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.rendering.state.*;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +64,8 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     };
 
     protected FillMode polygonMode;
+
+    protected boolean[] colorMask = new boolean[] {true, true, true, true};
 
     protected FrameBuffer boundFbo;
 
@@ -296,6 +299,26 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     @Override
     public FillMode getPolygonMode() {
         return polygonMode;
+    }
+
+    @Override
+    public void setColorWrite(boolean r, boolean g, boolean b, boolean a) {
+        boolean[] updated = new boolean[] {r,g,b,a};
+        if (Arrays.equals(updated, colorMask)) {
+            if (throwUnchanged) {
+                throw new IllegalStateException("ColorWrite (Mask) already <" + r + g + b + a + ">!");
+            } else {
+                return;
+            }
+        }
+        glColorMask(r, g, b, a);
+        this.colorMask = updated;
+
+    }
+
+    @Override
+    public boolean[] isColorWrite() {
+        return colorMask;
     }
 
     @Override
