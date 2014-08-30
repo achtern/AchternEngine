@@ -117,4 +117,19 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
         this.mouselock = lock;
     }
 
+    public float getSensitivity() {
+        return sensitivity;
+    }
+
+    public void setSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
+    public Key getUnlockKey() {
+        return unlockKey;
+    }
+
+    public void setUnlockKey(Key unlockKey) {
+        this.unlockKey = unlockKey;
+    }
 }
