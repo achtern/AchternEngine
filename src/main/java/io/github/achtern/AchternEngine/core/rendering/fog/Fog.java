@@ -29,7 +29,10 @@ import io.github.achtern.AchternEngine.core.rendering.Color;
 
 public class Fog {
 
+    public static final Fog DISABLED = new Fog(null, 0, Mode.DISABLED);
+
     public enum Mode {
+        DISABLED(-1),
         LINEAR(0),
         EXP(1),
         EXP2(2);

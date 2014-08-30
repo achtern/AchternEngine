@@ -34,14 +34,13 @@ import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter
 import io.github.achtern.AchternEngine.core.rendering.state.*;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.GlobalEntity;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
 import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
@@ -55,6 +54,8 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     protected ArrayList<RenderPass> passes;
     protected RenderPass activePass;
+
+    protected Map<Class, GlobalEntity> globalEntities;
 
     protected RenderTarget target;
 
@@ -74,6 +75,8 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
         passes = new ArrayList<RenderPass>();
         passFilters = new ArrayList<PassFilter>();
+
+        globalEntities = new HashMap<Class, GlobalEntity>();
 
         // TODO: do not hardcode this filter!
         addPassFilter(new BasicShadowRenderer());
@@ -256,6 +259,29 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
     @Override
     public boolean removePassFilter(PassFilter filter) {
         return passFilters.remove(filter);
+    }
+
+    @Override
+    public void addGlobal(GlobalEntity entity) {
+        this.globalEntities.put(entity.getObject().getClass(), entity);
+    }
+
+    @Override
+    public void removeGlobal(GlobalEntity entity) {
+        this.globalEntities.remove(entity.getObject().getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> GlobalEntity<T> getGlobal(Class<? extends T> type) {
+        GlobalEntity g = this.globalEntities.get(type);
+        if (g == null) return null;
+
+        if (g.getObject().getClass().isAssignableFrom(type)) {
+            return (GlobalEntity<T>) g;
+        } else {
+            return null;
+        }
     }
 
     @Override

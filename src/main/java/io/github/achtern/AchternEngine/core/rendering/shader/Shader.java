@@ -26,13 +26,13 @@ package io.github.achtern.AchternEngine.core.rendering.shader;
 
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
-import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.fog.Fog;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.GlobalEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,8 +91,14 @@ public abstract class Shader {
                 u.setValue(renderEngine.getActiveRenderPass());
 
             } else if (u.getType().equalsIgnoreCase("Fog")) {
-                // TMP!! TODO: remove
-                u.setValue(new Fog(new Color(0.7f, 0.7f, 0.7f), 0.04f));
+
+                GlobalEntity<Fog> gE = renderEngine.getGlobal(Fog.class);
+                if (gE != null) {
+                    u.setValue(gE.getObject());
+                } else {
+                    // use disabled fog
+                    u.setValue(Fog.DISABLED);
+                }
 
                 // other stuff below
                 // currently supporting

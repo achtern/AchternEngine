@@ -29,6 +29,7 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.GlobalEntity;
 import io.github.achtern.AchternEngine.core.util.DataStore;
 
 public interface RenderEngine extends DataStore {
@@ -78,4 +79,10 @@ public interface RenderEngine extends DataStore {
      * @return Whether the remove was successful.
      */
     public boolean removePassFilter(PassFilter filter);
+
+    public void addGlobal(GlobalEntity entity);
+
+    public void removeGlobal(GlobalEntity entity);
+
+    public <T> GlobalEntity<T> getGlobal(Class<? extends T> type);
 }

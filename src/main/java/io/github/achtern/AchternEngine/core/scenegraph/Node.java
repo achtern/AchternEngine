@@ -25,10 +25,10 @@
 package io.github.achtern.AchternEngine.core.scenegraph;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
-import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.EngineHolder;
-import io.github.achtern.AchternEngine.core.rendering.Renderable;
+import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.Renderable;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
 import java.util.ArrayList;

@@ -168,6 +168,11 @@ public class LWJGLUniformManager implements UniformManager {
 
     @Override
     public void setUniform(Shader shader, String name, Fog fog) {
+        setUniform(shader, name + ".mode", fog.getMode().getID());
+        if (fog.getMode().equals(Fog.Mode.DISABLED)) {
+            return;
+        }
+
         setUniform(shader, name + ".color", fog.getColor());
         if (fog.getMode().equals(Fog.Mode.LINEAR)) {
             setUniform(shader, name + ".start", fog.getRange().getX());
@@ -175,7 +180,6 @@ public class LWJGLUniformManager implements UniformManager {
         } else {
             setUniform(shader, name + ".density", fog.getDensity());
         }
-        setUniform(shader, name + ".mode", fog.getMode().getID());
     }
 
     @Override
