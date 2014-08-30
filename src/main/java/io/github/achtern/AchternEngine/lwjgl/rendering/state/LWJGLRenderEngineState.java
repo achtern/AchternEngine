@@ -63,7 +63,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
         BlendFunction.ZERO
     };
 
-    protected FillMode polygonMode;
+    protected FillMode polygonMode = FillMode.FILL;
 
     protected boolean[] colorMask = new boolean[] {true, true, true, true};
 
