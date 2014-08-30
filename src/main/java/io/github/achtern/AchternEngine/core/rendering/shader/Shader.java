@@ -26,8 +26,10 @@ package io.github.achtern.AchternEngine.core.rendering.shader;
 
 import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
+import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
+import io.github.achtern.AchternEngine.core.rendering.fog.Fog;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
@@ -88,6 +90,9 @@ public abstract class Shader {
             {
                 u.setValue(renderEngine.getActiveRenderPass());
 
+            } else if (u.getType().equalsIgnoreCase("Fog")) {
+                // TMP!! TODO: remove
+                u.setValue(new Fog(new Color(0.7f, 0.7f, 0.7f), 0.04f));
 
                 // other stuff below
                 // currently supporting
@@ -100,6 +105,9 @@ public abstract class Shader {
 
             } else if (n.equalsIgnoreCase("model")) {
                 u.setValue(transform.getTransformation());
+
+            } else if (n.equalsIgnoreCase("modelView")) {
+                u.setValue(renderEngine.getMainCamera().getView().mul(transform.getTransformation()));
 
             } else if (n.equalsIgnoreCase("eyePos")) {
                 u.setValue(renderEngine.getMainCamera().getTransform().getTransformedPosition());

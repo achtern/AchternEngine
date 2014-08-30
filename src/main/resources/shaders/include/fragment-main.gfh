@@ -1,4 +1,13 @@
+#import "fog.glib"
+
+uniform Fog fog;
+
 void main()
 {
-    fragColor = color * texture(diffuse, texCoord0.xy) * CalcLightEffect(normalize(normal0), worldPos0);
+    vec4 c = color
+            * texture(diffuse, texCoord0.xy)
+            * CalcLightEffect(normalize(normal0), worldPos0);
+
+    float fogCoord = abs(position0.z/position0.w);
+    fragColor = mix(c, fog.color, getFogFactor(fog, fogCoord));
 }

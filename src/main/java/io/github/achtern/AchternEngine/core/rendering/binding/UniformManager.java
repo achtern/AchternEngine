@@ -29,6 +29,7 @@ import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.math.Vector4f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
+import io.github.achtern.AchternEngine.core.rendering.fog.Fog;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
@@ -58,6 +59,8 @@ public interface UniformManager {
     public void setUniform(Shader shader, String name, float value);
 
     public void setUniform(Shader shader, String name, double value);
+
+    public void setUniform(Shader shader, String name, Fog fog);
 
     public void setUniform(Shader shader, String name, DirectionalLight directionalLight);
 

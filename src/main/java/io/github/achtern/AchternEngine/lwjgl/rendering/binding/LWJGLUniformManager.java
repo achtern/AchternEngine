@@ -30,6 +30,7 @@ import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.math.Vector4f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.binding.UniformManager;
+import io.github.achtern.AchternEngine.core.rendering.fog.Fog;
 import io.github.achtern.AchternEngine.core.rendering.light.Attenuation;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
@@ -112,6 +113,8 @@ public class LWJGLUniformManager implements UniformManager {
             setUniform(shader, uniform.getName(), (BaseLight) uniform.getValue());
         } else if (uniform.getValue() instanceof Attenuation) {
             setUniform(shader, uniform.getName(), (Attenuation) uniform.getValue());
+        } else if (uniform.getValue() instanceof Fog) {
+            setUniform(shader, uniform.getName(), (Fog) uniform.getValue());
         } else {
 
             Uniform.SetStrategy strategy = uniform.getSetStrategy();
@@ -161,6 +164,18 @@ public class LWJGLUniformManager implements UniformManager {
     @Override
     public void setUniform(Shader shader, String name, double value) {
         setUniform(shader, name, (float) value);
+    }
+
+    @Override
+    public void setUniform(Shader shader, String name, Fog fog) {
+        setUniform(shader, name + ".color", fog.getColor());
+        if (fog.getMode().equals(Fog.Mode.LINEAR)) {
+            setUniform(shader, name + ".start", fog.getRange().getX());
+            setUniform(shader, name + ".end", fog.getRange().getY());
+        } else {
+            setUniform(shader, name + ".density", fog.getDensity());
+        }
+        setUniform(shader, name + ".mode", fog.getMode().getID());
     }
 
     @Override

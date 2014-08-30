@@ -1,0 +1,49 @@
+#if !defined(FOG_INCLUDED_GLIB)
+#define FOG_INCLUDED_GLIB
+
+#define FOG_LINEAR 0
+#define FOG_EXP 1
+#define FOG_EXP2 2
+
+struct Fog
+{
+    vec4 color;
+    float start;
+    float end;
+    float density;
+    int mode;
+};
+
+float getFogFactor(Fog fog, float distance)
+{
+    float factor = 0.0;
+
+    if (fog.mode == FOG_LINEAR) {
+        factor = (fog.end - distance) / (fog.end - fog.start);
+    } else if (fog.mode == FOG_EXP) {
+        factor = exp(-fog.density * distance);
+    } else if (fog.mode == FOG_EXP2) {
+        factor = exp(-pow(fog.density * distance, 2.0));
+    }
+
+    return 1.0 - clamp(factor, 0.0, 1.0);
+}
+
+vec4 getFog(Fog fog, float distance)
+{
+    float factor = 0.0;
+
+    if (fog.mode == FOG_LINEAR) {
+        factor = (fog.end - distance) / (fog.end - fog.start);
+    } else if (fog.mode == FOG_EXP) {
+        factor = exp(-fog.density * distance);
+    } else if (fog.mode == FOG_EXP2) {
+        factor = exp(-pow(fog.density * distance, 2.0));
+    }
+
+    factor = 1.0 - clamp(factor, 0.0, 1.0);
+
+    return fog.color * vec4(factor);
+}
+
+#endif

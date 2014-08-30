@@ -77,7 +77,16 @@ public class Camera extends QuickEntity {
         Matrix4f cameraRotMat = getTransform().getTransformedRotation().conjugate().toRotationMatrix();
         Matrix4f cameraTransMat = new Matrix4f().initTranslation(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
 
-        return projection.mul(cameraRotMat.mul(cameraTransMat));
+        return projection.mul(getView());
+    }
+
+    public Matrix4f getView() {
+        Vector3f cameraPosition = getTransform().getTransformedPosition().mul(-1);
+
+        Matrix4f cameraRotMat = getTransform().getTransformedRotation().conjugate().toRotationMatrix();
+        Matrix4f cameraTransMat = new Matrix4f().initTranslation(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
+
+        return cameraRotMat.mul(cameraTransMat);
     }
 
     public void setProjection(Matrix4f projection) {
