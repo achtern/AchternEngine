@@ -30,6 +30,7 @@ import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.Renderable;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
+import io.github.achtern.AchternEngine.core.scenegraph.scanning.SingleEntityRetriever;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +66,11 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * Node's name
      */
     protected String name;
+
+    /**
+     * Used in {@link #getEntity(Class)}
+     */
+    protected SingleEntityRetriever singleEntityRetriever;
 
     /**
      * Create a new Node.
@@ -241,6 +247,26 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
         // to allow the entites to perform tasks on the engine
         // (e.g. remove themself as a render pass
         setEngine(null);
+    }
+
+    /**
+     * Convenience method. It just wraps a {@link io.github.achtern.AchternEngine.core.scenegraph.scanning.SingleEntityRetriever}
+     * and scans this node.
+     * Returns the first {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Entity} if
+     * there were multiple of the given type!
+     * NOTE: This wall ALWAYS scan this whole node.
+     * @param type Class of type of Entity
+     * @param <T> type of Entity
+     * @return Entity | null
+     */
+    public <T extends Entity> T getEntity(Class<T> type) {
+        if (singleEntityRetriever == null) {
+            singleEntityRetriever = new SingleEntityRetriever();
+        }
+
+        singleEntityRetriever.scan(this);
+
+        return singleEntityRetriever.get(type);
     }
 
     @Override
