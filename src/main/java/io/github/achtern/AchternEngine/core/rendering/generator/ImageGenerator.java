@@ -66,18 +66,17 @@ public class ImageGenerator {
         for(int y = 0; y < dimension.getY(); y++) {
             for(int x = 0; x < dimension.getX(); x++) {
 
-                int pixel = color.toInt();
 
-                buffer.put((byte)((pixel) & 0xFF)); // R
-                buffer.put((byte)((pixel >> 8) & 0xFF)); // G
-                buffer.put((byte)((pixel >> 16) & 0xFF)); // B
-                buffer.put((byte)((pixel >> 24) & 0xFF)); // Alpha
+                // Internal Format is RGBA8 by default
+                buffer.put((byte) (color.getRed() * 255));
+                buffer.put((byte) (color.getGreen() * 255));
+                buffer.put((byte) (color.getBlue() * 255));
+                buffer.put((byte) (color.getAlpha() * 255));
 
             }
         }
 
         buffer.flip();
-
 
         return new ByteImage(buffer, true, dimension);
     }
