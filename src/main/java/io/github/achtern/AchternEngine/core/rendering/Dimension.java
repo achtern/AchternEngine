@@ -56,11 +56,11 @@ public class Dimension extends Vector2f {
     }
 
     public void setHeight(int height) {
-        super.setX((int) height);
+        super.setY((int) height);
     }
 
     public void setWidth(int width) {
-        super.setY((int) width);
+        super.setX((int) width);
     }
 
     public int getHeight() {
