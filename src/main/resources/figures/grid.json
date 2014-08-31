@@ -1,0 +1,23 @@
+{
+    "name": "Grid",
+    "Mesh": {
+        "@": "Grid",
+        "args": [50, 50]
+    },
+    "Material": {
+        "Texture": {
+            "diffuse": {
+                "solid": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                }
+            }
+        },
+        "float": {
+            "specularIntensity": 1,
+            "specularPower": 8
+        }
+    }
+}
