@@ -29,8 +29,9 @@ import io.github.achtern.AchternEngine.core.Window;
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
+import io.github.achtern.AchternEngine.core.util.WindowChangeListener;
 
-public class Camera extends QuickEntity {
+public class Camera extends QuickEntity implements WindowChangeListener {
 
     protected float fov;
     protected float aspect;
@@ -102,6 +103,7 @@ public class Camera extends QuickEntity {
         super.setEngine(engine);
         if (engine != null) {
             engine.getRenderEngine().addCamera(this);
+            engine.addWindowChangeListener(this);
         }
     }
 
@@ -112,6 +114,7 @@ public class Camera extends QuickEntity {
     public void removed() {
         super.removed();
         getEngine().getRenderEngine().setMainCamera(null);
+        getEngine().removeWindowChangeListener(this);
     }
 
     public float getFov() {
@@ -155,5 +158,10 @@ public class Camera extends QuickEntity {
             projection = new Matrix4f();
         }
         setProjection(projection.initPerspective((float) Math.toRadians(fov), aspect, zNear, zFar));
+    }
+
+    @Override
+    public void onWindowChange(Window window) {
+        setAspect((float) window.getWidth() / (float) window.getHeight());
     }
 }

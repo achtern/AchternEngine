@@ -30,8 +30,12 @@ import io.github.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.util.FPS;
+import io.github.achtern.AchternEngine.core.util.WindowChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The CoreEngine is the main entry point of the
@@ -52,6 +56,8 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * The Main Render Window
      */
     protected Window window;
+
+    protected List<WindowChangeListener> windowChangeListenerList;
 
     private static boolean stopRequest = false;
 
@@ -99,6 +105,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
         this.fps = new FPS();
         this.bindingManager = binding;
         this.bindingManager.populateDrawStrategyFactory();
+        this.windowChangeListenerList = new ArrayList<WindowChangeListener>();
     }
 
     /**
@@ -199,6 +206,12 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
                 fps.rendered();
             }
 
+            if (window.resized()) {
+                for (WindowChangeListener l : windowChangeListenerList) {
+                    l.onWindowChange(window);
+                }
+            }
+
 
         }
 
@@ -213,6 +226,14 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      */
     public void cleanUp() {
         window.dispose();
+    }
+
+    public void addWindowChangeListener(WindowChangeListener listener) {
+        windowChangeListenerList.add(listener);
+    }
+
+    public void removeWindowChangeListener(WindowChangeListener listener) {
+        windowChangeListenerList.remove(listener);
     }
 
     /**

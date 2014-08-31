@@ -34,12 +34,16 @@ import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glGetInteger;
 import static org.lwjgl.opengl.GL30.*;
 
 public class LWJGLWindow extends Window {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(LWJGLWindow.class);
 
     protected int drawBuffer, readBuffer;
 
@@ -55,7 +59,8 @@ public class LWJGLWindow extends Window {
 
     @Override
     public void create(String title) {
-        Display.setTitle(title);
+        setTitle(title);
+        enableResize(true);
 
         PixelFormat pixelFormat = new PixelFormat();
         ContextAttribs contextAtrributes = new ContextAttribs(3, 2)
@@ -75,6 +80,11 @@ public class LWJGLWindow extends Window {
     }
 
     @Override
+    public void enableResize(boolean enable) {
+        Display.setResizable(true);
+    }
+
+    @Override
     public void render() {
         Display.update();
     }
@@ -82,6 +92,18 @@ public class LWJGLWindow extends Window {
     @Override
     public boolean isCloseRequested() {
         return Display.isCloseRequested();
+    }
+
+    @Override
+    public boolean resized() {
+        boolean rs = Display.wasResized();
+
+        if (rs) {
+            setWidth(Display.getWidth());
+            setHeight(Display.getHeight());
+        }
+
+        return rs;
     }
 
     @Override
@@ -93,7 +115,7 @@ public class LWJGLWindow extends Window {
 
     @Override
     public void bindAsRenderTarget(DataBinder binder) {
-        if (binder.getState().getBoundFbo() == null) {
+        if (binder.getState().getBoundFbo() == null && !resized()) {
             // Window is already bound.
             return;
         }

@@ -54,9 +54,18 @@ public abstract class Window extends Dimension implements RenderTarget {
 
     public abstract void create(String title);
 
+    public abstract void enableResize(boolean enable);
+
     public abstract void render();
 
     public abstract boolean isCloseRequested();
+
+    /**
+     * This should set the width/height of the class
+     * as well!
+     * @return when the Window has been re-sized true
+     */
+    public abstract boolean resized();
 
     public abstract void dispose();
 
