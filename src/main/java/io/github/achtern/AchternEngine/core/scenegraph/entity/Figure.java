@@ -24,7 +24,6 @@
 
 package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
-import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
@@ -100,10 +99,9 @@ public class Figure extends QuickEntity {
     @Override
     public void render(RenderEngine renderEngine) {
 
-        Matrix4f worldMat = getTransform().getTransformation();
-        Matrix4f projection = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
 
-        renderEngine.getActiveRenderPass().getShader().updateUniforms(getTransform(), getMaterial(), renderEngine, projection);
+
+        renderEngine.getActiveRenderPass().getShader().updateUniforms(renderEngine, this);
 
         DrawStrategy ds = getDrawStrategy();
         if (ds == null) {

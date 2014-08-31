@@ -29,9 +29,11 @@ import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.rendering.fog.Fog;
+import io.github.achtern.AchternEngine.core.rendering.mesh.MeshData;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.GlobalEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,15 @@ public abstract class Shader {
         this.program = program;
     }
 
-    public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
+    public void updateUniforms(RenderEngine renderEngine, Figure figure) {
 
+        Material material = figure.getMaterial();
+        Transform transform = figure.getTransform();
+
+        Matrix4f worldMat = transform.getTransformation();
+        Matrix4f projection = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
+
+        // Keeps track of the current SamplerSlot in use.
         int samplerSlot = 0;
 
         for (Uniform u : this.program.getUniforms()) {
@@ -71,7 +80,9 @@ public abstract class Shader {
 
                 } else if (renderEngine.hasTexture(n)) {
                     renderEngine.getDataBinder().bind(renderEngine.getTexture(n), samplerSlot);
-
+                } else if (!figure.getMesh().getData().getMode().equals(MeshData.Mode.TRIANGLES)) {
+                    // we do not need a texture anyway.
+                    u.setShouldSet(false);
                 } else {
                     LOGGER.warn("{}: texture '{}' not found in material nor RenderEngine.",
                             this.getClass().getSimpleName(), n);
