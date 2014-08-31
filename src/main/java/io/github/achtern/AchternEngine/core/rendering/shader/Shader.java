@@ -56,6 +56,8 @@ public abstract class Shader {
 
     public void updateUniforms(Transform transform, Material material, RenderEngine renderEngine, Matrix4f projection) {
 
+        int samplerSlot = 0;
+
         for (Uniform u : this.program.getUniforms()) {
             String n = u.getName(); // Just a quick access to the name!
 
@@ -65,22 +67,23 @@ public abstract class Shader {
                 // material takes precedence over the renderengine
                 if (material.hasTexture(n)) {
                     // Bind it to the sampler slot. this sampler slot comes from the RenderEngine
-                    renderEngine.getDataBinder().bind(material.getTexture(n), renderEngine.getSamplerSlot(n));
+                    renderEngine.getDataBinder().bind(material.getTexture(n), samplerSlot);
 
                 } else if (renderEngine.hasTexture(n)) {
-                    renderEngine.getDataBinder().bind(renderEngine.getTexture(n), renderEngine.getSamplerSlot(n));
+                    renderEngine.getDataBinder().bind(renderEngine.getTexture(n), samplerSlot);
 
                 } else {
                     LOGGER.warn("{}: texture '{}' not found in material nor RenderEngine.",
                             this.getClass().getSimpleName(), n);
                     // If the texture has not been found, set the missing texture from
                     // Material
-                    renderEngine.getDataBinder().bind(material.getTexture(n), renderEngine.getSamplerSlot(n));
+                    renderEngine.getDataBinder().bind(material.getTexture(n), samplerSlot);
                     n = "diffuse"; // Default to diffuse!
                 }
 
                 // and set the value of the uniform to the sampler slot
-                u.setValue(renderEngine.getSamplerSlot(n));
+                u.setValue(samplerSlot);
+                samplerSlot++;
 
                 // Now common structs like DirectionalLight, PointLight, SpotLight, AmbientLight
             } else if (u.getType().equalsIgnoreCase("DirectionalLight") ||

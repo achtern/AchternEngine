@@ -67,8 +67,6 @@ public interface RenderEngine extends DataStore {
 
     public void setDrawStrategy(DrawStrategy drawStrategy);
 
-    public int getSamplerSlot(String name);
-
     public DataBinder getDataBinder();
 
     public void addPassFilter(PassFilter filter);

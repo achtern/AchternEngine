@@ -59,8 +59,6 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     protected RenderTarget target;
 
-    protected Color clearColor;
-
     protected DrawStrategy drawStrategy;
 
     protected List<PassFilter> passFilters;
@@ -71,7 +69,6 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
         state = provider.getRenderEngineState();
 
         drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
-        clearColor = new Color(0, 0, 0, 0);
 
         passes = new ArrayList<RenderPass>();
         passFilters = new ArrayList<PassFilter>();
@@ -83,11 +80,7 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
         setRenderTarget(Window.get());
 
-
-        addInteger("diffuse", 0);
-        addInteger("shadowMap", 1);
-
-        state.setClearColor(clearColor);
+        state.setClearColor(new Color(0, 0, 0, 0));
 
         state.setFrontFace(FrontFaceMethod.CLOCKWISE);
         state.enable(Feature.CULL_FACE);
@@ -232,11 +225,6 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
             LOGGER.error("Please add a camera to the scene graph!");
         }
         return mainCamera;
-    }
-
-    @Override
-    public int getSamplerSlot(String name) {
-        return getInteger(name);
     }
 
     @Override
