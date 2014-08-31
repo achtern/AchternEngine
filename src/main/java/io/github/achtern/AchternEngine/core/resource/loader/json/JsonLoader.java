@@ -25,8 +25,10 @@
 package io.github.achtern.AchternEngine.core.resource.loader.json;
 
 import io.github.achtern.AchternEngine.core.rendering.Color;
+import io.github.achtern.AchternEngine.core.rendering.generator.ImageGenerator;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
+import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
 import io.github.achtern.AchternEngine.core.resource.loader.AsciiFileLoader;
 import io.github.achtern.AchternEngine.core.resource.loader.LoadingException;
 import org.json.JSONArray;
@@ -132,9 +134,21 @@ public abstract class JsonLoader<T> extends AsciiFileLoader<T> {
      * @throws Exception (from ResourceLoader)
      */
     protected Texture getTexture(JSONObject json) throws Exception {
-        final String file = json.getString("file");
 
-        return ResourceLoader.getTexture(file);
+        if (json.has("file")) {
+            return ResourceLoader.getTexture(json.getString("file"));
+        }
+
+        // Search for a plain color
+        if (json.has("solid")) {
+            Color c = getColor(json.getJSONObject("solid"));
+
+            return new Texture(ImageGenerator.bytesFromColor(c));
+        }
+
+        throw new ParsingException("Texture declaration illegal, missing <file> or <solid> key");
+
+
 
     }
 }
