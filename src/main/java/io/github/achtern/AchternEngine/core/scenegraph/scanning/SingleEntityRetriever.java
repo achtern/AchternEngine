@@ -24,6 +24,7 @@
 
 package io.github.achtern.AchternEngine.core.scenegraph.scanning;
 
+import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
 /**
@@ -33,6 +34,23 @@ import io.github.achtern.AchternEngine.core.scenegraph.entity.Entity;
  * Entity from the Camera Node, which has only one control Entity
  */
 public class SingleEntityRetriever extends EntityRetriever {
+
+    /**
+     * Default Constructor.
+     * Does nothing...
+     */
+    public SingleEntityRetriever() {
+    }
+
+    /**
+     * Calls #scan(Node) in order to allow easy
+     * chaining:
+     * <code>Entity e = new SingleEntityRetriever(someNode).get(Entity.class);</code>
+     * @param toScan will get scanned
+     */
+    public SingleEntityRetriever(Node toScan) {
+        scan(toScan);
+    }
 
     /**
      * Call #scan(Node) first!
