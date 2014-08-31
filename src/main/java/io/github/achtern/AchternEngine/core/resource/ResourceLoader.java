@@ -211,6 +211,7 @@ public class ResourceLoader {
      * @throws Exception
      */
     public static Figure getFigure(String name, boolean forceLoading) throws Exception {
+        LOGGER.info("Loading Figure {}", name);
         return load(name + FIGURE_DECLARATION_EXT, new FigureLoader(), forceLoading);
     }
 
