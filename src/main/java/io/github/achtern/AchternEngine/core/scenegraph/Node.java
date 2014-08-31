@@ -46,25 +46,25 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
     /**
      * Maps children's names to children.
      */
-    private Map<String, Node> children;
+    protected Map<String, Node> children;
     /**
      * List of Entities, attached to this Node
      */
-    private ArrayList<Entity> entities;
+    protected ArrayList<Entity> entities;
     /**
      * Transform of this Node and all the attached
      * Entities
      */
-    private Transform transform;
+    protected Transform transform;
     /**
      * The active CoreEngine
      */
-    private CoreEngine engine;
+    protected CoreEngine engine;
 
     /**
      * Node's name
      */
-    private String name;
+    protected String name;
 
     /**
      * Create a new Node.
