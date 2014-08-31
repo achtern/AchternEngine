@@ -30,12 +30,13 @@ import io.github.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.shadow.BasicShadowRenderer;
-import io.github.achtern.AchternEngine.core.rendering.sorting.AmbientFirstSorter;
+import io.github.achtern.AchternEngine.core.rendering.sorting.NoShadowFirstSorter;
 import io.github.achtern.AchternEngine.core.rendering.state.*;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.GlobalEntity;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 import io.github.achtern.AchternEngine.core.util.CommonDataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,10 +122,10 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
         if (!(this.activePass instanceof AmbientLight)) {
             LOGGER.trace("First Pass not instance of AmbientLight, sorting...");
-            Collections.sort(passes, new AmbientFirstSorter());
+            Collections.sort(passes, new NoShadowFirstSorter());
             this.activePass = passes.get(0);
-            if (!(this.activePass instanceof AmbientLight)) {
-                LOGGER.info("Using own Ambient Path with Color(0.01f, 0.01f, 0.01f)");
+            if (this.activePass instanceof BaseLight && ((BaseLight) this.activePass).getShadowInfo() != null) {
+                LOGGER.info("Using own Ambient Pass with Color(0.01f, 0.01f, 0.01f), to avoid shadow render loss");
                 this.activePass = new AmbientLight(new Color(0.01f, 0.01f, 0.01f));
                 skip = false;
             }

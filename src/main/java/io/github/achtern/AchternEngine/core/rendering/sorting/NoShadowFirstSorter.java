@@ -26,32 +26,45 @@ package io.github.achtern.AchternEngine.core.rendering.sorting;
 
 import io.github.achtern.AchternEngine.core.rendering.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.RenderPassSorter;
-import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
+import io.github.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 
 /**
  * Sorts a List of RenderPasses for the BasicRenderEngine
- * with ambient lights first
+ * with lights without {@link io.github.achtern.AchternEngine.core.rendering.shadow.ShadowInfo} first.
  */
-public class AmbientFirstSorter implements RenderPassSorter {
-
+public class NoShadowFirstSorter implements RenderPassSorter {
     @Override
     public int compare(RenderPass o1, RenderPass o2) {
-        // Both ambient => equal
-        if (o1 instanceof AmbientLight && o2 instanceof AmbientLight) {
-            return 0;
+        if (!(o1 instanceof BaseLight) && !(o2 instanceof BaseLight)) {
+            return 0; // doesn't matter
         }
 
-        // Only o1 Ambient => o1 greater => 1
-        if (o1 instanceof AmbientLight) {
-            return 1;
-        }
-
-        // Only o2 Ambient => o1 less => -1
-        if (o2 instanceof AmbientLight) {
+        if (o1 instanceof BaseLight && !(o2 instanceof BaseLight)) {
+            // o2 CANNOT have shadow info
             return -1;
         }
 
-        // o1 nor o2 ambient. doesn't matter => equal => 0
+        if (!(o1 instanceof BaseLight)) {
+            // o1 CANNOT have shadow info
+            return 1;
+        }
+
+        ShadowInfo i1 = ((BaseLight) o1).getShadowInfo();
+        ShadowInfo i2 = ((BaseLight) o2).getShadowInfo();
+
+        if (i1 != null && i2 != null) {
+            return 0; // doesn't matter
+        }
+
+        if (i1 == null && i2 == null) {
+            return 0; // doesn't matter
+        }
+
+        if (i1 == null) {
+            return 1;
+        }
+
         return 0;
     }
 }
