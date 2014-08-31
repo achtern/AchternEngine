@@ -152,7 +152,9 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
         LoadingScreen.get().show(this, game.getSplashScreen());
 
+        LOGGER.info("Initializing Game");
         game.preInit(this);
+        LOGGER.info("Done initializing Game");
 
         double lastTime = Time.getTime();
         double unprocessedTime = 0;
