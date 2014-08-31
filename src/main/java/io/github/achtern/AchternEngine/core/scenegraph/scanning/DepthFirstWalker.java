@@ -26,6 +26,7 @@ package io.github.achtern.AchternEngine.core.scenegraph.scanning;
 
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,10 @@ public class DepthFirstWalker implements SceneGraphWalker {
     protected List<Visitor> visitors;
 
 
+    public DepthFirstWalker() {
+        visitors = new ArrayList<Visitor>();
+    }
+
     /**
      * Scans the given Node
      * This should scan all child nodes.
@@ -50,10 +55,10 @@ public class DepthFirstWalker implements SceneGraphWalker {
     public void scan(Node node) {
         for (Visitor v : visitors) {
             v.on(node);
+        }
 
-            for (Node n : node.getChildren().values()) {
-                scan(node);
-            }
+        for (Node n : node.getChildren().values()) {
+            scan(n);
         }
     }
 

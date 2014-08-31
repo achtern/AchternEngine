@@ -56,8 +56,11 @@ public abstract class EntityRetriever implements SceneGraphRetriever<Entity> {
      */
     @Override
     public void scan(Node node) {
-        this.nodes.add(node);
+        // Reset the data
+        this.nodes.clear();
+        this.entities.clear();
 
+        this.nodes.add(node);
         this.entities.addAll(getAll(node));
     }
 
