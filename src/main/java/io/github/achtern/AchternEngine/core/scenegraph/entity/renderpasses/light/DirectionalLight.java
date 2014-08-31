@@ -37,7 +37,7 @@ public class DirectionalLight extends BaseLight {
 
         setShader(Directional.getInstance());
 
-        setShadowInfo(new ShadowInfo(new Matrix4f().initOrthographic(-40, 40, -40, 40, -40, 40)));
+        setShadowInfo(new ShadowInfo(new Matrix4f().initOrthographic(-30, 30, -30, 30, -30, 30)));
     }
 
     public Vector3f getDirection() {

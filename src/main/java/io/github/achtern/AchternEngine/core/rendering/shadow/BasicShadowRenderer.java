@@ -102,9 +102,9 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
                 RenderPass mainRP = renderEngine.getActiveRenderPass();
 
                 Face cullFace = null;
-                if (renderEngine.getState().isEnabled(Feature.CULL_FACE)) {
+                if (renderEngine.getState().isEnabled(Feature.CULL_FACE) && shadowInfo.getCullFace() != null) {
                     cullFace = renderEngine.getState().getCullFace();
-                    renderEngine.getState().cullFace(Face.FRONT);
+                    renderEngine.getState().cullFace(shadowInfo.getCullFace());
                 }
 
 
