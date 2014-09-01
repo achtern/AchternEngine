@@ -117,7 +117,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
         window = bindingManager.getWindow(dimensions);
         window.create(title);
         this.renderEngine = new BasicRenderEngine(bindingManager);
-        LOGGER.debug("OpenGL Version: {}", this.renderEngine.getOpenGLVersion());
+        LOGGER.debug("OpenGL Version: {}", this.renderEngine.getState().getVersion());
     }
 
     /**

@@ -62,7 +62,7 @@ public abstract class Shader {
         Transform transform = figure.getTransform();
 
         Matrix4f worldMat = transform.getTransformation();
-        Matrix4f projection = renderEngine.getMainCamera().getViewProjection().mul(worldMat);
+        Matrix4f projection = renderEngine.getCamera().getViewProjection().mul(worldMat);
 
         // Keeps track of the current SamplerSlot in use.
         int samplerSlot = 0;
@@ -127,10 +127,10 @@ public abstract class Shader {
                 u.setValue(transform.getTransformation());
 
             } else if (n.equalsIgnoreCase("modelView")) {
-                u.setValue(renderEngine.getMainCamera().getView().mul(transform.getTransformation()));
+                u.setValue(renderEngine.getCamera().getView().mul(transform.getTransformation()));
 
             } else if (n.equalsIgnoreCase("eyePos")) {
-                u.setValue(renderEngine.getMainCamera().getTransform().getTransformedPosition());
+                u.setValue(renderEngine.getCamera().getTransform().getTransformedPosition());
 
             } else if (n.equalsIgnoreCase("shadowMatrix")) {
                 Matrix4f m = new Matrix4f().initIdentiy();

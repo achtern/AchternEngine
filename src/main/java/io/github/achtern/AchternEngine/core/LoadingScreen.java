@@ -109,7 +109,7 @@ public class LoadingScreen implements RenderPass {
         // Make sure to delete this after render,
         // so the end-user doesn't see it!
         engine.getRenderEngine().removeRenderPass(this);
-        engine.getRenderEngine().addCamera(null);
+        engine.getRenderEngine().setCamera(null);
 
     }
 

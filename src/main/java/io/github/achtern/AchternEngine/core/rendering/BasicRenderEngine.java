@@ -47,94 +47,91 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
-    protected Camera mainCamera;
-
+    protected RenderEngineState state;
     protected DataBinder dataBinder;
 
-    protected RenderEngineState state;
+    protected RenderTarget renderTarget;
 
-    protected ArrayList<RenderPass> passes;
+    protected List<RenderPass> renderPasses;
     protected RenderPass activePass;
-
-    protected Map<Class, GlobalEntity> globalEntities;
-
-    protected RenderTarget target;
-
-    protected DrawStrategy drawStrategy;
 
     protected List<PassFilter> passFilters;
 
-    public BasicRenderEngine(BindingProvider provider) {
+    protected Camera camera;
 
-        dataBinder = provider.getDataBinder();
-        state = provider.getRenderEngineState();
+    protected DrawStrategy drawStrategy;
 
-        drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
+    protected Map<Class, GlobalEntity> globalEntities;
 
-        passes = new ArrayList<RenderPass>();
-        passFilters = new ArrayList<PassFilter>();
+    public BasicRenderEngine(BindingProvider bindingProvider) {
+        this.state = bindingProvider.getRenderEngineState();
+        this.dataBinder = bindingProvider.getDataBinder();
 
-        globalEntities = new HashMap<Class, GlobalEntity>();
+        this.setRenderTarget(Window.get());
 
-        // TODO: do not hardcode this filter!
+        this.renderPasses = new ArrayList<RenderPass>();
+
+        this.passFilters = new ArrayList<PassFilter>();
+
+        this.drawStrategy = DrawStrategyFactory.get(DrawStrategyFactory.Common.SOLID);
+
+        this.globalEntities = new HashMap<Class, GlobalEntity>();
+
+        setupStates();
+
+        // TODO: Do not hard code this filter
         addPassFilter(new BasicShadowRenderer());
 
-        setRenderTarget(Window.get());
 
-        state.setClearColor(new Color(0, 0, 0, 0));
-
-        state.setFrontFace(FrontFaceMethod.CLOCKWISE);
-        state.enable(Feature.CULL_FACE);
-        state.cullFace(Face.BACK);
-        state.enable(Feature.DEPTH_TEST);
-        state.setDepthFunction(DepthFunction.LESS);
-
-        state.enable(Feature.DEPTH_CLAMP);
-
-        state.enable(Feature.TEXTURE_2D);
     }
 
     @Override
     public void render(Node node) {
-        render(node, true);
+        this.render(node, true);
     }
 
     @Override
     public void render(Node node, boolean clear) {
-
-        if (target != null) {
-            target.bindAsRenderTarget(getDataBinder());
+        if (getRenderTarget() != null) {
+            getRenderTarget().bindAsRenderTarget(getDataBinder());
         }
 
         if (clear) {
             state.clear(true, true, false);
         }
 
-        if (passes.isEmpty()) {
+        if (renderPasses.isEmpty()) {
             LOGGER.debug("No render passes. Skip render!");
             return;
         }
 
-        this.activePass = passes.get(0);
+        this.activePass = renderPasses.get(0);
+
         LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
+
 
         boolean skip = true;
 
-        if (!(this.activePass instanceof AmbientLight)) {
-            LOGGER.trace("First Pass not instance of AmbientLight, sorting...");
-            Collections.sort(passes, new NoShadowFirstSorter());
-            this.activePass = passes.get(0);
-            if (this.activePass instanceof BaseLight && ((BaseLight) this.activePass).getShadowInfo() != null) {
+
+        if (hasShadow(this.activePass)) {
+            LOGGER.debug("First Pass has shadow, sorting...");
+            Collections.sort(renderPasses, new NoShadowFirstSorter());
+            this.activePass = renderPasses.get(0);
+            if (hasShadow(this.activePass)) {
                 LOGGER.info("Using own Ambient Pass with Color(0.01f, 0.01f, 0.01f), to avoid shadow render loss");
                 this.activePass = new AmbientLight(new Color(0.01f, 0.01f, 0.01f));
                 skip = false;
             }
         }
-        getDataBinder().bind(activePass.getShader());
+
+        // Bind Shader
+        getDataBinder().bind(this.activePass.getShader());
+        // Render first pass
         node.render(this);
 
+        // Now we enter the forward specific part
 
-        for (RenderPass pass : this.passes) {
+        for (RenderPass pass : this.renderPasses) {
             if (skip) {
                 skip = false;
                 continue;
@@ -146,24 +143,23 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
                 filter.pre(node, pass, this);
             }
 
-
-            state.enable(Feature.BLEND);
-            state.setBlendFunction(BlendFunction.ONE, BlendFunction.ONE);
-            state.enableDepthWrite(false);
-            state.setDepthFunction(DepthFunction.EQUAL);
+            state.enable(Feature.BLEND); // we need to blend in the other passes
+            state.setBlendFunction(BlendFunction.ONE, BlendFunction.ONE); // just one-to-one
+            state.enableDepthWrite(false); // we have written depth in the first pass already!
+            state.setDepthFunction(DepthFunction.EQUAL); // so just pass, when depth is equal!
             {
-
                 LOGGER.trace("Rendering Pass of type: {}", this.activePass.getClass());
-                getDataBinder().bind(pass.getShader());
+                getDataBinder().bind(pass.getShader()); // bind the shader
                 node.render(this);
-
-                for (PassFilter filter : passFilters) {
-                    filter.post(node, pass, this);
-                }
             }
             state.setDepthFunction(DepthFunction.LESS);
             state.enableDepthWrite(true);
             state.disable(Feature.BLEND);
+
+
+            for (PassFilter filter : passFilters) {
+                filter.post(node, pass, this);
+            }
         }
 
     }
@@ -173,42 +169,40 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
         return state;
     }
 
-    public void setRenderTarget(RenderTarget target) {
-        this.target = target;
+    @Override
+    public DataBinder getDataBinder() {
+        return dataBinder;
     }
 
+    @Override
+    public void setRenderTarget(RenderTarget target) {
+        this.renderTarget = target;
+    }
+
+    @Override
     public RenderTarget getRenderTarget() {
-        return target;
+        return renderTarget;
     }
 
     @Override
     public void addRenderPass(RenderPass pass) {
-        LOGGER.debug("Added RenderPass {}", pass.getClass());
-        if (pass instanceof AmbientLight) {
-            this.passes.add(0, pass);
-        } else {
-            this.passes.add(pass);
-        }
+        renderPasses.add(pass);
     }
 
     @Override
     public void removeRenderPass(RenderPass pass) {
-        LOGGER.debug("Removing RenderPass {}", pass.getClass());
-        this.passes.remove(pass);
-    }
-
-    @Override
-    public void addCamera(Camera camera) {
-        this.mainCamera = camera;
+        renderPasses.remove(pass);
     }
 
     @Override
     public RenderPass getActiveRenderPass() {
-        return this.activePass;
+        return activePass;
     }
 
     /**
      * internal use only
+     *
+     * @param active Will be set as active RenderPass
      */
     @Override
     public void setActiveRenderPass(RenderPass active) {
@@ -216,27 +210,29 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
     }
 
     @Override
-    public String getOpenGLVersion() {
-        return state.getVersion();
+    public Camera getCamera() {
+        return camera;
     }
 
     @Override
-    public Camera getMainCamera() {
-        if (mainCamera == null) {
-            LOGGER.error("Please add a camera to the scene graph!");
-        }
-        return mainCamera;
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 
     @Override
-    public DataBinder getDataBinder() {
-        return dataBinder;
+    public DrawStrategy getDrawStrategy() {
+        return drawStrategy;
+    }
+
+    @Override
+    public void setDrawStrategy(DrawStrategy drawStrategy) {
+        this.drawStrategy = drawStrategy;
     }
 
     @Override
     public void addPassFilter(PassFilter filter) {
-        filter.init(this);
         passFilters.add(filter);
+        filter.init(this);
     }
 
     /**
@@ -263,29 +259,24 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
     @SuppressWarnings("unchecked")
     @Override
     public <T> GlobalEntity<T> getGlobal(Class<? extends T> type) {
-        GlobalEntity g = this.globalEntities.get(type);
-        if (g == null) return null;
-
-        if (g.getObject().getClass().isAssignableFrom(type)) {
-            return (GlobalEntity<T>) g;
-        } else {
-            return null;
-        }
+        return (GlobalEntity<T>) this.globalEntities.get(type);
     }
 
-    @Override
-    public void setMainCamera(Camera mainCamera) {
-        this.mainCamera = mainCamera;
+    protected void setupStates() {
+        state.setClearColor(new Color(0, 0, 0, 0));
+
+        state.setFrontFace(FrontFaceMethod.CLOCKWISE);
+        state.enable(Feature.CULL_FACE);
+        state.cullFace(Face.BACK);
+        state.enable(Feature.DEPTH_TEST);
+        state.setDepthFunction(DepthFunction.LESS);
+
+        state.enable(Feature.DEPTH_CLAMP);
+
+        state.enable(Feature.TEXTURE_2D);
     }
 
-    @Override
-    public DrawStrategy getDrawStrategy() {
-        return drawStrategy;
+    protected boolean hasShadow(RenderPass pass) {
+        return pass instanceof BaseLight && ((BaseLight) pass).getShadowInfo() != null;
     }
-
-    @Override
-    public void setDrawStrategy(DrawStrategy drawStrategy) {
-        this.drawStrategy = drawStrategy;
-    }
-
 }

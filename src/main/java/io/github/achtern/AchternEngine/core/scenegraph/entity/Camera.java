@@ -95,14 +95,14 @@ public class Camera extends QuickEntity implements WindowChangeListener {
     }
 
     public void bindAsMain() {
-        getEngine().getRenderEngine().addCamera(this);
+        getEngine().getRenderEngine().setCamera(this);
     }
 
     @Override
     public void setEngine(CoreEngine engine) {
         super.setEngine(engine);
         if (engine != null) {
-            engine.getRenderEngine().addCamera(this);
+            engine.getRenderEngine().setCamera(this);
             engine.addWindowChangeListener(this);
         }
     }
@@ -113,7 +113,7 @@ public class Camera extends QuickEntity implements WindowChangeListener {
     @Override
     public void removed() {
         super.removed();
-        getEngine().getRenderEngine().setMainCamera(null);
+        getEngine().getRenderEngine().setCamera(null);
         getEngine().removeWindowChangeListener(this);
     }
 

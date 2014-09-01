@@ -38,17 +38,20 @@ public interface RenderEngine extends DataStore {
 
     public void render(Node node, boolean clear);
 
+
     public RenderEngineState getState();
+
+    public DataBinder getDataBinder();
+
 
     public void setRenderTarget(RenderTarget target);
 
     public RenderTarget getRenderTarget();
 
+
     public void addRenderPass(RenderPass pass);
 
     public void removeRenderPass(RenderPass pass);
-
-    public void addCamera(Camera camera);
 
     public RenderPass getActiveRenderPass();
 
@@ -57,17 +60,17 @@ public interface RenderEngine extends DataStore {
      */
     public void setActiveRenderPass(RenderPass active);
 
-    public String getOpenGLVersion();
 
-    public Camera getMainCamera();
 
-    public void setMainCamera(Camera mainCamera);
+    public Camera getCamera();
+
+    public void setCamera(Camera camera);
+
 
     public DrawStrategy getDrawStrategy();
 
     public void setDrawStrategy(DrawStrategy drawStrategy);
 
-    public DataBinder getDataBinder();
 
     public void addPassFilter(PassFilter filter);
 
@@ -77,6 +80,7 @@ public interface RenderEngine extends DataStore {
      * @return Whether the remove was successful.
      */
     public boolean removePassFilter(PassFilter filter);
+
 
     public void addGlobal(GlobalEntity entity);
 

@@ -104,7 +104,7 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
                 getGame().add(wireframe);
             }
         } else if (event.getKey().equals(Key.C)) {
-            Camera c = getEngine().getRenderEngine().getMainCamera();
+            Camera c = getEngine().getRenderEngine().getCamera();
             LOGGER.info("\nCamera Dump:\n" +
                     "pos={}\n" +
                     "rot={}\n" +

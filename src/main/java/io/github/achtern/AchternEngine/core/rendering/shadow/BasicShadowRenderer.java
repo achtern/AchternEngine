@@ -98,7 +98,7 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
                 renderEngine.addMatrix("shadowMatrix", bias.mul(camera.getViewProjection()));
 
                 // Store a copy of the main camera/renderpass/cullface
-                Camera mainC = renderEngine.getMainCamera();
+                Camera mainC = renderEngine.getCamera();
                 RenderPass mainRP = renderEngine.getActiveRenderPass();
 
                 Face cullFace = null;
@@ -108,7 +108,7 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
                 }
 
 
-                renderEngine.setMainCamera(camera);
+                renderEngine.setCamera(camera);
                 renderEngine.setActiveRenderPass(this);
                 renderEngine.getDataBinder().bind(ShadowGenerator.getInstance());
                 node.render(renderEngine);
@@ -117,7 +117,7 @@ public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
                 if (cullFace != null) {
                     renderEngine.getState().cullFace(cullFace);
                 }
-                renderEngine.setMainCamera(mainC);
+                renderEngine.setCamera(mainC);
                 renderEngine.setActiveRenderPass(mainRP);
 
 
