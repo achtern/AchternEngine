@@ -48,7 +48,6 @@ public class Grid extends Mesh {
 
     /**
      * Generates the Grid Mesh
-     * lineSeparation MUST be greater or equal to 1
      * @param xCount Lines on X
      * @param yCount Lines on Y
      * @param lineSeparation Distance between lines
@@ -59,16 +58,11 @@ public class Grid extends Mesh {
 
     /**
      * Generates the Grid Mesh
-     * lineSeparation MUST be greater or equal to 1
      * @param xCount Lines on X
      * @param yCount Lines on Y
      * @param lineSeparation Distance between lines
      */
     public void generate(int xCount, int yCount, float lineSeparation) {
-        if (lineSeparation < 1) {
-            throw new IllegalArgumentException("lineSeparation MUST be greater or equal" +
-                    " to one. Use Transform based scaling to shrink speperation even more.");
-        }
 
         int lineCount = xCount + yCount;
 
