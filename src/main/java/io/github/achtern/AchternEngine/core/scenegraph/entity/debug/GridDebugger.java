@@ -29,7 +29,6 @@ import io.github.achtern.AchternEngine.core.rendering.Material;
 import io.github.achtern.AchternEngine.core.rendering.generator.ImageGenerator;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Grid;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
-import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import org.slf4j.Logger;
@@ -59,26 +58,35 @@ public class GridDebugger extends Node {
         this(name, 50, 50, 1);
     }
 
+    /**
+     * Create a new GridDebugger.
+     * (Name of this Node: 'Grid')
+     * @param xCount Lines in x direction
+     * @param yCount Lines in y direction
+     * @param lineSeparation Distance between lines
+     */
+    public GridDebugger(int xCount, int yCount, float lineSeparation) {
+        this("Grid", xCount, yCount, lineSeparation);
+    }
+
+    /**
+     * Create a new GridDebugger.
+     * @param name The name of the node
+     * @param xCount Lines in x direction
+     * @param yCount Lines in y direction
+     * @param lineSeparation Distance between lines
+     */
     public GridDebugger(String name, int xCount, int yCount, float lineSeparation) {
         super(name);
-        try {
-            this.grid = ResourceLoader.getFigure("grid");
-        } catch (Exception e) {
-            LOGGER.error("Error loading bundled Figure grid", e);
 
+        this.grid = new Figure("Grid");
+        this.grid.setMesh(new Grid(xCount, yCount, lineSeparation));
+        Material m = new Material();
+        m.addTexture("diffuse", new Texture(ImageGenerator.bytesFromColor(Color.WHITE)));
+        m.addFloat("specularIntensity", 1);
+        m.addFloat("specularPower", 8);
+        this.grid.setMaterial(m);
 
-            this.grid = new Figure("Grid");
-            this.grid.setMesh(new Grid(xCount, yCount, lineSeparation));
-            Material m = new Material();
-            m.addTexture("diffuse", new Texture(ImageGenerator.bytesFromColor(Color.WHITE)));
-            m.addFloat("specularIntensity", 1);
-            m.addFloat("specularPower", 8);
-            this.grid.setMaterial(m);
-        }
-
-        if (xCount != 50 && yCount != 50 && lineSeparation != 1) {
-            ((Grid) this.grid.getMesh()).generate(xCount, yCount, lineSeparation);
-        }
 
         add(grid);
 
