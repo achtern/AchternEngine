@@ -37,24 +37,48 @@ import java.util.List;
  */
 public class Grid extends Mesh {
 
+    /**
+     * Generates the Grid Mesh
+     * @param xCount Lines on X
+     * @param yCount Lines on Y
+     */
     public Grid(int xCount, int yCount) {
         this(xCount, yCount, 1);
     }
 
+    /**
+     * Generates the Grid Mesh
+     * lineSeparation MUST be greater or equal to 1
+     * @param xCount Lines on X
+     * @param yCount Lines on Y
+     * @param lineSeparation Distance between lines
+     */
     public Grid(int xCount, int yCount, float lineSeparation){
         generate(xCount, yCount, lineSeparation);
     }
 
+    /**
+     * Generates the Grid Mesh
+     * lineSeparation MUST be greater or equal to 1
+     * @param xCount Lines on X
+     * @param yCount Lines on Y
+     * @param lineSeparation Distance between lines
+     */
     public void generate(int xCount, int yCount, float lineSeparation) {
+        if (lineSeparation < 1) {
+            throw new IllegalArgumentException("lineSeparation MUST be greater or equal" +
+                    " to one. Use Transform based scaling to shrink speperation even more.");
+        }
+
         int lineCount = xCount + yCount;
 
         List<Vector3f> positions = new ArrayList<Vector3f>(lineCount * 2);
         List<Integer> integers = new ArrayList<Integer>(lineCount);
 
-        Vector2f length = new Vector2f((yCount - 1) * lineSeparation, (xCount - 1) * lineSeparation);
+        Vector2f length = new Vector2f(yCount - 1, xCount - 1).mul(lineSeparation);
 
         for (int i = 0; i < xCount; i++){
-            float y = i * lineSeparation;
+            float y = (i) * lineSeparation;
 
             final Vector3f v1 = new Vector3f(0, 0, y);
             final Vector3f v2 = new Vector3f(length.getX(), 0, y);
@@ -75,7 +99,7 @@ public class Grid extends Mesh {
 
         // add lines along Y
         for (int i = 0; i < yCount; i++){
-            float x = i * lineSeparation;
+            float x = (i) * lineSeparation;
 
             final Vector3f v1 = new Vector3f(x, 0, 0);
             final Vector3f v2 = new Vector3f(x, 0, length.getY());
