@@ -25,6 +25,7 @@
 package io.github.achtern.AchternEngine.core.input.event.listener.trigger;
 
 import io.github.achtern.AchternEngine.core.input.Key;
+import lombok.Getter;
 
 public class KeyTrigger implements Trigger<Key, KeyTrigger.Type> {
 
@@ -36,8 +37,8 @@ public class KeyTrigger implements Trigger<Key, KeyTrigger.Type> {
         ALL
     }
 
-    private Key onKey;
-    private Type type;
+    protected Key onKey;
+    @Getter protected Type type;
 
 
     /**
@@ -64,11 +65,5 @@ public class KeyTrigger implements Trigger<Key, KeyTrigger.Type> {
     public Key get() {
         return onKey;
     }
-
-    @Override
-    public Type getType() {
-        return type;
-    }
-
 
 }

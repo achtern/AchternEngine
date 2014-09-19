@@ -28,6 +28,8 @@ import io.github.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,7 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyMap.class);
 
-    protected InputAdapter input;
+    @Getter @Setter protected InputAdapter input;
 
     protected Map<KeyTrigger, List<KeyListener>> listener;
 
@@ -123,13 +125,5 @@ public class KeyMap implements InputMap<KeyTrigger, KeyListener> {
 
     public void setClickListener(Map<KeyTrigger, List<KeyListener>> listener) {
         this.listener = listener;
-    }
-
-    public InputAdapter getInput() {
-        return input;
-    }
-
-    public void setInput(InputAdapter input) {
-        this.input = input;
     }
 }

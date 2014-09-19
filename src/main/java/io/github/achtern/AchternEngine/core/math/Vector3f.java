@@ -24,6 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.math;
 
+import lombok.Getter;
+
 /**
  * A Vector3f is a implementation of the mathematical
  * Vector in R3.
@@ -59,9 +61,9 @@ public class Vector3f implements Cloneable {
 
     protected boolean locked = false;
 
-    private float x;
-    private float y;
-    private float z;
+    @Getter private float x;
+    @Getter private float y;
+    @Getter private float z;
 
     /**
      * Calculates the euclidean distance.
@@ -425,10 +427,6 @@ public class Vector3f implements Cloneable {
         return this;
     }
 
-    public float getX() {
-        return x;
-    }
-
     public void setX(float x) {
         if (locked) {
             throw new IllegalAccessError("Vector is locked!");
@@ -436,19 +434,11 @@ public class Vector3f implements Cloneable {
         this.x = x;
     }
 
-    public float getY() {
-        return y;
-    }
-
     public void setY(float y) {
         if (locked) {
             throw new IllegalAccessError("Vector is locked!");
         }
         this.y = y;
-    }
-
-    public float getZ() {
-        return z;
     }
 
     public void setZ(float z) {

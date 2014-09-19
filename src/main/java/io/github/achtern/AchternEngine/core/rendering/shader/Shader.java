@@ -35,6 +35,8 @@ import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLProgram;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.GlobalEntity;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +44,9 @@ public abstract class Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Shader.class);
 
-    private GLSLParser parser = new GLSLParser();
+    @Getter @Setter private GLSLParser parser = new GLSLParser();
 
-    protected GLSLProgram program;
+    @Getter protected GLSLProgram program;
 
     /**
      * For subclasses.
@@ -164,17 +166,5 @@ public abstract class Shader {
 
     protected void handle(Uniform uniform, Transform transform, Material material,
                           RenderEngine renderEngine, Matrix4f projection) {
-    }
-
-    public GLSLProgram getProgram() {
-        return program;
-    }
-
-    public GLSLParser getParser() {
-        return parser;
-    }
-
-    public void setParser(GLSLParser parser) {
-        this.parser = parser;
     }
 }

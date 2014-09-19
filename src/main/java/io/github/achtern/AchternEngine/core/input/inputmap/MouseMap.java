@@ -29,6 +29,8 @@ import io.github.achtern.AchternEngine.core.input.event.listener.MouseListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.MouseEvent;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +40,9 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseListener> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MouseMap.class);
 
-    private InputAdapter input;
+    @Getter @Setter protected InputAdapter input;
 
-    protected Map<MouseButtonTrigger, List<MouseListener>> clickListener;
+    @Setter protected Map<MouseButtonTrigger, List<MouseListener>> clickListener;
 
     protected List<MouseListener> moveListener;
 
@@ -123,20 +125,5 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseListener> {
     @Override
     public Map<MouseButtonTrigger, List<MouseListener>> getClickListener() {
         return clickListener;
-    }
-
-    @Override
-    public void setClickListener(Map<MouseButtonTrigger, List<MouseListener>> clickListener) {
-        this.clickListener = clickListener;
-    }
-
-    @Override
-    public InputAdapter getInput() {
-        return input;
-    }
-
-    @Override
-    public void setInput(InputAdapter input) {
-        this.input = input;
     }
 }

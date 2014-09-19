@@ -26,7 +26,11 @@ package io.github.achtern.AchternEngine.core.rendering.fog;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@AllArgsConstructor
+@Data
 public class Fog {
 
     public static final Fog DISABLED = new Fog(null, 0, Mode.DISABLED);
@@ -69,42 +73,4 @@ public class Fog {
         this(color, range, -1, Mode.LINEAR);
     }
 
-    public Fog(Color color, Vector2f range, float density, Mode mode) {
-        this.color = color;
-        this.range = range;
-        this.density = density;
-        this.mode = mode;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public Vector2f getRange() {
-        return range;
-    }
-
-    public void setRange(Vector2f range) {
-        this.range = range;
-    }
-
-    public float getDensity() {
-        return density;
-    }
-
-    public void setDensity(float density) {
-        this.density = density;
-    }
-
-    public Mode getMode() {
-        return mode;
-    }
-
-    public void setMode(Mode mode) {
-        this.mode = mode;
-    }
 }

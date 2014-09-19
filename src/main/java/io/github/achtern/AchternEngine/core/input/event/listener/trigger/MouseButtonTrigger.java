@@ -25,6 +25,7 @@
 package io.github.achtern.AchternEngine.core.input.event.listener.trigger;
 
 import io.github.achtern.AchternEngine.core.input.MouseButton;
+import lombok.Getter;
 
 public class MouseButtonTrigger implements Trigger<MouseButton, MouseButtonTrigger.Type> {
 
@@ -37,8 +38,8 @@ public class MouseButtonTrigger implements Trigger<MouseButton, MouseButtonTrigg
         ALL
     }
 
-    private MouseButton onClick;
-    private Type type;
+    protected MouseButton onClick;
+    @Getter protected Type type;
 
     public MouseButtonTrigger(MouseButton onClick) {
         this(onClick, Type.DOWN);
@@ -52,10 +53,5 @@ public class MouseButtonTrigger implements Trigger<MouseButton, MouseButtonTrigg
     @Override
     public MouseButton get() {
         return onClick;
-    }
-
-    @Override
-    public Type getType() {
-        return type;
     }
 }

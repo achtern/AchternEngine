@@ -27,10 +27,11 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.scenegraph.bounding.BoundingBox;
+import lombok.Getter;
 
 public class Mesh {
 
-    protected MeshData data;
+    @Getter protected MeshData data;
 
     protected BoundingBox bb;
 
@@ -94,10 +95,6 @@ public class Mesh {
             vertex.getNormal().normalize();
         }
 
-    }
-
-    public MeshData getData() {
-        return data;
     }
 
     protected void setData(MeshData data) {

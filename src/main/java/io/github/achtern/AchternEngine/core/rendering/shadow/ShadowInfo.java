@@ -26,7 +26,11 @@ package io.github.achtern.AchternEngine.core.rendering.shadow;
 
 import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.rendering.state.Face;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@AllArgsConstructor
+@Data
 public class ShadowInfo {
 
     protected Matrix4f matrix;
@@ -35,26 +39,5 @@ public class ShadowInfo {
 
     public ShadowInfo(Matrix4f matrix) {
         this(matrix, Face.FRONT);
-    }
-
-    public ShadowInfo(Matrix4f matrix, Face cullFace) {
-        this.matrix = matrix;
-        this.cullFace = cullFace;
-    }
-
-    public Matrix4f getMatrix() {
-        return matrix;
-    }
-
-    public void setMatrix(Matrix4f matrix) {
-        this.matrix = matrix;
-    }
-
-    public Face getCullFace() {
-        return cullFace;
-    }
-
-    public void setCullFace(Face cullFace) {
-        this.cullFace = cullFace;
     }
 }
