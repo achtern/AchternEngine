@@ -43,8 +43,11 @@ public class FogGenerator extends QuickEntity implements GlobalEntity<Fog> {
      */
     public FogGenerator(String name) {
         super(name);
-        // we just add all data, to allow a quick change of modes
-        this.fog = new Fog(new Color(0.7f, 0.7f, 0.7f), new Vector2f(5, 50), 0.01f, Fog.Mode.EXP);
+        this.fog = new Fog(null, null);
+    }
+
+    public FogGenerator(Color color) {
+        this(color, 0.01f);
     }
 
     public FogGenerator(Color color, float density) {
