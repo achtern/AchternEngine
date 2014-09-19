@@ -24,18 +24,22 @@
 
 package io.github.achtern.AchternEngine.core.scenegraph.entity.controller;
 
-import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.input.Key;
 import io.github.achtern.AchternEngine.core.input.event.listener.KeyListener;
 import io.github.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Moves a node around based on the up vector of the node.
  */
 public class SimpleMover extends QuickEntity implements KeyListener {
-    protected float speed;
+
+    @Getter @Setter protected float speed;
 
     protected Key forwardKey;
     protected Key backKey;
@@ -98,14 +102,6 @@ public class SimpleMover extends QuickEntity implements KeyListener {
      */
     protected void move(Vector3f amount) {
         getTransform().setPosition(getTransform().getPosition().add(amount));
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
     }
 
     @Override

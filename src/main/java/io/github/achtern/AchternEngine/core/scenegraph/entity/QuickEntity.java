@@ -25,10 +25,11 @@
 package io.github.achtern.AchternEngine.core.scenegraph.entity;
 
 import io.github.achtern.AchternEngine.core.CoreEngine;
-import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.EngineHolder;
+import io.github.achtern.AchternEngine.core.Transform;
 import io.github.achtern.AchternEngine.core.rendering.RenderEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import lombok.Data;
 
 /**
  * A helper class to create an {@link io.github.achtern.AchternEngine.core.scenegraph.entity.Entity} easily.
@@ -37,6 +38,7 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
  * - Storing the coreengine
  * - Storing a name (and setting it)
  */
+@Data
 public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
 
     public static final String NAME_UNTITLED_ENTITY = "Untitled Entity";
@@ -92,18 +94,6 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     public void attached() {
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @see Entity#getName()
-     */
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
     /**
      * Returns a Node containing this Entity.
      * The Name should equal the name of this Entity.
@@ -126,33 +116,5 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     @Override
     public Transform getTransform() {
         return this.parent.getTransform();
-    }
-
-    /**
-     * @see Entity#setParent(io.github.achtern.AchternEngine.core.scenegraph.Node)
-     */
-    @Override
-    public void setParent(Node parent) {
-        this.parent = parent;
-    }
-
-    protected Node getParent() {
-        return parent;
-    }
-
-    /**
-     * @see io.github.achtern.AchternEngine.core.EngineHolder#setEngine(Object)
-     */
-    @Override
-    public void setEngine(CoreEngine engine) {
-        this.engine = engine;
-    }
-
-    /**
-     * @see io.github.achtern.AchternEngine.core.EngineHolder#getEngine()
-     */
-    @Override
-    public CoreEngine getEngine() {
-        return engine;
     }
 }

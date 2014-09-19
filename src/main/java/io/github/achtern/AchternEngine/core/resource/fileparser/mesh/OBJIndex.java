@@ -24,11 +24,14 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.mesh;
 
+import lombok.Data;
+
+@Data
 public class OBJIndex {
 
-    private int vertex;
-    private int texCoord;
-    private int normal;
+    protected int vertex;
+    protected int texCoord;
+    protected int normal;
 
 
     public boolean equals(OBJIndex index) {
@@ -56,29 +59,5 @@ public class OBJIndex {
         hash = ((hash + getTexCoord()) << 5) - (hash + getTexCoord());
         hash = ((hash + getNormal()) << 5) - (hash + getNormal());
         return hash;
-    }
-
-    public int getVertex() {
-        return vertex;
-    }
-
-    public void setVertex(int vertex) {
-        this.vertex = vertex;
-    }
-
-    public int getTexCoord() {
-        return texCoord;
-    }
-
-    public void setTexCoord(int texCoord) {
-        this.texCoord = texCoord;
-    }
-
-    public int getNormal() {
-        return normal;
-    }
-
-    public void setNormal(int normal) {
-        this.normal = normal;
     }
 }

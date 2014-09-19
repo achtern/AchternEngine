@@ -30,15 +30,17 @@ import io.github.achtern.AchternEngine.core.math.Matrix4f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.rendering.Dimension;
 import io.github.achtern.AchternEngine.core.util.WindowChangeListener;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Camera extends QuickEntity implements WindowChangeListener {
 
-    protected float fov;
-    protected float aspect;
-    protected float zNear;
-    protected float zFar;
+    @Getter protected float fov;
+    @Getter protected float aspect;
+    @Getter protected float zNear;
+    @Getter protected float zFar;
 
-    protected Matrix4f projection;
+    @Setter protected Matrix4f projection;
 
 
     /**
@@ -90,10 +92,6 @@ public class Camera extends QuickEntity implements WindowChangeListener {
         return cameraRotMat.mul(cameraTransMat);
     }
 
-    public void setProjection(Matrix4f projection) {
-        this.projection = projection;
-    }
-
     public void bindAsMain() {
         getEngine().getRenderEngine().setCamera(this);
     }
@@ -117,17 +115,9 @@ public class Camera extends QuickEntity implements WindowChangeListener {
         getEngine().removeWindowChangeListener(this);
     }
 
-    public float getFov() {
-        return fov;
-    }
-
     public void setFov(float fov) {
         this.fov = fov;
         setMatrix(fov, aspect, zNear, zFar);
-    }
-
-    public float getAspect() {
-        return aspect;
     }
 
     public void setAspect(float aspect) {
@@ -135,17 +125,9 @@ public class Camera extends QuickEntity implements WindowChangeListener {
         setMatrix(fov, aspect, zNear, zFar);
     }
 
-    public float getzNear() {
-        return zNear;
-    }
-
     public void setzNear(float zNear) {
         this.zNear = zNear;
         setMatrix(fov, aspect, zNear, zFar);
-    }
-
-    public float getzFar() {
-        return zFar;
     }
 
     public void setzFar(float zFar) {

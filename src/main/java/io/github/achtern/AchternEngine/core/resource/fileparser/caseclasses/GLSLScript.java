@@ -25,10 +25,14 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses;
 
 import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class GLSLScript extends NativeObject {
 
     public enum Type {
@@ -37,21 +41,21 @@ public class GLSLScript extends NativeObject {
         FRAGMENT_SHADER
     }
 
-    private String name;
+    protected String name;
 
-    private Type type;
+    protected Type type;
 
-    private List<GLSLStruct> structs;
+    protected List<GLSLStruct> structs;
 
-    private List<Variable> attributes;
+    protected List<Variable> attributes;
 
-    private List<Uniform> uniforms;
+    protected List<Uniform> uniforms;
 
-    private List<Uniform> expandedUniforms;
+    protected List<Uniform> expandedUniforms;
 
-    private String source;
+    protected String source;
 
-    private boolean processed;
+    protected boolean processed;
 
 
     public GLSLScript(String name, Type type) {
@@ -60,38 +64,6 @@ public class GLSLScript extends NativeObject {
         this.structs = new ArrayList<GLSLStruct>();
         this.uniforms = new ArrayList<Uniform>();
         this.attributes = new ArrayList<Variable>();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public List<GLSLStruct> getStructs() {
-        return structs;
-    }
-
-    public void setStructs(List<GLSLStruct> structs) {
-        this.structs = structs;
-    }
-
-    public List<Uniform> getUniforms() {
-        return uniforms;
-    }
-
-    public void setUniforms(List<Uniform> uniforms) {
-        this.uniforms = uniforms;
     }
 
     public void setUniformsFromVariable(List<Variable> uniforms) {
@@ -103,35 +75,4 @@ public class GLSLScript extends NativeObject {
         setUniforms(u);
     }
 
-    public List<Uniform> getExpandedUniforms() {
-        return expandedUniforms;
-    }
-
-    public void setExpandedUniforms(List<Uniform> expandedUniforms) {
-        this.expandedUniforms = expandedUniforms;
-    }
-
-    public List<Variable> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<Variable> attributes) {
-        this.attributes = attributes;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public boolean isProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
-    }
 }

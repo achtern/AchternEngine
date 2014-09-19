@@ -27,9 +27,11 @@ package io.github.achtern.AchternEngine.core.rendering.mesh;
 import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
 import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class MeshData extends NativeObject {
 
@@ -78,5 +80,9 @@ public class MeshData extends NativeObject {
         this.setSize(size);
         this.setVertices(vertices);
         this.setIndices(indices);
+    }
+
+    public int getVertexCount() {
+        return getVertices().length;
     }
 }

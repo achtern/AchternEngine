@@ -26,16 +26,20 @@ package io.github.achtern.AchternEngine.core.rendering;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.ArrayList;
 
+@AllArgsConstructor
+@Data
 public class Vertex {
 
     public static final int SIZE = 8;
 
-    private Vector3f pos;
-    private Vector2f texCor;
-    private Vector3f normal;
+    protected Vector3f pos;
+    protected Vector2f texCor;
+    protected Vector3f normal;
 
     public static Vertex[] toArray(float[] positions) {
         ArrayList<Vertex> r = new ArrayList<Vertex>(positions.length / 3);
@@ -81,37 +85,7 @@ public class Vertex {
         this(pos, texCor, new Vector3f(0, 0, 0));
     }
 
-    public Vertex(Vector3f pos, Vector2f texCor, Vector3f normal) {
-        this.pos = pos;
-        this.texCor = texCor;
-        this.normal = normal;
-    }
-
     public Vertex(float x, float y, float z, float texX, float texY) {
         this(new Vector3f(x, y, z), new Vector2f(texX, texY));
-    }
-
-    public Vector3f getPos() {
-        return pos;
-    }
-
-    public void setPos(Vector3f pos) {
-        this.pos = pos;
-    }
-
-    public Vector2f getTexCor() {
-        return texCor;
-    }
-
-    public void setTexCor(Vector2f texCor) {
-        this.texCor = texCor;
-    }
-
-    public Vector3f getNormal() {
-        return normal;
-    }
-
-    public void setNormal(Vector3f normal) {
-        this.normal = normal;
     }
 }

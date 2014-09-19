@@ -35,7 +35,11 @@ import io.github.achtern.AchternEngine.core.input.event.listener.trigger.MouseBu
 import io.github.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import io.github.achtern.AchternEngine.core.input.event.payload.MouseEvent;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class MouseLook extends QuickEntity implements KeyListener, MouseListener {
 
     protected float sensitivity;
@@ -107,29 +111,5 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
 
     protected void centerMouse(InputAdapter input) {
         input.setMousePosition(getEngine().getWindow().getCenter());
-    }
-
-    protected boolean isMouselock() {
-        return mouselock;
-    }
-
-    protected void setMouselock(boolean lock) {
-        this.mouselock = lock;
-    }
-
-    public float getSensitivity() {
-        return sensitivity;
-    }
-
-    public void setSensitivity(float sensitivity) {
-        this.sensitivity = sensitivity;
-    }
-
-    public Key getUnlockKey() {
-        return unlockKey;
-    }
-
-    public void setUnlockKey(Key unlockKey) {
-        this.unlockKey = unlockKey;
     }
 }

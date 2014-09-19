@@ -28,10 +28,14 @@ import io.github.achtern.AchternEngine.core.CoreEngine;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.rendering.RenderPass;
 import io.github.achtern.AchternEngine.core.rendering.shader.Shader;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class QuickRenderPass extends QuickEntity implements RenderPass {
 
-    private Shader shader;
+    protected Shader shader;
 
     @Override
     public void setEngine(CoreEngine engine) {
@@ -46,14 +50,6 @@ public class QuickRenderPass extends QuickEntity implements RenderPass {
     @Override
     public void removed() {
         getEngine().getRenderEngine().removeRenderPass(this);
-    }
-
-    public void setShader(Shader shader) {
-        this.shader = shader;
-    }
-
-    public Shader getShader() {
-        return shader;
     }
 
 }

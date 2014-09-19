@@ -28,6 +28,8 @@ import io.github.achtern.AchternEngine.core.bootstrap.NativeObject;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
+import lombok.Getter;
+import lombok.Setter;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.ArrayList;
@@ -37,19 +39,19 @@ import java.util.Map;
 
 public class GLSLProgram extends NativeObject {
 
-    protected String name;
+    @Getter protected String name;
 
-    protected String source;
+    @Getter protected String source;
 
-    protected Map parsed;
+    @Getter protected Map parsed;
 
-    protected List<GLSLScript> scripts;
+    @Getter protected List<GLSLScript> scripts;
 
     protected Map<String, Uniform> cachedUniforms;
 
     protected Map<String, Uniform> cachedExpandedUniforms;
 
-    protected GLSLParser parser;
+    @Getter @Setter protected GLSLParser parser;
 
     /**
      * Instance to load yaml
@@ -155,29 +157,5 @@ public class GLSLProgram extends NativeObject {
         if (!map.containsKey(key)) {
             throw new IllegalArgumentException("'" + key + "' key missing in ShaderProgram <" + name + ">.");
         }
-    }
-
-    public List<GLSLScript> getScripts() {
-        return scripts;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Map getParsed() {
-        return parsed;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setParser(GLSLParser parser) {
-        this.parser = parser;
-    }
-
-    public GLSLParser getParser() {
-        return parser;
     }
 }

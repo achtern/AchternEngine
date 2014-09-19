@@ -25,7 +25,11 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.caseclasses;
 
 import io.github.achtern.AchternEngine.core.rendering.binding.UniformManager;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class Uniform extends Variable {
 
     protected int location = -1;
@@ -45,36 +49,13 @@ public class Uniform extends Variable {
         super(type, name);
     }
 
-    public int getLocation() {
-        return location;
-    }
 
-    public void setLocation(int location) {
-        this.location = location;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    public SetStrategy getSetStrategy() {
-        return setStrategy;
-    }
-
-    public void setSetStrategy(SetStrategy setStrategy) {
-        this.setStrategy = setStrategy;
-    }
-
+    /**
+     * Equivalent to {@link #isShouldSet()}
+     * @return shouldSet
+     */
     public boolean shouldSet() {
-        return shouldSet;
-    }
-
-    public void setShouldSet(boolean shouldSet) {
-        this.shouldSet = shouldSet;
+        return isShouldSet();
     }
 
     @Override

@@ -26,10 +26,14 @@ package io.github.achtern.AchternEngine.core.scenegraph.entity.renderpasses.ligh
 
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.shader.forward.Ambient;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class AmbientLight extends Light {
 
-    private Color color;
+    protected Color color;
 
     public AmbientLight(Color color) {
         this.color = color;
@@ -39,13 +43,5 @@ public class AmbientLight extends Light {
 
     public AmbientLight(float r, float g, float b) {
         this(new Color(r, g, b));
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 }

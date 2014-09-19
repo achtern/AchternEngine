@@ -30,6 +30,8 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import io.github.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A Figure represents a renderable {@link Mesh}.
@@ -37,14 +39,14 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
  */
 public class Figure extends QuickEntity {
 
-    protected Mesh mesh;
-    protected Material material;
+    @Getter @Setter protected Mesh mesh;
+    @Getter @Setter protected Material material;
 
     /**
      * Override the renderEngine supplied drawStrategy
      * if not null
      */
-    protected DrawStrategy drawStrategy;
+    @Getter @Setter protected DrawStrategy drawStrategy;
 
     /**
      * Create an empty Figure
@@ -131,29 +133,5 @@ public class Figure extends QuickEntity {
      */
     public int getVertexCount() {
         return getMesh().getVertexCount();
-    }
-
-    public Mesh getMesh() {
-        return mesh;
-    }
-
-    public void setMesh(Mesh mesh) {
-        this.mesh = mesh;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public DrawStrategy getDrawStrategy() {
-        return drawStrategy;
-    }
-
-    public void setDrawStrategy(DrawStrategy drawStrategy) {
-        this.drawStrategy = drawStrategy;
     }
 }

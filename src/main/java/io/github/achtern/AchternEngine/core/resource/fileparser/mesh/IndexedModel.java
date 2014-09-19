@@ -26,15 +26,17 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.mesh;
 
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import lombok.Data;
 
 import java.util.ArrayList;
 
+@Data
 public class IndexedModel {
 
-    private ArrayList<Vector3f> positions;
-    private ArrayList<Vector2f> texCoord;
-    private ArrayList<Vector3f> normal;
-    private ArrayList<Integer> indices;
+    protected ArrayList<Vector3f> positions;
+    protected ArrayList<Vector2f> texCoord;
+    protected ArrayList<Vector3f> normal;
+    protected ArrayList<Integer> indices;
 
 
     public IndexedModel() {
@@ -65,37 +67,5 @@ public class IndexedModel {
             normal.normalize();
         }
 
-    }
-
-    public ArrayList<Vector3f> getPositions() {
-        return positions;
-    }
-
-    public void setPositions(ArrayList<Vector3f> positions) {
-        this.positions = positions;
-    }
-
-    public ArrayList<Vector2f> getTexCoord() {
-        return texCoord;
-    }
-
-    public void setTexCoord(ArrayList<Vector2f> texCoord) {
-        this.texCoord = texCoord;
-    }
-
-    public ArrayList<Vector3f> getNormal() {
-        return normal;
-    }
-
-    public void setNormal(ArrayList<Vector3f> normal) {
-        this.normal = normal;
-    }
-
-    public ArrayList<Integer> getIndices() {
-        return indices;
-    }
-
-    public void setIndices(ArrayList<Integer> indices) {
-        this.indices = indices;
     }
 }

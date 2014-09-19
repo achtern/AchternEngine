@@ -32,6 +32,7 @@ import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import io.github.achtern.AchternEngine.core.scenegraph.scanning.FigureRetriever;
+import lombok.Getter;
 
 public class Chaser extends QuickEntity implements GameDebugger.DebugStateListener {
 
@@ -43,7 +44,7 @@ public class Chaser extends QuickEntity implements GameDebugger.DebugStateListen
 
     protected Node chaseTo;
 
-    protected boolean disabled;
+    @Getter protected boolean disabled;
     protected boolean idle;
 
     private Figure cacheFigure;
@@ -135,10 +136,6 @@ public class Chaser extends QuickEntity implements GameDebugger.DebugStateListen
 
     protected Figure getFigure() {
         return cacheFigure;
-    }
-
-    public boolean isDisabled() {
-        return disabled;
     }
 
     public void disable() {

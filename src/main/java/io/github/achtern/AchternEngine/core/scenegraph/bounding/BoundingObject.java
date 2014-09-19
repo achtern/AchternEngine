@@ -25,9 +25,11 @@
 package io.github.achtern.AchternEngine.core.scenegraph.bounding;
 
 import io.github.achtern.AchternEngine.core.math.Vector3f;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public abstract class BoundingObject implements Cloneable {
 
     protected Vector3f center;
@@ -62,24 +64,8 @@ public abstract class BoundingObject implements Cloneable {
         return getCenter().euclidean(point);
     }
 
-    public Vector3f getCenter() {
-        return center;
-    }
-
     public Vector3f getCenter(Vector3f store) {
         store.set(getCenter());
         return store;
-    }
-
-    public void setCenter(Vector3f center) {
-        this.center = center;
-    }
-
-    public int getCheckPlane() {
-        return checkPlane;
-    }
-
-    public void setCheckPlane(int checkPlane) {
-        this.checkPlane = checkPlane;
     }
 }

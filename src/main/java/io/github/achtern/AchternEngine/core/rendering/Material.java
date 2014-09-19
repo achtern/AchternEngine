@@ -27,6 +27,7 @@ package io.github.achtern.AchternEngine.core.rendering;
 import io.github.achtern.AchternEngine.core.rendering.texture.Texture;
 import io.github.achtern.AchternEngine.core.resource.ResourceLoader;
 import io.github.achtern.AchternEngine.core.util.CommonDataStore;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class Material extends CommonDataStore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
 
-    private boolean wireframe = false;
+    @Getter protected boolean wireframe = false;
 
     @Override
     public Texture getTexture(String name) {
@@ -64,10 +65,6 @@ public class Material extends CommonDataStore {
         } else {
             return c;
         }
-    }
-
-    public boolean isWireframe() {
-        return wireframe;
     }
 
     public void asWireframe(boolean wireframe) {

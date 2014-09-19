@@ -28,6 +28,8 @@ import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.math.Vector3f;
 import io.github.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
 import io.github.achtern.AchternEngine.core.util.UString;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +43,12 @@ public class OBJParser implements Model, LineBasedParser {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(OBJParser.class);
 
-    private ArrayList<Vector3f> positions;
-    private ArrayList<Vector2f> texCoord;
-    private ArrayList<Vector3f> normal;
-    private ArrayList<OBJIndex> indices;
-    private boolean hasTexCoords;
-    private boolean hasNormals;
+    @Getter @Setter protected ArrayList<Vector3f> positions;
+    @Getter @Setter protected ArrayList<Vector2f> texCoord;
+    @Getter @Setter protected ArrayList<Vector3f> normal;
+    @Getter @Setter protected ArrayList<OBJIndex> indices;
+    protected boolean hasTexCoords;
+    protected boolean hasNormals;
 
     protected boolean run = false;
 
@@ -224,38 +226,6 @@ public class OBJParser implements Model, LineBasedParser {
         }
 
         return result;
-    }
-
-    public ArrayList<Vector3f> getPositions() {
-        return positions;
-    }
-
-    public void setPositions(ArrayList<Vector3f> positions) {
-        this.positions = positions;
-    }
-
-    public ArrayList<Vector2f> getTexCoord() {
-        return texCoord;
-    }
-
-    public void setTexCoord(ArrayList<Vector2f> texCoord) {
-        this.texCoord = texCoord;
-    }
-
-    public ArrayList<Vector3f> getNormal() {
-        return normal;
-    }
-
-    public void setNormal(ArrayList<Vector3f> normal) {
-        this.normal = normal;
-    }
-
-    public ArrayList<OBJIndex> getIndices() {
-        return indices;
-    }
-
-    public void setIndices(ArrayList<OBJIndex> indices) {
-        this.indices = indices;
     }
 
     public boolean hasRun() {

@@ -29,11 +29,15 @@ import io.github.achtern.AchternEngine.core.rendering.Vertex;
 import io.github.achtern.AchternEngine.core.rendering.mesh.WireBox;
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
 import io.github.achtern.AchternEngine.core.scenegraph.entity.Figure;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@NoArgsConstructor
 public class BoundingBox extends BoundingObject {
 
 
@@ -49,10 +53,7 @@ public class BoundingBox extends BoundingObject {
     }
 
 
-    protected Vector3f extents;
-
-    public BoundingBox() {
-    }
+    @Getter @Setter protected Vector3f extents;
 
     public BoundingBox(Vector3f center, Vector3f extents) {
         super(center);
@@ -251,14 +252,6 @@ public class BoundingBox extends BoundingObject {
 
     public Node makeNode() {
         return makeNode(this);
-    }
-
-    public Vector3f getExtents() {
-        return extents;
-    }
-
-    public void setExtents(Vector3f extents) {
-        this.extents = extents;
     }
 
     public Vertex[] toVertexArray() {

@@ -25,6 +25,7 @@
 package io.github.achtern.AchternEngine.core.scenegraph.scanning;
 
 import io.github.achtern.AchternEngine.core.scenegraph.Node;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class DepthFirstWalker implements SceneGraphWalker {
     /**
      * List of all visitors
      */
-    protected List<Visitor> visitors;
+    @Getter protected List<Visitor> visitors;
 
 
     public DepthFirstWalker() {
@@ -79,15 +80,5 @@ public class DepthFirstWalker implements SceneGraphWalker {
     @Override
     public void clearVisitors() {
         visitors.clear();
-    }
-
-    /**
-     * Returns all visitors
-     *
-     * @return List of all visitors
-     */
-    @Override
-    public List<Visitor> getVisitors() {
-        return visitors;
     }
 }
