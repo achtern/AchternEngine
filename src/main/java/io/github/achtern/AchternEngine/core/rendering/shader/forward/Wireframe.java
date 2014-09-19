@@ -64,11 +64,11 @@ public class Wireframe extends Shader {
         }
 
         if (uniform.getName().equalsIgnoreCase("wirecolor")) {
-            uniform.setValue(((WireframeDisplay) renderEngine.getActiveRenderPass()).getWireColor());
+            uniform.setValue(((WireframeDisplay) renderEngine.getActiveRenderPass()).getWirecolor());
         }
 
         if (uniform.getName().equalsIgnoreCase("fillcolor")) {
-            uniform.setValue(((WireframeDisplay) renderEngine.getActiveRenderPass()).getFillColor());
+            uniform.setValue(((WireframeDisplay) renderEngine.getActiveRenderPass()).getFillcolor());
         }
     }
 }
