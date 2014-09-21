@@ -24,6 +24,7 @@
 
 package io.github.achtern.AchternEngine.core;
 
+import io.github.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import io.github.achtern.AchternEngine.core.bootstrap.BuildInfo;
 import io.github.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
 import io.github.achtern.AchternEngine.core.rendering.BasicRenderEngine;
@@ -88,9 +89,12 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Creates a new Game Holder and runner
      * @param game The game to run.
+     * @param provider The Graphics Binding
+     *
+     * @see io.github.achtern.AchternEngine.core.bootstrap.BindingProvider
      */
-    public CoreEngine(Game game) {
-        this(game, new MainBindingProvider(MainBindingProvider.Bindings.LWJGL));
+    public CoreEngine(Game game, BindingProvider provider) {
+        this(game, new MainBindingProvider(provider));
     }
 
     /**

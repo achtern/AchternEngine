@@ -33,24 +33,12 @@ import io.github.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactor
 import io.github.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
 import io.github.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
 import io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState;
-import io.github.achtern.AchternEngine.lwjgl.bootstrap.LWJGLProvider;
 
 import java.util.Map;
 
 public class MainBindingProvider implements BindingProvider {
 
-    public enum Bindings {
-        LWJGL
-    }
-
     protected BindingProvider binding;
-
-    public MainBindingProvider(Bindings binding) {
-        switch (binding) {
-            case LWJGL:
-                this.binding = new LWJGLProvider();
-        }
-    }
 
     public MainBindingProvider(BindingProvider binding) {
         this.binding = binding;
