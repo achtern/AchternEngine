@@ -27,13 +27,16 @@ package io.github.achtern.AchternEngine.core.scenegraph.entity;
 import io.github.achtern.AchternEngine.core.math.Vector2f;
 import io.github.achtern.AchternEngine.core.rendering.Color;
 import io.github.achtern.AchternEngine.core.rendering.fog.Fog;
+import lombok.Getter;
 
 public class FogGenerator extends QuickEntity implements GlobalEntity<Fog> {
 
-    protected Fog fog;
+    public static final String DEFAULT_NAME = "Fog";
+
+    @Getter protected Fog fog;
 
     public FogGenerator() {
-        this("Fog");
+        this(DEFAULT_NAME);
     }
 
     /**
@@ -43,7 +46,7 @@ public class FogGenerator extends QuickEntity implements GlobalEntity<Fog> {
      */
     public FogGenerator(String name) {
         super(name);
-        this.fog = new Fog(null, null);
+        this.fog = new Fog(Color.WHITE, 0.01f);
     }
 
     public FogGenerator(Color color) {
@@ -63,7 +66,7 @@ public class FogGenerator extends QuickEntity implements GlobalEntity<Fog> {
     }
 
     public FogGenerator(Color color, Vector2f range, float density, Fog.Mode mode) {
-        this();
+        super(DEFAULT_NAME);
         fog.setColor(color);
         fog.setRange(range);
         fog.setDensity(density);
