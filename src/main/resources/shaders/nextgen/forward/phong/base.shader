@@ -18,7 +18,7 @@ void main ()
   @provide vec3 worldPos = (model * vec4(inPosition, 1.0)).xyz;
   @provide vec4 shadowMapCoord = shadowMatrix * vec4(inPosition, 1.0);
 
-  @yield lib
+  @yield;
 }
 
 #---END---#
@@ -28,15 +28,15 @@ void main ()
 @require vec4 color;
 @require sampler2D diffuse;
 
-@import fog.slib
+@import fog.slib;
 
 void main()
 {
     vec4 out = color * texture(diffuse, texCoord.xy);
 
-    @yield lib
+    @yield out;
 
-    @write(0) out
+    @write(0) out;
 }
 
 

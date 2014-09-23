@@ -1,3 +1,3 @@
 #extends base
 
-@import ambient from lighting.slib
+@import ambient from lighting.slib;

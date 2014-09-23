@@ -1,4 +1,4 @@
-#fragment
+#---FRAGMENT---#
 
 @global {
     struct BaseLight
@@ -167,3 +167,5 @@
         return color * CalcSpotLight(spotLight, normal, worldPos, eyePos, specularIntensity, specularPower);
     }
 }
+
+#---END---#
