@@ -28,7 +28,7 @@ import lombok.Getter;
 
 import java.util.regex.Pattern;
 
-public class ShaderTypeBlockParser {
+public class ShaderTypeBlockParser implements BlockParser {
 
     public enum TypeDef {
         VERTEX("VERTEX"),
@@ -51,5 +51,10 @@ public class ShaderTypeBlockParser {
 
     public ShaderTypeBlockParser(String name) {
         this.pattern = Pattern.compile("#---" + name + "---#((.|\\n)*?)#---END---#");
+    }
+
+    @Override
+    public String get(String input) {
+        return pattern.matcher(input).group(0);
     }
 }
