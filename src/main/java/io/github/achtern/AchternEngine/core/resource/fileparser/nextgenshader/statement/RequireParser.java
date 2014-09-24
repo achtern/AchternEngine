@@ -26,6 +26,11 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.s
 
 import java.util.regex.Pattern;
 
+/**
+ * "@require type name;"
+ *
+ * This will pull information from uniforms.
+ */
 public class RequireParser extends BasicStatementParser {
 
     public static final Pattern REGEX = Pattern.compile("@require\\s([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*);");

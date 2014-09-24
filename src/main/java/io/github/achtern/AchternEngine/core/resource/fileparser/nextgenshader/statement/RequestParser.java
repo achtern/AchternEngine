@@ -26,6 +26,13 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.s
 
 import java.util.regex.Pattern;
 
+/**
+ * "@request type name;"
+ *
+ * This is the counter part to the @provide statement and pulls the data from
+ * the vertex/geometry shader!
+ * If there is now corresponding @provide statement the shader won't compile!
+ */
 public class RequestParser extends BasicStatementParser {
 
     public static final Pattern REGEX = Pattern.compile("@request\\s([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*);");

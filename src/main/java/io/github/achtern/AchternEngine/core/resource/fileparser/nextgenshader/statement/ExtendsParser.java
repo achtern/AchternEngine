@@ -26,6 +26,19 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.s
 
 import java.util.regex.Pattern;
 
+/**
+ * "#extends shader_file"
+ *
+ * extends can be used to re-use all code from the given shader file
+ * name.
+ *
+ * This allows you to add additional @import statements.
+ * Especially usefull, when you have a basic diffuse shader
+ * and based on light-type want to import a diffrent set of lighting
+ * methods.
+ *
+ * You can only include ".shader" files! NOT shader libs (".slib")
+ */
 public class ExtendsParser extends BasicStatementParser {
 
     public static final Pattern REGEX = Pattern.compile("#extends\\s([a-zA-Z0-9]*)$");

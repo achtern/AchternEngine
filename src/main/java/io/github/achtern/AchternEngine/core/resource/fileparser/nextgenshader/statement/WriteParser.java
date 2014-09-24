@@ -26,6 +26,13 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.s
 
 import java.util.regex.Pattern;
 
+/**
+ * "@write[(slot)] variable;"
+ *
+ * This can only be used in the fragment shader and out a given variable into the
+ * buffers.
+ * The slot in parenthesis is optional and defaults to 0.
+ */
 public class WriteParser extends BasicStatementParser {
 
     public static final Pattern REGEX = Pattern.compile("@write(\\(([0-9]*)\\))?\\s([a-zA-Z0-9]*);");

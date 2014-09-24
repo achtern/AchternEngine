@@ -26,6 +26,17 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.s
 
 import java.util.regex.Pattern;
 
+/**
+ * "@yield[ variable];"
+ *
+ * This declares where slib code will go.
+ *
+ * The vertex shader cannot pass an variable, but the fragment can.
+ *
+ * This will pass the variable into the <code>vec4 get()</code> method of the lib.
+ * The returned value from that will get passed to the next one!
+ * The first @import statement will get called first!
+ */
 public class YieldParser extends BasicStatementParser {
 
     public static final Pattern REGEX = Pattern.compile("@yield\\s?([a-zA-Z0-9]*)?;");

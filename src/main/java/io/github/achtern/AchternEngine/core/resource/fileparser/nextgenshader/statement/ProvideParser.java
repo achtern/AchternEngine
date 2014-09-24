@@ -26,9 +26,16 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.s
 
 import java.util.regex.Pattern;
 
+/**
+ * "@provide type name = expr;"
+ *
+ * <code>@provide</code> can only be used inside the main method of the vertex block.
+ * It will generate the out statements and assign the value.
+ * If there is now shader which is requesting the value, the statement will get stripped!
+ */
 public class ProvideParser extends BasicStatementParser {
 
-    public static final Pattern REGEX = Pattern.compile("@provide\\s(([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*).*);");
+    public static final Pattern REGEX = Pattern.compile("@provide\\s((([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*).*)\\s?=(.*);)");
 
     public ProvideParser() {
         super(REGEX);
