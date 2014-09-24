@@ -50,10 +50,6 @@ public class ShaderTypeBlockParser {
     }
 
     public ShaderTypeBlockParser(String name) {
-        /*
-            TODO: only capture to FIRST occurance of this string, while allowing the second block,
-             to be without a new line at the end!
-         */
-        this.pattern = Pattern.compile("#---" + name + "---#((.|\\n)+)#---END---#\\n|\\r|\\r\\n");
+        this.pattern = Pattern.compile("#---" + name + "---#((.|\\n)*?)#---END---#");
     }
 }
