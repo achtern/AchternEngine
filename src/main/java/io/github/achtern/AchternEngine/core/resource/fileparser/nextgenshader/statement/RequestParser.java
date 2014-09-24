@@ -35,9 +35,22 @@ import java.util.regex.Pattern;
  */
 public class RequestParser extends BasicStatementParser {
 
+    /**
+     * Capture Groups: (example: "@request vec2 texCoord;")
+     * - 0 type (example: "vec2")
+     * - 1 name (example: "texCoord")
+     */
     public static final Pattern REGEX = Pattern.compile("@request\\s([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*);");
 
     public RequestParser() {
         super(REGEX);
+    }
+
+    public String getType(String input) {
+        return getGroup(input, 0);
+    }
+
+    public String getName(String input) {
+        return getGroup(input, 1);
     }
 }

@@ -33,9 +33,22 @@ import java.util.regex.Pattern;
  */
 public class RequireParser extends BasicStatementParser {
 
+    /**
+     * Capture Groups: (example: "@require vec2 texCoord;")
+     * - 0 type (example: "vec2")
+     * - 1 name (example: "texCoord")
+     */
     public static final Pattern REGEX = Pattern.compile("@require\\s([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*);");
 
     public RequireParser() {
         super(REGEX);
+    }
+
+    public String getType(String input) {
+        return getGroup(input, 0);
+    }
+
+    public String getName(String input) {
+        return getGroup(input, 1);
     }
 }

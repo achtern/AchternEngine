@@ -39,9 +39,17 @@ import java.util.regex.Pattern;
  */
 public class YieldParser extends BasicStatementParser {
 
+    /**
+     * Capture Groups: (example: "@yield out;")
+     * - 0 varName (example: "out")
+     */
     public static final Pattern REGEX = Pattern.compile("@yield\\s?([a-zA-Z0-9]*)?;");
 
     public YieldParser() {
         super(REGEX);
+    }
+
+    public String getVarName(String input) {
+        return getGroup(input, 0);
     }
 }

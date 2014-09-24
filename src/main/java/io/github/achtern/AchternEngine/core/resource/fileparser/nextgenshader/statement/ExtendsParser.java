@@ -47,4 +47,8 @@ public class ExtendsParser extends BasicStatementParser {
         super(REGEX);
     }
 
+    public String getParent(String input) {
+        return REGEX.matcher(input).group();
+    }
+
 }

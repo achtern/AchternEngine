@@ -39,4 +39,8 @@ public abstract class BasicStatementParser implements StatementParser {
     public boolean test(String line) {
         return this.pattern.matcher(line).find();
     }
+
+    protected String getGroup(String input, int i) {
+        return this.pattern.matcher(input).group(i);
+    }
 }

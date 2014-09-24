@@ -46,4 +46,12 @@ public class ImportParser extends BasicStatementParser {
     public ImportParser() {
         super(REGEX);
     }
+
+    public String getLib(String input) {
+        return getGroup(input, 2);
+    }
+
+    public String getModule(String input) {
+        return getGroup(input, 1);
+    }
 }

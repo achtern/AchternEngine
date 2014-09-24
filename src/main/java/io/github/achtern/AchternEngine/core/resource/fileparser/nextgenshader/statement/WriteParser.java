@@ -35,9 +35,28 @@ import java.util.regex.Pattern;
  */
 public class WriteParser extends BasicStatementParser {
 
+    /**
+     * Capture Groups: (example: "@write(0) out;")
+     * - 0 garbage (example: "(0)")
+     * - 1 slot (example: "0")
+     * - 2 varName (example: "out")
+     */
     public static final Pattern REGEX = Pattern.compile("@write(\\(([0-9]*)\\))?\\s([a-zA-Z0-9]*);");
 
     public WriteParser() {
         super(REGEX);
+    }
+
+    public int getSlot(String input) {
+        String i = getGroup(input, 1);
+        if (i == null) {
+            return 0;
+        }
+
+        return Integer.parseInt(i);
+    }
+
+    public String getVarName(String input) {
+        return getGroup(input, 2);
     }
 }

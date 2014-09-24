@@ -35,10 +35,31 @@ import java.util.regex.Pattern;
  */
 public class ProvideParser extends BasicStatementParser {
 
+    /**
+     * Capture Groups: (example: "@provide vec2 texCoord = vec4();")
+     * - 0 statement (example: "vec2 texCoord = vec4();")
+     * - 1 definition/declaration (example: "vec2 texCoord ")
+     * - 2 type (example: "vec2")
+     * - 3 name (example: "texCoord")
+     * - 4 expression (example: " vec4()")
+     */
     public static final Pattern REGEX = Pattern.compile("@provide\\s((([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*).*)\\s?=(.*);)");
 
     public ProvideParser() {
         super(REGEX);
+    }
+
+
+    public String getType(String input) {
+        return getGroup(input, 2);
+    }
+
+    public String getName(String input) {
+        return getGroup(input, 3);
+    }
+
+    public String getMainLine(String input) {
+        return getGroup(input, 0);
     }
 
 }
