@@ -27,9 +27,11 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.b
 import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager.RequireManager;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class UniformBlockBuilderTest {
 
@@ -39,14 +41,22 @@ public class UniformBlockBuilderTest {
         m.add("vec2", "foo1");
         m.add("vec2", "foo2");
         m.add("vec2", "foo3");
-        m.add("vec2", "foo3");
+        m.add("vec3", "foo4");
 
 
         UniformBlockBuilder builder = new UniformBlockBuilder(m);
 
         List<String> lines = builder.getLines();
+        List<String> correctLines = new ArrayList<String>(4);
+        correctLines.add("uniform vec2 foo1;");
+        correctLines.add("uniform vec2 foo2;");
+        correctLines.add("uniform vec2 foo3;");
+        correctLines.add("uniform vec3 foo4;");
 
-        assertTrue(true);
+        Collections.reverse(correctLines);
+
+        assertEquals("Generates correct amount of lines", correctLines.size(), lines.size());
+        assertEquals("Generates valid GLSL lines", correctLines, lines);
 
     }
 }
