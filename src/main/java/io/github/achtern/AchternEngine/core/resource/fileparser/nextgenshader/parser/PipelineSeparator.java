@@ -25,6 +25,7 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser;
 
 import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
+import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement.BlockExtractor;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,13 +78,13 @@ public class PipelineSeparator {
 
         final Map<String, String> processedBlocks = new HashMap<String, String>(blocks.length);
 
-        Matcher matcher;
+        BlockExtractor extractor = new BlockExtractor();
         for (String block : blocks) {
-            matcher = BLOCK_EXTRAXTOR.matcher(block);
 
+            Matcher matcher = extractor.getPattern().matcher(block);
             if (matcher.matches()) {
-                String type = matcher.group(2);
-                String content = matcher.group(3).trim();
+                String type = extractor.getType(block).trim();
+                String content = extractor.getContent(block).trim();
 
                 processedBlocks.put(type, content);
             } else {

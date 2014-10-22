@@ -24,31 +24,28 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement;
 
-
-import lombok.Getter;
-
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class BasicStatementParser implements StatementParser {
+public class BlockExtractor extends BasicStatementParser {
 
-    @Getter protected final Pattern pattern;
+    /**
+     * Capture Groups: (example: "#---VERTEX---#..stuff...")
+     * - 0 everything (example: "#---VERTEX---#..stuff...")
+     * - 1 garbage (example: null)
+     * - 2 type (example: "VERTEX")
+     * - 3 content (example: "..stuff...")
+     */
+    public static final Pattern REGEX = Pattern.compile("(.|\\n)*#---(.*)---#((.|\\n)*)");
 
-    protected BasicStatementParser(Pattern pattern) {
-        this.pattern = pattern;
+    public BlockExtractor() {
+        super(REGEX);
     }
 
-    @Override
-    public boolean test(String line) {
-        return this.pattern.matcher(line).find();
+    public String getType(String input) {
+        return getGroup(input, 2);
     }
 
-    protected String getGroup(String input, int i) {
-        Matcher m = this.pattern.matcher(input);
-        if (m.matches()) {
-            return m.group(i);
-        } else {
-            return null;
-        }
+    public String getContent(String input) {
+        return getGroup(input, 3);
     }
 }
