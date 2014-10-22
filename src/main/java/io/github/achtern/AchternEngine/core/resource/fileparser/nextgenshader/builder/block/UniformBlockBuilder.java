@@ -44,10 +44,22 @@ public class UniformBlockBuilder {
     }
 
 
+    /**
+     * Calls {@link #get(String)} with the dilimter "\n"
+     * @see #getLines()
+     * @return Valid GLSL uniform block
+     */
     public String get() {
         return get("\n");
     }
 
+    /**
+     * Calls {@link #getLines()} and implodes them with the given
+     * delimiter
+     * @see #getLines()
+     * @param delimiter The string to implode the lines
+     * @return Block of uniforms
+     */
     public String get(String delimiter) {
         List<String> lines = getLines();
         StringBuilder builder = new StringBuilder(lines.size());
@@ -59,6 +71,11 @@ public class UniformBlockBuilder {
         return builder.toString();
     }
 
+    /**
+     * Generates valid GLSL lines from the stored {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager.RequireManager}
+     * (the uniform stuff).
+     * @return List of valid GLSL lines WITH ';' {@link io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser#TOKEN_END_STATEMENT}
+     */
     public List<String> getLines() {
         final List<String> lines = new ArrayList<String>(getManager().getRequires().size());
 

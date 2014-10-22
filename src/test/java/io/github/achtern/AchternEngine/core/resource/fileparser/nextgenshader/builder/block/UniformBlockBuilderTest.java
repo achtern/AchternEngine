@@ -25,6 +25,7 @@
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.block;
 
 import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager.RequireManager;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -35,26 +36,57 @@ import static org.junit.Assert.assertEquals;
 
 public class UniformBlockBuilderTest {
 
-    @Test
-    public void testGetLines() throws Exception {
-        RequireManager m = new RequireManager();
+    public RequireManager m;
+    public UniformBlockBuilder builder;
+    public List<String> correctLines;
+
+    @Before
+    public void before() {
+        m = new RequireManager();
         m.add("vec2", "foo1");
         m.add("vec2", "foo2");
         m.add("vec2", "foo3");
         m.add("vec3", "foo4");
 
+        builder = new UniformBlockBuilder(m);
 
-        UniformBlockBuilder builder = new UniformBlockBuilder(m);
+        correctLines = new ArrayList<String>(4);
 
-        List<String> lines = builder.getLines();
-        List<String> correctLines = new ArrayList<String>(4);
         correctLines.add("uniform vec2 foo1;");
         correctLines.add("uniform vec2 foo2;");
         correctLines.add("uniform vec2 foo3;");
         correctLines.add("uniform vec3 foo4;");
 
         Collections.reverse(correctLines);
+    }
 
+    @Test
+    public void testGet() throws Exception {
+        StringBuilder block = new StringBuilder();
+
+        for (String l : correctLines) {
+            block.append(l).append("\n");
+        }
+
+        assertEquals("Should use the line break delimiter by default", block.toString(), builder.get());
+    }
+
+    @Test
+    public void testGetWithArgs() throws Exception {
+        StringBuilder block = new StringBuilder();
+
+        String del = "-";
+
+        for (String l : correctLines) {
+            block.append(l).append(del);
+        }
+
+        assertEquals("Should use the correct delimiter", block.toString(), builder.get(del));
+    }
+
+    @Test
+    public void testGetLines() throws Exception {
+        List<String> lines = builder.getLines();
         assertEquals("Generates correct amount of lines", correctLines.size(), lines.size());
         assertEquals("Generates valid GLSL lines", correctLines, lines);
 
