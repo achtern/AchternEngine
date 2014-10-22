@@ -24,12 +24,30 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser;
 
+import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PipelineSeparator {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(PipelineSeparator.class);
+
+    /**
+     * Capture Groups: (example: "#---VERTEX---#..stuff...")
+     * - 0 everything (example: "#---VERTEX---#..stuff...")
+     * - 1 garbage (example: null)
+     * - 2 type (example: "VERTEX")
+     * - 3 content (example: "..stuff...")
+     */
+    public static final Pattern BLOCK_EXTRAXTOR = Pattern.compile("(.|\\n)*#---(.*)---#((.|\\n)*)");
 
     @Getter protected final String source;
 
@@ -39,7 +57,7 @@ public class PipelineSeparator {
 
     public List<String> getGlobals() {
         // TODO: move this value into a final, constant value!
-        String globals = source.substring(0, source.indexOf("#---"));
+        String globals = getSource().substring(0, getSource().indexOf("#---"));
 
         String[] lines = globals.split("\n");
 
@@ -52,7 +70,28 @@ public class PipelineSeparator {
         return globalStatements;
     }
 
-    protected List<String> getBlocks() {
-        return new ArrayList<String>();
+    protected Map<String, String> getBlocks() throws ParsingException {
+        String removedGlobals = getSource().substring(getSource().indexOf("#---"), getSource().length());
+
+        String[] blocks = removedGlobals.split("#---END---#");
+
+        final Map<String, String> processedBlocks = new HashMap<String, String>(blocks.length);
+
+        Matcher matcher;
+        for (String block : blocks) {
+            matcher = BLOCK_EXTRAXTOR.matcher(block);
+
+            if (matcher.matches()) {
+                String type = matcher.group(2);
+                String content = matcher.group(3).trim();
+
+                processedBlocks.put(type, content);
+            } else {
+                throw new ParsingException("Block doesn't match regex.\n>>" + block + "<<\n");
+            }
+        }
+
+
+        return processedBlocks;
     }
 }

@@ -28,7 +28,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,9 +55,9 @@ public class PipelineSeparatorTest {
 
     @Test
     public void testGetBlocks() throws Exception {
-        List<String> blocks = new ArrayList<String>(2);
-        blocks.add(getVertexContent());
-        blocks.add(getFragmentContent());
+        Map<String, String> blocks = new HashMap<String, String>(2);
+        blocks.put("VERTEX", getVertexContent().trim());
+        blocks.put("FRAGMENT", getFragmentContent().trim());
 
         assertEquals("Should extract the correct number of blocks", blocks.size(), ps.getBlocks().size());
         assertEquals("Should extract the correct blocks", blocks, ps.getBlocks());
