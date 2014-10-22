@@ -53,6 +53,6 @@ public class PipelineSeparator {
     }
 
     protected List<String> getBlocks() {
-        return null;
+        return new ArrayList<String>();
     }
 }

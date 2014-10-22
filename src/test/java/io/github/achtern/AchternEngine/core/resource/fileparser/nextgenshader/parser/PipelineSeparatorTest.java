@@ -43,14 +43,22 @@ public class PipelineSeparatorTest {
 
     @Test
     public void testGetGlobals() throws Exception {
-        String source = getSource();
-
         List<String> globals = new ArrayList<String>(2);
         globals.add("@import fog.slib;");
         globals.add("@import fuckit.slib;");
 
         assertEquals("Should retrieve all global statements", globals.size(), ps.getGlobals().size());
         assertEquals("Should retrieve correct, trimmed global statements", globals, ps.getGlobals());
+    }
+
+    @Test
+    public void testGetBlocks() throws Exception {
+        List<String> blocks = new ArrayList<String>(2);
+        blocks.add(getVertexContent());
+        blocks.add(getFragmentContent());
+
+        assertEquals("Should extract the correct number of blocks", blocks.size(), ps.getBlocks().size());
+        assertEquals("Should extract the correct blocks", blocks, ps.getBlocks());
     }
 
     public static String getSource() {
@@ -98,5 +106,48 @@ public class PipelineSeparatorTest {
                 "\n" +
                 "\n" +
                 "#---END---#";
+    }
+
+    public static String getVertexContent() {
+        return "layout (location = 0) in vec3 inPosition;\n" +
+                "layout (location = 1) in vec2 inTexCoord;\n" +
+                "layout (location = 2) in vec3 inNormal;\n" +
+                "\n" +
+                "\n" +
+                "@require mat4 model;\n" +
+                "@require mat4 modelView;\n" +
+                "@require mat4 MVP;\n" +
+                "@require mat4 shadowMatrix;\n" +
+                "\n" +
+                "void main ()\n" +
+                "{\n" +
+                "  gl_Position = MVP * vec4(inPosition, 1.0);\n" +
+                "\n" +
+                "  @provide vec2 texCoord = inTexCoord;\n" +
+                "  @provide vec3 normal = (model * vec4(inNormal, 0.0)).xyz;\n" +
+                "  @provide vec3 worldPos = (model * vec4(inPosition, 1.0)).xyz;\n" +
+                "  @provide vec4 shadowMapCoord = shadowMatrix * vec4(inPosition, 1.0);\n" +
+                "\n" +
+                "  @yield;\n" +
+                "}\n" +
+                "\n";
+    }
+
+    public static String getFragmentContent() {
+        return "@request vec2 texCoord;\n" +
+                "\n" +
+                "@require vec4 color;\n" +
+                "@require sampler2D diffuse;\n" +
+                "\n" +
+                "void main()\n" +
+                "{\n" +
+                "    vec4 out = color * texture(diffuse, texCoord.xy);\n" +
+                "\n" +
+                "    @yield out;\n" +
+                "\n" +
+                "    @write(0) out;\n" +
+                "}\n" +
+                "\n" +
+                "\n";
     }
 }
