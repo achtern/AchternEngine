@@ -79,6 +79,13 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     public static final String CUSTOM_TOKEN_IMPORT = "#import";
 
     /**
+     * Just a space character to safe some memory, when generating code.
+     * Nothing special...
+     * Content: " " (one space)
+     */
+    public static final String TOKEN_SPACE = " ";
+
+    /**
      * The uniform token used in the GLSL language
      * (uniform type name)
      */
