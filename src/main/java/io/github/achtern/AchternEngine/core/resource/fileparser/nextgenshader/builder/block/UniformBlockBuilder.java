@@ -60,14 +60,21 @@ public class UniformBlockBuilder {
     }
 
     public List<String> getLines() {
-        final List<String> lines = new ArrayList<String>(manager.getRequires().size());
+        final List<String> lines = new ArrayList<String>(getManager().getRequires().size());
 
         Iterator<Map.Entry<String, String>> it = getManager().getRequires().entrySet().iterator();
 
         while (it.hasNext()) {
             Map.Entry<String, String> uniform = it.next();
 
-            lines.add(GLSLParser.TOKEN_UNIFORM + " " + uniform.getKey() + " " + uniform.getValue());
+            lines.add(
+                    GLSLParser.TOKEN_UNIFORM
+                  + GLSLParser.TOKEN_SPACE
+                  + uniform.getValue()
+                  + GLSLParser.TOKEN_SPACE
+                  + uniform.getKey()
+                  + GLSLParser.TOKEN_END_STATEMENT
+            );
 
             it.remove();
         }
