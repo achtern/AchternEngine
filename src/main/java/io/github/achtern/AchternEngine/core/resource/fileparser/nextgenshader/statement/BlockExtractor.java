@@ -41,8 +41,20 @@ public class BlockExtractor extends BasicStatementParser {
         super(REGEX);
     }
 
+    public BlockExtractor(String input) {
+        super(REGEX, input);
+    }
+
+    public String getType() {
+        return getGroup(2);
+    }
+
     public String getType(String input) {
         return getGroup(input, 2);
+    }
+
+    public String getContent() {
+        return getGroup(3);
     }
 
     public String getContent(String input) {

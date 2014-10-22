@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PipelineSeparator {
@@ -78,13 +77,13 @@ public class PipelineSeparator {
 
         final Map<String, String> processedBlocks = new HashMap<String, String>(blocks.length);
 
-        BlockExtractor extractor = new BlockExtractor();
+        BlockExtractor extractor;
         for (String block : blocks) {
+            extractor = new BlockExtractor(block);
 
-            Matcher matcher = extractor.getPattern().matcher(block);
-            if (matcher.matches()) {
-                String type = extractor.getType(block).trim();
-                String content = extractor.getContent(block).trim();
+            if (extractor.getTargetMatcher().matches()) {
+                String type = extractor.getType().trim();
+                String content = extractor.getContent().trim();
 
                 processedBlocks.put(type, content);
             } else {

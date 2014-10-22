@@ -34,8 +34,16 @@ public abstract class BasicStatementParser implements StatementParser {
 
     @Getter protected final Pattern pattern;
 
+    @Getter private String target;
+    private Matcher targetMatcher;
+
     protected BasicStatementParser(Pattern pattern) {
         this.pattern = pattern;
+    }
+
+    protected BasicStatementParser(Pattern pattern, String target) {
+        this(pattern);
+        this.target = target;
     }
 
     @Override
@@ -43,12 +51,32 @@ public abstract class BasicStatementParser implements StatementParser {
         return this.pattern.matcher(line).find();
     }
 
+    public boolean test() {
+        return getTargetMatcher().find();
+    }
+
     protected String getGroup(String input, int i) {
         Matcher m = this.pattern.matcher(input);
+        return getGroup(m, i);
+    }
+
+    protected String getGroup(int i) {
+        return getGroup(getTargetMatcher(), i);
+    }
+
+    public Matcher getTargetMatcher() {
+        if (targetMatcher == null) {
+            targetMatcher = getPattern().matcher(getTarget());
+        }
+
+        return targetMatcher;
+    }
+
+    private String getGroup(Matcher m, int i) {
         if (m.matches()) {
             return m.group(i);
         } else {
-            return null;
+            return "";
         }
     }
 }
