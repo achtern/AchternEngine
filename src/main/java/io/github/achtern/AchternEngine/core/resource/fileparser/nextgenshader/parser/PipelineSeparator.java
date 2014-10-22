@@ -38,7 +38,18 @@ public class PipelineSeparator {
     }
 
     public List<String> getGlobals() {
-        return new ArrayList<String>();
+        // TODO: move this value into a final, constant value!
+        String globals = source.substring(0, source.indexOf("#---"));
+
+        String[] lines = globals.split("\n");
+
+        final List<String> globalStatements = new ArrayList<String>(lines.length);
+
+        for (String l : lines) {
+            globalStatements.add(l.trim());
+        }
+
+        return globalStatements;
     }
 
     protected List<String> getBlocks() {

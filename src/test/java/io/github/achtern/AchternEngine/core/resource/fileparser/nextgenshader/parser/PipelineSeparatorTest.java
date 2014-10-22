@@ -55,7 +55,7 @@ public class PipelineSeparatorTest {
 
     public static String getSource() {
         return "@import fog.slib;\n" +
-                "@import fuckit.slib\n" +
+                "@import fuckit.slib;\n" +
                 "\n" +
                 "#---VERTEX---#\n" +
                 "layout (location = 0) in vec3 inPosition;\n" +
