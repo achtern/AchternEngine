@@ -27,7 +27,7 @@ package io.github.achtern.AchternEngine.core.util;
 /**
  * Utility for Arrays
  */
-public class UArray {
+public final class UArray {
 
     /**
      * Joins an array of strings into one.
