@@ -31,6 +31,13 @@ public class SkyBox extends Mesh {
     private static float X_MOD = 1f / 4;
     private static float Y_MOD = 1f / 3;
 
+    public SkyBox(int size) {
+        this((float) size);
+    }
+
+    public SkyBox(double size) {
+        this((float) size);
+    }
 
     public SkyBox(float size) {
 
