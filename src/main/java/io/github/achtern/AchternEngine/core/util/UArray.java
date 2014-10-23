@@ -50,7 +50,7 @@ public class UArray {
         E[] merged = (E[]) new Object[first.length + second.length];
 
         System.arraycopy(first, 0, merged, 0, first.length);
-        System.arraycopy(second, 0, merged, first.length - 1, second.length);
+        System.arraycopy(second, 0, merged, first.length, second.length);
 
 
         return merged;

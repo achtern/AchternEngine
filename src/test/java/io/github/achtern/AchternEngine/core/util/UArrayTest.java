@@ -29,6 +29,7 @@ public class UArrayTest {
         assertEquals("ABC D", UArray.join(array2));
     }
 
+    @Test
     public void testConcat() {
 
         Integer[] arr1 = new Integer[] {
