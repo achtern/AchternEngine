@@ -32,9 +32,15 @@ import java.util.regex.Pattern;
 
 public abstract class BasicStatementParser implements StatementParser {
 
+    public interface GroupProvider {
+
+        public int get();
+
+    }
+
     @Getter protected final Pattern pattern;
 
-    @Getter private String target;
+    @Getter protected String target;
     private Matcher targetMatcher;
 
     protected BasicStatementParser(Pattern pattern) {
@@ -60,8 +66,16 @@ public abstract class BasicStatementParser implements StatementParser {
         return getGroup(m, i);
     }
 
+    protected String getGroup(String input, GroupProvider provider) {
+        return getGroup(input, provider.get());
+    }
+
     protected String getGroup(int i) {
         return getGroup(getTargetMatcher(), i);
+    }
+
+    protected String getGroup(GroupProvider provider) {
+        return getGroup(provider.get());
     }
 
     public Matcher getTargetMatcher() {

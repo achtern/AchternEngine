@@ -24,6 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement;
 
+import lombok.AllArgsConstructor;
+
 import java.util.regex.Pattern;
 
 /**
@@ -45,21 +47,38 @@ public class ProvideParser extends BasicStatementParser {
      */
     public static final Pattern REGEX = Pattern.compile("@provide\\s((([a-zA-Z0-9]*)\\s([a-zA-Z0-9]*).*)\\s?=(.*);)");
 
+    @AllArgsConstructor
+    public enum Groups implements GroupProvider {
+        STATEMENT(0),
+        DECLARATION(1),
+        TYPE(2),
+        NAME(3),
+        EXPRESSION(4);
+
+
+        protected int group;
+
+        @Override
+        public int get() {
+            return group;
+        }
+    }
+
     public ProvideParser() {
         super(REGEX);
     }
 
 
     public String getType(String input) {
-        return getGroup(input, 2);
+        return getGroup(input, Groups.TYPE);
     }
 
     public String getName(String input) {
-        return getGroup(input, 3);
+        return getGroup(input, Groups.NAME);
     }
 
     public String getMainLine(String input) {
-        return getGroup(input, 0);
+        return getGroup(input, Groups.STATEMENT);
     }
 
 }

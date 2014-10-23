@@ -24,6 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement;
 
+import lombok.AllArgsConstructor;
+
 import java.util.regex.Pattern;
 
 /**
@@ -43,12 +45,27 @@ public class WriteParser extends BasicStatementParser {
      */
     public static final Pattern REGEX = Pattern.compile("@write(\\(([0-9]*)\\))?\\s([a-zA-Z0-9]*);");
 
+    @AllArgsConstructor
+    public enum Groups implements GroupProvider {
+        GARBAGE(0),
+        SLOT(1),
+        NAME(2);
+
+
+        protected int group;
+
+        @Override
+        public int get() {
+            return group;
+        }
+    }
+
     public WriteParser() {
         super(REGEX);
     }
 
     public int getSlot(String input) {
-        String i = getGroup(input, 1);
+        String i = getGroup(input, Groups.SLOT);
         if (i == null) {
             return 0;
         }
@@ -56,7 +73,7 @@ public class WriteParser extends BasicStatementParser {
         return Integer.parseInt(i);
     }
 
-    public String getVarName(String input) {
-        return getGroup(input, 2);
+    public String getName(String input) {
+        return getGroup(input, Groups.NAME);
     }
 }

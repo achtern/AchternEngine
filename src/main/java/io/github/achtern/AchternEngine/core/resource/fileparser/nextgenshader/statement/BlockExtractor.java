@@ -24,6 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement;
 
+import lombok.AllArgsConstructor;
+
 import java.util.regex.Pattern;
 
 public class BlockExtractor extends BasicStatementParser {
@@ -37,6 +39,21 @@ public class BlockExtractor extends BasicStatementParser {
      */
     public static final Pattern REGEX = Pattern.compile("(.|\\n)*#---(.*)---#((.|\\n)*)");
 
+    @AllArgsConstructor
+    public enum Groups implements GroupProvider {
+        EVERYTHING(0),
+        GARBAGE(1),
+        TYPE(2),
+        CONTENT(3);
+
+        protected int group;
+
+        @Override
+        public int get() {
+            return group;
+        }
+    }
+
     public BlockExtractor() {
         super(REGEX);
     }
@@ -46,18 +63,18 @@ public class BlockExtractor extends BasicStatementParser {
     }
 
     public String getType() {
-        return getGroup(2);
+        return getGroup(Groups.TYPE);
     }
 
     public String getType(String input) {
-        return getGroup(input, 2);
+        return getGroup(input, Groups.TYPE);
     }
 
     public String getContent() {
-        return getGroup(3);
+        return getGroup(Groups.CONTENT);
     }
 
     public String getContent(String input) {
-        return getGroup(input, 3);
+        return getGroup(input, Groups.CONTENT);
     }
 }

@@ -24,6 +24,8 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement;
 
+import lombok.AllArgsConstructor;
+
 import java.util.regex.Pattern;
 
 /**
@@ -45,11 +47,24 @@ public class YieldParser extends BasicStatementParser {
      */
     public static final Pattern REGEX = Pattern.compile("@yield\\s?([a-zA-Z0-9]*)?;");
 
+    @AllArgsConstructor
+    public enum Groups implements GroupProvider {
+        NAME(0);
+
+
+        protected int group;
+
+        @Override
+        public int get() {
+            return group;
+        }
+    }
+
     public YieldParser() {
         super(REGEX);
     }
 
-    public String getVarName(String input) {
-        return getGroup(input, 0);
+    public String getName(String input) {
+        return getGroup(input, Groups.NAME);
     }
 }

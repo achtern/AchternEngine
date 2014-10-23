@@ -34,20 +34,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class PipelineSeparator {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(PipelineSeparator.class);
 
-    /**
-     * Capture Groups: (example: "#---VERTEX---#..stuff...")
-     * - 0 everything (example: "#---VERTEX---#..stuff...")
-     * - 1 garbage (example: null)
-     * - 2 type (example: "VERTEX")
-     * - 3 content (example: "..stuff...")
-     */
-    public static final Pattern BLOCK_EXTRAXTOR = Pattern.compile("(.|\\n)*#---(.*)---#((.|\\n)*)");
+    public static final String PIPELINE_SEPARATOR_START = "#---";
+
+    public static final String PIPELINE_SEPARATOR_END = "---#";
+
+    public static final String PIPELINE_END = PIPELINE_SEPARATOR_START + "END" + PIPELINE_SEPARATOR_END;
 
     @Getter protected final String source;
 
@@ -56,10 +52,9 @@ public class PipelineSeparator {
     }
 
     public List<String> getGlobals() {
-        // TODO: move this value into a final, constant value!
-        String globals = getSource().substring(0, getSource().indexOf("#---"));
+        final String globals = getSource().substring(0, getSource().indexOf(PIPELINE_SEPARATOR_START));
 
-        String[] lines = globals.split("\n");
+        final String[] lines = globals.split("\n");
 
         final List<String> globalStatements = new ArrayList<String>(lines.length);
 
@@ -71,9 +66,9 @@ public class PipelineSeparator {
     }
 
     protected Map<String, String> getBlocks() throws ParsingException {
-        String removedGlobals = getSource().substring(getSource().indexOf("#---"), getSource().length());
+        final String removedGlobals = getSource().substring(getSource().indexOf("#---"), getSource().length());
 
-        String[] blocks = removedGlobals.split("#---END---#");
+        final String[] blocks = removedGlobals.split(PIPELINE_END);
 
         final Map<String, String> processedBlocks = new HashMap<String, String>(blocks.length);
 
