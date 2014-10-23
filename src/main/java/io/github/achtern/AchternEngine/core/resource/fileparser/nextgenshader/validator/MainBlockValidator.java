@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.validator;
+package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.validator;
 
 import java.util.regex.Pattern;
 
-public interface SourceValidator {
+public class MainBlockValidator extends BasicSourceValidator {
 
-    public Pattern getRegex();
+    public static final Pattern REGEX = Pattern.compile("(.|\\n)*void main\\s?\\(\\)\\s\\{((.|\\n)*)\\}(.|\\n)*");
 
-    public boolean isValid(String source);
-
+    public MainBlockValidator() {
+        super(REGEX);
+    }
 }

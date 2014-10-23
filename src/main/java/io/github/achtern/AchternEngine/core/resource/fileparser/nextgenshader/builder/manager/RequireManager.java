@@ -24,32 +24,5 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager;
 
-import lombok.Getter;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class RequireManager {
-
-    /**
-     * This keeps track off all require statements.
-     * Maps name to type (name => type)
-     * This order seems confusing, but is the only way
-     * to avoid overrides when requiring multiple values
-     * of the same type. The name however is unique!
-     */
-    @Getter protected Map<String, String> requires;
-
-    public RequireManager() {
-        this.requires = new HashMap<String, String>();
-    }
-
-    /**
-     * Adds a new require statement!
-     * @param type The Type!
-     * @param name The Name!
-     */
-    public void add(String type, String name) {
-        getRequires().put(name, type);
-    }
+public class RequireManager extends VariableTransportManager {
 }

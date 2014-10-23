@@ -22,39 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.slib;
+package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager;
 
-import lombok.Getter;
-
-import java.util.regex.Pattern;
-
-public class ShaderTypeBlockParser implements BlockParser {
-
-    public enum TypeDef {
-        VERTEX("VERTEX"),
-        FRAGMENT("FRAGMENT"),
-        GEOMETRY("GEOMETRY");
-
-
-        @Getter protected final String name;
-
-        TypeDef(String name) {
-            this.name = name;
-        }
-    }
-
-    protected final Pattern pattern;
-
-    public ShaderTypeBlockParser(TypeDef def) {
-        this(def.getName());
-    }
-
-    public ShaderTypeBlockParser(String name) {
-        this.pattern = Pattern.compile("#---" + name + "---#((.|\\n)*?)#---END---#");
-    }
-
-    @Override
-    public String get(String input) {
-        return pattern.matcher(input).group(0);
-    }
+public class VaryingManager extends VariableTransportManager {
 }

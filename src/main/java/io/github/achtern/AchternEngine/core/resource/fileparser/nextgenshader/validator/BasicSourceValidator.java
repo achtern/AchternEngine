@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.validator;
+package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.validator;
 
 import lombok.Getter;
 

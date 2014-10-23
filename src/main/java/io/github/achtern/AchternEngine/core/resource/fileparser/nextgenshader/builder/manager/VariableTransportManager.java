@@ -22,10 +22,43 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.slib;
+package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager;
 
-public interface BlockParser {
+import lombok.Getter;
 
-    public String get(String line);
+import java.util.HashMap;
+import java.util.Map;
 
+public abstract class VariableTransportManager {
+
+    /**
+     * This keeps track off all transport statements.
+     * Maps name to type (name => type)
+     * This order seems confusing, but is the only way
+     * to avoid overrides when handling multiple values
+     * of the same type. The name - however - is unique!
+     */
+    @Getter protected Map<String, String> transports;
+
+    protected VariableTransportManager() {
+        this.transports = new HashMap<String, String>();
+    }
+
+    /**
+     * Adds a new transport statement!
+     * @param type The Type!
+     * @param name The Name!
+     */
+    public void add(String type, String name) {
+        getTransports().put(name, type);
+    }
+
+    /**
+     * Alias for {@link #add(String, String)}
+     * @param type The Type!
+     * @param name The Name!
+     */
+    public void put(String type, String name) {
+        add(type, name);
+    }
 }

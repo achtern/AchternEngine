@@ -24,7 +24,7 @@
 
 package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder;
 
-import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.validator.MainBlockValidator;
+import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.validator.MainBlockValidator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,17 +34,17 @@ public class GLSLBuilder {
 
     /**
      * Nextgen source of the vertex shader (can be retrieved using
-     * {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.slib.ShaderTypeBlockParser})
+     * {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser.PipelineSeparator})
      */
     @Getter @Setter protected String vertex;
     /**
      * Nextgen source of the vertex shader (can be retrieved using
-     * {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.slib.ShaderTypeBlockParser})
+     * {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser.PipelineSeparator})
      */
     @Getter @Setter protected String fragment;
     /**
      * Nextgen source of the vertex shader (can be retrieved using
-     * {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.slib.ShaderTypeBlockParser})
+     * {@link io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser.PipelineSeparator})
      */
     @Getter @Setter protected String geometry;
 

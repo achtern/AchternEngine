@@ -22,25 +22,14 @@
  * SOFTWARE.
  */
 
-package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.block;
+package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.validator;
 
-import io.github.achtern.AchternEngine.core.resource.fileparser.GLSLParser;
-import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager.RequireManager;
+import java.util.regex.Pattern;
 
-public class UniformBlockBuilder extends TransportBlockBuilder {
+public interface SourceValidator {
 
-    public UniformBlockBuilder(RequireManager manager) {
-        super(manager);
-    }
+    public Pattern getRegex();
 
-    @Override
-    protected String buildLine(String type, String name) {
-        return GLSLParser.TOKEN_UNIFORM
-                + GLSLParser.TOKEN_SPACE
-                + type
-                + GLSLParser.TOKEN_SPACE
-                + name
-                + GLSLParser.TOKEN_END_STATEMENT;
-    }
+    public boolean isValid(String source);
 
 }
