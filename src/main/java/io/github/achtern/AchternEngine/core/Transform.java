@@ -41,29 +41,12 @@ public class Transform {
     private Quaternion rotation;
     private Vector3f scale;
 
-    private Vector3f oldPosition;
-    private Quaternion oldRotation;
-    private Vector3f oldScale;
 
     public Transform() {
         position = new Vector3f(0, 0, 0);
         rotation = new Quaternion(0, 0, 0, 1);
         scale = new Vector3f(1, 1, 1);
         parentMat = new Matrix4f().initIdentiy();
-    }
-
-    public void update() {
-        if (oldPosition != null) {
-            oldPosition.set(position);
-            oldRotation.set(rotation);
-            oldScale.set(scale);
-        } else {
-            oldPosition = position.add(1);
-
-            oldRotation = rotation.mul(0.5f);
-
-            oldScale = scale.add(1);
-        }
     }
 
     public Matrix4f getTransformation() {
@@ -89,27 +72,6 @@ public class Transform {
 
     public Quaternion getFaceAt(Vector3f at, Vector3f up) {
         return new Quaternion(new Matrix4f().initRotation(at.sub(getPosition()).normalized(), up));
-    }
-
-    public boolean hasChanged() {
-
-        if (parent != null && parent.hasChanged()) {
-            return true;
-        }
-
-        if (!position.equals(oldPosition)) {
-            return true;
-        }
-
-        if (!rotation.equals(oldRotation)) {
-            return true;
-        }
-
-        if (!scale.equals(oldScale)) {
-            return true;
-        }
-
-        return false;
     }
 
     public Vector3f getTransformedPosition() {
@@ -157,7 +119,7 @@ public class Transform {
     }
 
     private Matrix4f getParentMatrix() {
-        if (this.parent != null && this.parent.hasChanged()) {
+        if (this.parent != null) {
             this.parentMat = this.parent.getTransformation();
         }
 

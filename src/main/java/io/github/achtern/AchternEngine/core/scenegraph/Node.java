@@ -102,8 +102,6 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      */
     @Override
     public void update(float delta) {
-        transform.update();
-
         for (Entity entity : getEntities()) {
             entity.update(delta);
         }
