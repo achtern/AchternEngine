@@ -131,22 +131,8 @@ public class Vector2f {
         setY(y);
     }
 
-    public boolean equals(Vector2f v) {
-        return x == v.getX() && y == v.getY();
-    }
-
     public boolean isNullVector() {
         return getX() == 0 && getY() == 0;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Vector2f && equals((Vector2f) obj);
-    }
-
-    @Override
-    public String toString() {
-        return "(" + getX() + "/" + getY() + ")";
     }
 
     /**
