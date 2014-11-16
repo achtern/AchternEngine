@@ -451,16 +451,13 @@ public class LWJGLInput implements InputAdapter {
     private boolean[] lastKeys = new boolean[NUM_KEYCODES];
     private boolean[] lastMouse = new boolean[NUM_MOUSEBUTTONS];
 
-    @Deprecated
-    private static boolean[] lastMouseStatic = new boolean[NUM_MOUSEBUTTONS];
-
     public void update() {
         for (int i = 0; i < NUM_KEYCODES; i++) {
             lastKeys[i] = getKey(i);
         }
 
         for (int i = 0; i < NUM_MOUSEBUTTONS; i++) {
-            lastMouseStatic[i] = lastMouse[i] = getMouse(i);
+            lastMouse[i] = getMouse(i);
         }
     }
 
