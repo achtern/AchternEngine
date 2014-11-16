@@ -39,42 +39,104 @@ import java.util.Map;
 import static io.github.achtern.AchternEngine.lwjgl.util.GLEnum.getGLEnum;
 import static org.lwjgl.opengl.GL11.*;
 
-
+/**
+ * API to talk to the OpenGL statemachine provided by LWJGL Bindings
+ *
+ * @see io.github.achtern.AchternEngine.core.rendering.state.RenderEngineState
+ */
 public class LWJGLRenderEngineState implements RenderEngineState {
 
+    /**
+     * Stores the version string of the OpenGL Version on the system.
+     * NOT the version of LWJGL
+     */
     protected String version;
 
+    /**
+     * Indicates whether or not to throw exceptions,
+     * when a state changed is invoked, but the state is
+     * already set on the graphics card program.
+     * Useful to find useless calls, but not advised to have
+     * turned on in production!
+     */
     protected final boolean throwUnchanged;
 
+    /**
+     * Stores which features are enabled or disabled.
+     * @see io.github.achtern.AchternEngine.core.rendering.state.Feature
+     */
     protected Map<Feature, Boolean> enabled = new HashMap<Feature, Boolean>(Feature.values().length);
 
+    /**
+     * Stores which {@link io.github.achtern.AchternEngine.core.rendering.state.DepthFunction}
+     * is currently active.
+     */
     protected DepthFunction depthFunction = DepthFunction.LESS;
 
+    /**
+     * Stores which face is getting culled.
+     */
     protected Face cullFace = Face.BACK;
 
+    /**
+     * Stores the color to clear the screen.
+     */
     protected Color clearColor = Color.BLACK;
 
+    /**
+     * Stores how faces are drawn.
+     */
     protected FrontFaceMethod frontFace = FrontFaceMethod.COUNTER_CLOCKWISE;
 
+    /**
+     * Stores whether or not the engine writes into the depth buffer.
+     */
     protected boolean depthWrite = true;
 
+    /**
+     * Stores the 2-component blend function which is currently active.
+     */
     protected BlendFunction[] blendFunction = new BlendFunction[] {
         BlendFunction.ONE,
         BlendFunction.ZERO
     };
 
+    /**
+     * Store how polygons are getting filled.
+     */
     protected FillMode polygonMode = FillMode.FILL;
 
+    /**
+     * Stores the active color mask (RGBA)
+     */
     protected boolean[] colorMask = new boolean[] {true, true, true, true};
 
+    /**
+     * Stores the bound framebuffer object.
+     */
     protected FrameBuffer boundFbo;
 
+    /**
+     * Stores the bound {@link io.github.achtern.AchternEngine.core.rendering.texture.Texture}
+     */
     protected Texture boundTexture;
 
+    /**
+     * Stores the bound {@link io.github.achtern.AchternEngine.core.rendering.mesh.Mesh}
+     */
     protected Mesh boundMesh;
 
+    /**
+     * Stores the bound {@link io.github.achtern.AchternEngine.core.rendering.shader.Shader}
+     */
     protected Shader boundShader;
 
+    /**
+     * Constructs a new LWJGLRenderEngine state.
+     *
+     * Throws exceptions on unchanged state calls!
+     * @see #throwUnchanged
+     */
     public LWJGLRenderEngineState() {
         this(true);
     }
@@ -83,6 +145,12 @@ public class LWJGLRenderEngineState implements RenderEngineState {
         this.throwUnchanged = throwUnchanged;
     }
 
+    /**
+     * Returns the OpenGL Version.
+     * Calls {@link org.lwjgl.opengl.GL11#glGetString(int)}.
+     * (Caches the value after on first call!)
+     * @return OpenGL Version
+     */
     @Override
     public String getVersion() {
         if (version == null) {
