@@ -156,6 +156,12 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     @Override
     public void run() {
 
+        // Pre loading images here
+        // this way there is a shorter period of
+        // the black screen.
+        if (game.getSplashScreen() == null) {
+            LoadingScreen.get().preLoad();
+        }
 
         running = true;
 
@@ -226,10 +232,11 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     /**
      * Disposes the window.
-     * Destroing Mouse and Keyboard.
+     * Destroying Mouse and Keyboard.
      */
     public void cleanUp() {
         window.dispose();
+        LOGGER.info("Shutdown.");
     }
 
     public void addWindowChangeListener(WindowChangeListener listener) {

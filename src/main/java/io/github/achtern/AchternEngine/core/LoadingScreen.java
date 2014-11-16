@@ -42,6 +42,8 @@ import org.slf4j.LoggerFactory;
 
 public class LoadingScreen implements RenderPass {
 
+    public static final String DEFAULT_TEXTURE_NAME = "loading.v0.0.1.png";
+
     public static final Logger LOGGER = LoggerFactory.getLogger(LoadingScreen.class);
 
     private static LoadingScreen instance;
@@ -54,9 +56,17 @@ public class LoadingScreen implements RenderPass {
         return instance;
     }
 
+    public void preLoad() {
+        try {
+            ResourceLoader.getTexture(DEFAULT_TEXTURE_NAME);
+        } catch (Exception e) {
+            LOGGER.error("Error Loading bundled LoadingScreen image.");
+        }
+    }
+
     public void show(CoreEngine engine) {
         try {
-            show(engine, ResourceLoader.getTexture("loading.v0.0.1.png"));
+            show(engine, ResourceLoader.getTexture(DEFAULT_TEXTURE_NAME));
         } catch (Exception e) {
             LOGGER.error("Error Loading bundled LoadingScreen image.");
         }
