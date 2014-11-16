@@ -26,6 +26,8 @@ package io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.p
 
 import io.github.achtern.AchternEngine.core.resource.fileparser.ParsingException;
 import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager.RequireManager;
+import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.builder.manager.VaryingManager;
+import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement.ProvideParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.statement.RequireParser;
 import io.github.achtern.AchternEngine.core.resource.fileparser.nextgenshader.validator.MainBlockValidator;
 import lombok.Getter;
@@ -35,7 +37,13 @@ public class VertexParser implements PipelineParser {
 
     @Setter @Getter protected String source;
 
-    protected RequireManager requireManager;
+    protected final RequireManager requireManager;
+    protected final VaryingManager varyingManager;
+
+    public VertexParser() {
+        this.requireManager = new RequireManager();
+        this.varyingManager = new VaryingManager();
+    }
 
     @Override
     public void parse() throws ParsingException {
@@ -46,15 +54,17 @@ public class VertexParser implements PipelineParser {
             throw new ParsingException("No valid 'void main () {/.../}' method found!");
         }
 
-        // Get the require lines!
 
         final String[] lines = getSource().split("\n");
 
-        this.requireManager = new RequireManager();
         final RequireParser requireParser = new RequireParser();
+        final ProvideParser provideParser = new ProvideParser();
         for (String l : lines) {
-            if (requireParser.test(l.trim())) {
-                requireManager.add(requireParser.getType(l.trim()), requireParser.getName(l.trim()));
+            String tL = l.trim();
+            if (requireParser.test(tL)) {
+                requireManager.add(requireParser.getType(tL), requireParser.getName(tL));
+            } else if (provideParser.test(tL)) {
+                varyingManager.add(provideParser.getType(tL), provideParser.getName(tL));
             }
         }
 
