@@ -45,6 +45,11 @@ import java.util.Map;
 public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     /**
+     * Parent Node. (null if root node)
+     */
+    protected Node parent;
+
+    /**
      * Maps children's names to children.
      */
     protected Map<String, Node> children;
@@ -170,6 +175,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
             e.setParent(node);
             e.attached();
         }
+        node.setParent(this);
         return this;
     }
 
@@ -368,5 +374,13 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
     }
 }
