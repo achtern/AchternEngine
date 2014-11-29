@@ -46,10 +46,20 @@ public class LWJGLProvider implements BindingProvider {
     protected LWJGLDataBinder dataBinder;
     protected LWJGLInput inputAdapter;
 
-    public LWJGLProvider() {
-        this.state = new LWJGLRenderEngineState(false);
+    public LWJGLProvider(LWJGLRenderEngineState state, LWJGLDataBinder dataBinder, LWJGLInput inputAdapter) {
+        this.state = state;
+        this.dataBinder = dataBinder;
+        this.inputAdapter = inputAdapter;
+    }
+
+    public LWJGLProvider(boolean throwUnchanged) {
+        this.state = new LWJGLRenderEngineState(throwUnchanged);
         this.dataBinder = new LWJGLDataBinder(state);
         this.inputAdapter = new LWJGLInput();
+    }
+
+    public LWJGLProvider() {
+        this(false);
     }
 
     @Override
