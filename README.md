@@ -1,4 +1,4 @@
-# Achtern Engine v0.3-SNAPSHOT
+# Achtern Engine v0.3
 
 ## Java Game Engine by the Captain of Achtern - DaGardner ;)
 
