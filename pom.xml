@@ -28,14 +28,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.achtern</groupId>
+    <groupId>org.achtern</groupId>
     <packaging>jar</packaging>
     <name>AchternEngine</name>
     <artifactId>AchternEngine</artifactId>
 
     <version>0.3-SNAPSHOT</version>
 
-    <url>http://achtern.github.io</url>
+    <url>http://achtern.org</url>
 
     <description>
         AchternEngine is a 3D graphics engine built on top of OpenGL.
@@ -53,7 +53,7 @@
             <name>Christian Gärtner</name>
             <email>chrisdagardner@gmail.com</email>
             <organization>Achtern</organization>
-            <organizationUrl>http://achtern.github.io</organizationUrl>
+            <organizationUrl>http://achtern.org</organizationUrl>
         </developer>
     </developers>
 
@@ -64,7 +64,7 @@
     </scm>
 
     <properties>
-        <main.class>io.github.achtern.AchternEngine.core.CoreEngine</main.class>
+        <main.class>org.achtern.AchternEngine.core.CoreEngine</main.class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <slf4j.version>1.7.5</slf4j.version>
