@@ -80,12 +80,14 @@
 
     <dependencies>
 
+        <!-- Logging Framework -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- Shipped OpenGL Java Binding -->
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -113,6 +115,7 @@
             <version>${json.version}</version>
         </dependency>
 
+        <!-- Helper. Easy Data classes and Getter & Setter Gen-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
