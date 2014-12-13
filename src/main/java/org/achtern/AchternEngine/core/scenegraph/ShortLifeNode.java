@@ -51,7 +51,7 @@ public class ShortLifeNode extends Node {
          */
         DETACH,
         /**
-         * Destroy all asociated resource.
+         * Destroy all associated resource.
          */
         DESTROY
     }
