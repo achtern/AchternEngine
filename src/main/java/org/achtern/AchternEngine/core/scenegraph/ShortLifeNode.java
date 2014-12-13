@@ -32,7 +32,7 @@ import org.achtern.AchternEngine.core.util.Callback;
  * A ShortLifeNode is just a standard {@link org.achtern.AchternEngine.core.scenegraph.Node}
  * with a limited lifetime. After this lifetime has passed, it gets removed from the scenegraph.
  *
- * You can also provide your own on death {@link org.achtern.AchternEngine.core.util.Callback<org.achtern.AchternEngine.core.scenegraph.ShortLifeNode>} for each Node.
+ * You can also provide your own on death {@link org.achtern.AchternEngine.core.util.Callback} for each Node.
  * This callback gets called <strong>before</strong> the removal of the Node!
  */
 public class ShortLifeNode extends Node {
