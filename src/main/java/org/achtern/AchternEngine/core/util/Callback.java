@@ -24,8 +24,20 @@
 
 package org.achtern.AchternEngine.core.util;
 
+/**
+ * A Callback is a generic way to inform the API-user
+ * of an event.
+ * @param <T> The class which is going to call the callback
+ */
 public interface Callback<T> {
 
+    /**
+     * Should handle the callback, but can do anything.
+     *
+     * Including ignoring it or destroying the world, however
+     * I would be thankful if you wouldn't do the latter.
+     * @param item Item of interest.
+     */
     public void call(T item);
 
 }
