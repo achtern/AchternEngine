@@ -140,6 +140,8 @@ public class ShortLifeNode extends Node {
     public void update(float delta) {
         super.update(delta);
 
+        this.lifeTime += delta;
+
         if (this.lifeTime >= this.maxLifeTime) {
             // detach node
             if (getDeathCallback() != null) {
@@ -147,7 +149,5 @@ public class ShortLifeNode extends Node {
             }
             this.getParent().remove(this);
         }
-
-        this.lifeTime += delta;
     }
 }
