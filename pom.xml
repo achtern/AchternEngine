@@ -76,6 +76,7 @@
         <git-commit-id-plugin.version>2.1.10</git-commit-id-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>2.5.1</maven-release-plugin.version>
     </properties>
 
     <dependencies>
@@ -154,7 +155,21 @@
                         </configuration>
 
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
 
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>build</name>
+                    <value>release</value>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -171,8 +186,8 @@
                     </plugin>
                 </plugins>
             </build>
-
         </profile>
+
     </profiles>
 
     <build>
@@ -203,6 +218,18 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
             </plugin>
         </plugins>
     </build>
