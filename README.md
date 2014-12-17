@@ -1,5 +1,8 @@
 # Achtern Engine v0.4-SNAPSHOT
 
+[![Build Status](https://travis-ci.org/achtern/AchternEngine.svg?branch=develop)](https://travis-ci.org/achtern/AchternEngine)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine)
+
 ## Java Game Engine by the Captain of Achtern - DaGardner ;)
 
 More detailed explanations and code examples, once 0.5 has passed!
