@@ -33,9 +33,9 @@ import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
 import org.achtern.AchternEngine.core.scenegraph.scanning.SingleEntityRetriever;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A Node represents a part of the scenegraph.
@@ -82,7 +82,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * @param name The name of the node
      */
     public Node(String name) {
-        this.children = new HashMap<String, Node>();
+        this.children = new ConcurrentHashMap<String, Node>();
         this.entities = new ArrayList<Entity>();
         this.transform = new Transform();
         this.name = name;
