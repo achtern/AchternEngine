@@ -37,10 +37,14 @@ import org.achtern.AchternEngine.core.input.event.payload.MouseEvent;
 import org.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class MouseLook extends QuickEntity implements KeyListener, MouseListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MouseLook.class);
 
     protected float sensitivity;
     protected boolean mouselock = false;
@@ -74,9 +78,11 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
 
     @Override
     public void onAction(KeyEvent event) {
+        LOGGER.trace("unlockKey pressed <{}>; mouselock={}", unlockKey, isMouselock());
         if (!isMouselock()) return;
         event.getInputAdapter().setCursor(true);
         setMouselock(false);
+        LOGGER.trace("Cursor enabled; mouselock={}", isMouselock());
     }
 
     @Override
@@ -84,6 +90,15 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
         if (event.getButton() == null) {
             // MouseMove
             if (!isMouselock()) {
+                /*
+                I honestly do not know why this is needed here,
+                but it seems to fix a bug, where the cursor wouldn't get reenabled after unlocking.
+                this action handler gets called and mouseLock gets updated, but the single call to
+                event.getInputAdapter().setCursor(true); is not enough for some reason,
+                maybe the second one fixes it, because... I don't know...
+                Sorry.
+                 */
+                event.getInputAdapter().setCursor(true);
                 return;
             }
 
