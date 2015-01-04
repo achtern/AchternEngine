@@ -24,13 +24,13 @@
 
 package org.achtern.AchternEngine.core.input.inputmap;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import org.achtern.AchternEngine.core.input.event.listener.MouseListener;
 import org.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import org.achtern.AchternEngine.core.input.event.payload.MouseEvent;
 import org.achtern.AchternEngine.core.math.Vector2f;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +81,6 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseListener> {
         return this;
     }
 
-    protected Vector2f previousPosition = new Vector2f(0, 0);
-
     public void trigger(float delta) {
 
         Set<MouseButtonTrigger> keys = this.clickListener.keySet();
@@ -103,17 +101,13 @@ public class MouseMap implements InputMap<MouseButtonTrigger, MouseListener> {
 
         }
 
+        Vector2f mDelta = input.getMouseDelta();
 
-        Vector2f position = input.getMousePosition();
-
-        if (position.equals(previousPosition)) return;
+        if (mDelta.isNullVector()) return;
 
         for (MouseListener l : this.moveListener) {
-            l.onAction(new MouseEvent(input, null, delta, position, position.sub(previousPosition)));
+            l.onAction(new MouseEvent(input, null, delta, input.getMousePosition(), mDelta));
         }
-
-
-        previousPosition = input.getMousePosition();
     }
 
     protected void cycle(MouseButtonTrigger b, float delta) {
