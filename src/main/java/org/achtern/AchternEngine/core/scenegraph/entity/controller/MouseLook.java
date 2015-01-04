@@ -46,8 +46,6 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
     protected boolean mouselock = false;
     protected Key unlockKey;
 
-    protected boolean skip = true;
-
     public MouseLook(float sensitivity) {
         this(sensitivity, Key.ESCAPE);
     }
@@ -89,11 +87,6 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
                 return;
             }
 
-            if (skip) {
-                skip = false;
-                return;
-            }
-
             getTransform().rotate(getTransform().getRotation().getRight(), -event.getMouseDelta().getY() * sensitivity);
 
             getTransform().rotate(Transform.Y_AXIS, event.getMouseDelta().getX() * sensitivity);
@@ -104,7 +97,6 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
             event.getInputAdapter().setCursor(false);
             setMouselock(true);
             centerMouse(event.getInputAdapter());
-            skip = true;
         }
     }
 
