@@ -235,6 +235,16 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
     }
 
     /**
+     * Removes the Node from the parent.
+     *
+     * @see #getParent()
+     * @see #remove(Node)
+     */
+    public void remove() {
+        getParent().remove(this);
+    }
+
+    /**
      * When this Node has been removed from it's parent, this method
      * will get called and notifies all children and child-entites.
      */
