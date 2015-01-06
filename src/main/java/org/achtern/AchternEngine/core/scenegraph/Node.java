@@ -273,6 +273,28 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
         return singleEntityRetriever.get(type);
     }
 
+    /**
+     * This method allows to attach Nodes to the "World" Node
+     * Useful for adding independent nodes/entities to the world,
+     *  from deep in the scenegraph. This method calls this function on the parent {@link #getParent()},
+     *  unless the parent is null, then it calls {@link #add(Node)} on itself.
+     *
+     * The "World" is just the Node without a parent, if you want to have your own world
+     *  class, under the root Node, just extend {@link org.achtern.AchternEngine.core.scenegraph.Node} and
+     *  override this method.
+     *
+     * @see #add(Node)
+     * @see #getParent()
+     * @param node The Node to attach to the world
+     */
+    public void addToWorld(Node node) {
+        if (getParent() != null) {
+            getParent().addToWorld(node);
+        } else {
+            add(node);
+        }
+    }
+
     @Override
     public String toString() {
         return "Node: " + this.name + " (" + getChildren().size() + " children; " + getEntities().size() + " entities)";
