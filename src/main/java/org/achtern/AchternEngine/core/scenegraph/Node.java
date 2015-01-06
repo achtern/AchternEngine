@@ -118,7 +118,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     /**
      * Trigger an render.
-     * Do rendering releated stuff here.
+     * Do rendering related stuff here.
      *
      * @param renderEngine The active RenderEngine
      */
@@ -181,7 +181,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     /**
      * Add an Entity to this Node.
-     * All Entites attached to this node, will share
+     * All Entices attached to this node, will share
      * the same {@link org.achtern.AchternEngine.core.Transform}.
      * @param entity New Entity to add
      * @return this
@@ -258,7 +258,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * and scans this node.
      * Returns the first {@link org.achtern.AchternEngine.core.scenegraph.entity.Entity} if
      * there were multiple of the given type!
-     * NOTE: This wall ALWAYS scan this whole node.
+     * NOTE: This wall ALWAYS scans this whole node.
      * @param type Class of type of Entity
      * @param <T> type of Entity
      * @return Entity | null
@@ -365,7 +365,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * Inject the engine
      * CoreEngine.
      * Passes Engine to the children/entities
-     * if diffrent from currently stored.
+     * if different from currently stored.
      * @param engine The engine to store
      */
     @Override
