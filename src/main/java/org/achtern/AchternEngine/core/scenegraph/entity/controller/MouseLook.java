@@ -34,6 +34,7 @@ import org.achtern.AchternEngine.core.input.event.listener.trigger.KeyTrigger;
 import org.achtern.AchternEngine.core.input.event.listener.trigger.MouseButtonTrigger;
 import org.achtern.AchternEngine.core.input.event.payload.KeyEvent;
 import org.achtern.AchternEngine.core.input.event.payload.MouseEvent;
+import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -102,9 +103,12 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
                 return;
             }
 
-            getTransform().rotate(getTransform().getRotation().getRight(), -event.getMouseDelta().getY() * sensitivity);
 
-            getTransform().rotate(Transform.Y_AXIS, event.getMouseDelta().getX() * sensitivity);
+            Vector2f factor = getDeltaMoveFactor(getSensitivity(), event.getMouseDelta());
+
+            getTransform().rotate(getTransform().getRotation().getRight(), -event.getMouseDelta().getY() * factor.getX());
+
+            getTransform().rotate(Transform.Y_AXIS, event.getMouseDelta().getX() * factor.getY());
 
             centerMouse(event.getInputAdapter());
         } else {
@@ -113,6 +117,20 @@ public class MouseLook extends QuickEntity implements KeyListener, MouseListener
             setMouselock(true);
             centerMouse(event.getInputAdapter());
         }
+    }
+
+    /**
+     * This returns the sensitivity aka delta move factor.
+     *
+     * At this point the sensitivity is for all delta values the same.
+     * @param sensitivity sensitivity, supplied by the user
+     * @param delta mouse move event delta {@link org.achtern.AchternEngine.core.input.event.payload.MouseEvent}
+     * @return move factor for X and Y axis
+     */
+    protected Vector2f getDeltaMoveFactor(float sensitivity, Vector2f delta) {
+
+
+        return new Vector2f(sensitivity, sensitivity);
     }
 
 
