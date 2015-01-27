@@ -143,7 +143,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      */
     protected void stop() {
         if (!running) {
-            return;
+            throw new IllegalStateException("Engine is already stopped.");
         }
 
         running = false;
