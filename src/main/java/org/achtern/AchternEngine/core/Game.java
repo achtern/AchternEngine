@@ -25,6 +25,7 @@
 package org.achtern.AchternEngine.core;
 
 import org.achtern.AchternEngine.core.rendering.Renderable;
+import org.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.achtern.AchternEngine.core.scenegraph.Updatable;
 import org.achtern.AchternEngine.core.input.InputManager;
 import org.achtern.AchternEngine.core.rendering.Dimension;
@@ -239,12 +240,11 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Returns the loading/splash image.
      * Should only do minimal stuff!
      * FAST FAST FAST
-     * If the texture is null, the engine's
-     * default image will get shown.
+     * If the texture is null, no loading screen will be shown.
      * @return A texture | null
      */
-    public Texture getSplashScreen() {
-        return null;
+    public Texture getSplashScreen() throws Exception {
+        return ResourceLoader.getTexture(LoadingScreen.DEFAULT_TEXTURE_NAME);
     }
 
     /**

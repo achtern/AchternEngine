@@ -73,10 +73,6 @@ public class LoadingScreen implements RenderPass {
     }
 
     public void show(CoreEngine engine, Texture loadingImage) {
-        if (loadingImage == null) {
-            show(engine);
-            return;
-        }
 
         // Create the Material
         Material material = new Material();

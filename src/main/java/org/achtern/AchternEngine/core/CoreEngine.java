@@ -30,6 +30,7 @@ import org.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
 import org.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
+import org.achtern.AchternEngine.core.rendering.texture.Texture;
 import org.achtern.AchternEngine.core.util.FPS;
 import org.achtern.AchternEngine.core.util.WindowChangeListener;
 import org.slf4j.Logger;
@@ -156,18 +157,21 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     @Override
     public void run() {
 
-        // Pre loading images here
-        // this way there is a shorter period of
-        // the black screen.
-        if (game.getSplashScreen() == null) {
-            LoadingScreen.get().preLoad();
-        }
 
         running = true;
 
         createWindow(game.getWindowTitle(), game.getWindowDimensions());
 
-        LoadingScreen.get().show(this, game.getSplashScreen());
+        try {
+            Texture loadingScreen = game.getSplashScreen();
+            if (loadingScreen != null) {
+                LoadingScreen.get().show(this, loadingScreen);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Error loading loading screen, ignoring", e);
+        }
+
+
 
         LOGGER.info("Initializing Game");
         game.preInit(this);
