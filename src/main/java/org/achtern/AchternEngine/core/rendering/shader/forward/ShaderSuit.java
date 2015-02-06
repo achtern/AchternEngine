@@ -24,8 +24,8 @@
 
 package org.achtern.AchternEngine.core.rendering.shader.forward;
 
-import org.achtern.AchternEngine.core.rendering.light.LightType;
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
+import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.Light;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,42 +33,42 @@ import java.util.Map;
 /**
  * A ShaderSuit holds a collection of {@link org.achtern.AchternEngine.core.rendering.shader.Shader}s to render
  *  for all (or a subset of) Light-types.
- *  @see org.achtern.AchternEngine.core.rendering.light.LightType
+ *  @see org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.Light
  *
- * There are no accesor methods, beside the {@link #getFor(org.achtern.AchternEngine.core.rendering.light.LightType)}
+ * There are no accesor methods, beside the {@link #getFor(Class)}
  *  for a specific reason. If one wants to alter the ShaderSuit, a subclass should be created.
  *  ShaderSuits should be (are) <strong>immutable</strong>!
  */
 public abstract class ShaderSuit {
 
-    protected Map<LightType, Shader> shaders;
+    protected Map<Class<? extends Light>, Shader> shaders;
 
     protected ShaderSuit() {
-        this(new HashMap<LightType, Shader>());
+        this(new HashMap<Class<? extends Light>, Shader>());
     }
 
-    protected ShaderSuit(Map<LightType, Shader> shaders) {
+    protected ShaderSuit(Map<Class<? extends Light>, Shader> shaders) {
         this.shaders = shaders;
     }
 
     /**
      * Returns the Shader for the given type.
      * Throws a NullPointerException, if no shader exists for the given LightType
-     * @param type Type to retrieve Shader based on
+     * @param light Light to retrieve Shader based on
      * @return a shader (cannot be null)
      */
-    public Shader getFor(LightType type) throws NullPointerException {
+    public Shader getFor(Class<? extends Light> light) throws NullPointerException {
 
-        Shader s = shaders.get(type);
+        Shader s = shaders.get(light);
 
         if (s == null) {
-            throw new NullPointerException("No shader for lighttype {" + type + "}");
+            throw new NullPointerException("No shader for Light {" + light.getClass().getSimpleName() + "}");
         }
 
         return s;
     }
 
-    protected void addShader(LightType type, Shader shader) {
+    protected void addShader(Class<? extends Light> type, Shader shader) {
         this.shaders.put(type, shader);
     }
 

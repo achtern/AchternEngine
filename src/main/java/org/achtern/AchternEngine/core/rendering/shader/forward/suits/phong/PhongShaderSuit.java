@@ -24,8 +24,10 @@
 
 package org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong;
 
-import org.achtern.AchternEngine.core.rendering.light.LightType;
 import org.achtern.AchternEngine.core.rendering.shader.forward.ShaderSuit;
+import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.DirectionalLight;
+import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.PointLight;
+import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.SpotLight;
 
 /**
  * Holds Shaders for the Phong lighting model,
@@ -46,8 +48,8 @@ public class PhongShaderSuit extends ShaderSuit {
     private PhongShaderSuit() {
         super();
 
-        addShader(LightType.DIRECTIONAL, PhongDirectional.getInstance());
-        addShader(LightType.POINT, PhongPoint.getInstance());
-        addShader(LightType.SPOT, PhongSpot.getInstance());
+        addShader(DirectionalLight.class, PhongDirectional.getInstance());
+        addShader(PointLight.class, PhongPoint.getInstance());
+        addShader(SpotLight.class, PhongSpot.getInstance());
     }
 }
