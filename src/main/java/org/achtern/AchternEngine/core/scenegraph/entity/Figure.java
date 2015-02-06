@@ -27,6 +27,7 @@ package org.achtern.AchternEngine.core.scenegraph.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.achtern.AchternEngine.core.rendering.Material;
+import org.achtern.AchternEngine.core.rendering.PassFilter;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
@@ -104,8 +105,11 @@ public class Figure extends QuickEntity {
 
 
         Shader shader = renderEngine.getActiveRenderPass().getShader();
-        if (getMaterial().getShader() != null) {
-            // shader = getMaterial().getShader().getFor(renderEngine.getActiveRenderPass().getClass());
+
+        // If the current Shader is not from a RenderPassFilter (shadows etc.)
+        // and the ShaderSuit is not empty, try to get the Shader from the Suit
+        if (!(renderEngine.getActiveRenderPass() instanceof PassFilter) && getMaterial().getShader() != null) {
+            shader = getMaterial().getShader().getFor(renderEngine.getActiveRenderPass().getClass());
         }
 
         shader.updateUniforms(renderEngine, this);
