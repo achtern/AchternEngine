@@ -24,8 +24,8 @@
 
 package org.achtern.AchternEngine.core.rendering.shader.forward;
 
+import org.achtern.AchternEngine.core.rendering.RenderPass;
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
-import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.Light;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,20 +34,16 @@ import java.util.Map;
  * A ShaderSuit holds a collection of {@link org.achtern.AchternEngine.core.rendering.shader.Shader}s to render
  *  for all (or a subset of) Light-types.
  *  @see org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.Light
- *
- * There are no accesor methods, beside the {@link #getFor(Class)}
- *  for a specific reason. If one wants to alter the ShaderSuit, a subclass should be created.
- *  ShaderSuits should be (are) <strong>immutable</strong>!
  */
 public abstract class ShaderSuit {
 
-    protected Map<Class<? extends Light>, Shader> shaders;
+    protected Map<Class<? extends RenderPass>, Shader> shaders;
 
     protected ShaderSuit() {
-        this(new HashMap<Class<? extends Light>, Shader>());
+        this(new HashMap<Class<? extends RenderPass>, Shader>());
     }
 
-    protected ShaderSuit(Map<Class<? extends Light>, Shader> shaders) {
+    protected ShaderSuit(Map<Class<? extends RenderPass>, Shader> shaders) {
         this.shaders = shaders;
     }
 
@@ -57,18 +53,18 @@ public abstract class ShaderSuit {
      * @param light Light to retrieve Shader based on
      * @return a shader (cannot be null)
      */
-    public Shader getFor(Class<? extends Light> light) throws NullPointerException {
+    public Shader getFor(Class<? extends RenderPass> light) throws NullPointerException {
 
         Shader s = shaders.get(light);
 
         if (s == null) {
-            throw new NullPointerException("No shader for Light {" + light.getClass().getSimpleName() + "}");
+            throw new NullPointerException("No shader for Light {" + light.toString() + "}");
         }
 
         return s;
     }
 
-    protected void addShader(Class<? extends Light> type, Shader shader) {
+    public void setShaderFor(Class<? extends RenderPass> type, Shader shader) {
         this.shaders.put(type, shader);
     }
 

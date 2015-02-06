@@ -75,7 +75,7 @@ public class LoadingScreen implements RenderPass {
     public void show(CoreEngine engine, Texture loadingImage) {
 
         // Create the Material
-        Material material = new Material();
+        Material material = new Material(null);
         material.addTexture("diffuse", loadingImage);
         material.setColor(Color.WHITE);
 
