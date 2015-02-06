@@ -22,29 +22,12 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
+package org.achtern.AchternEngine.core.rendering.light;
 
-import org.achtern.AchternEngine.core.math.Vector3f;
-import org.achtern.AchternEngine.core.rendering.Color;
-import org.achtern.AchternEngine.core.rendering.light.Attenuation;
-import org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong.PhongSpot;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+public enum LightType {
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-public class SpotLight extends PointLight {
+    DIRECTIONAL,
+    POINT,
+    SPOT
 
-    protected float cutoff;
-
-    public SpotLight(Color color, float intensity, Attenuation attenuation, float cutoff) {
-        super(color, intensity, attenuation);
-        this.cutoff = cutoff;
-
-        setShader(PhongSpot.getInstance());
-    }
-
-    public Vector3f getDirection() {
-        return getTransform().getTransformedRotation().getForward();
-    }
 }

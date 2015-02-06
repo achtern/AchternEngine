@@ -22,29 +22,27 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering.shader.forward;
+package org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong;
 
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
 import org.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Spot extends Shader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Spot.class);
+public class PhongDirectional extends Shader {
+    public static final Logger LOGGER = LoggerFactory.getLogger(PhongDirectional.class);
 
-    private static final Spot instance = new Spot();
+    private static final PhongDirectional instance = new PhongDirectional();
 
-    public static Spot getInstance() {
+    public static PhongDirectional getInstance() {
         return instance;
     }
 
-    private Spot() {
-        super();
-
+    private PhongDirectional() {
         try {
-            this.program = ResourceLoader.getShaderProgram("forward.spot");
+            this.program = ResourceLoader.getShaderProgram("forward.directional");
         } catch (Exception e) {
-            LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
+            LOGGER.warn("Error Loading Bundled Directional Shader GLSL files.", e);
         }
     }
 }

@@ -22,30 +22,29 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering.shader.forward;
+package org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong;
 
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
 import org.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Point extends Shader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Point.class);
+public class PhongSpot extends Shader {
+    public static final Logger LOGGER = LoggerFactory.getLogger(PhongSpot.class);
 
-    private static final Point instance = new Point();
+    private static final PhongSpot instance = new PhongSpot();
 
-    public static Point getInstance() {
+    public static PhongSpot getInstance() {
         return instance;
     }
 
-    private Point() {
+    private PhongSpot() {
         super();
 
         try {
-            this.program = ResourceLoader.getShaderProgram("forward.point");
+            this.program = ResourceLoader.getShaderProgram("forward.spot");
         } catch (Exception e) {
-            LOGGER.warn("Error Loading Bundled Point Shader GLSL files.", e);
+            LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
         }
-
     }
 }

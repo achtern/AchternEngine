@@ -22,27 +22,32 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering.shader.forward;
+package org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong;
 
-import org.achtern.AchternEngine.core.rendering.shader.Shader;
-import org.achtern.AchternEngine.core.resource.ResourceLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.achtern.AchternEngine.core.rendering.light.LightType;
+import org.achtern.AchternEngine.core.rendering.shader.forward.ShaderSuit;
 
-public class Directional extends Shader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Directional.class);
+/**
+ * Holds Shaders for the Phong lighting model,
+ * currently supporting:
+ * * Directional Lights
+ * * Point Lights
+ * * Spot Lights
+ *
+ * Use {@link #get()} to get the instance!
+ */
+public class PhongShaderSuit extends ShaderSuit {
 
-    private static final Directional instance = new Directional();
+    private static final PhongShaderSuit instance = new PhongShaderSuit();
 
-    public static Directional getInstance() {
-        return instance;
-    }
+    public static PhongShaderSuit get() { return instance; }
 
-    private Directional() {
-        try {
-            this.program = ResourceLoader.getShaderProgram("forward.directional");
-        } catch (Exception e) {
-            LOGGER.warn("Error Loading Bundled Directional Shader GLSL files.", e);
-        }
+
+    private PhongShaderSuit() {
+        super();
+
+        addShader(LightType.DIRECTIONAL, PhongDirectional.getInstance());
+        addShader(LightType.POINT, PhongPoint.getInstance());
+        addShader(LightType.SPOT, PhongSpot.getInstance());
     }
 }

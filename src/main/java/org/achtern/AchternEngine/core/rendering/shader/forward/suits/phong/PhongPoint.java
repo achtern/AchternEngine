@@ -22,29 +22,30 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
+package org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong;
 
-import org.achtern.AchternEngine.core.math.Vector3f;
-import org.achtern.AchternEngine.core.rendering.Color;
-import org.achtern.AchternEngine.core.rendering.light.Attenuation;
-import org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong.PhongSpot;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.achtern.AchternEngine.core.rendering.shader.Shader;
+import org.achtern.AchternEngine.core.resource.ResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-public class SpotLight extends PointLight {
+public class PhongPoint extends Shader {
+    public static final Logger LOGGER = LoggerFactory.getLogger(PhongPoint.class);
 
-    protected float cutoff;
+    private static final PhongPoint instance = new PhongPoint();
 
-    public SpotLight(Color color, float intensity, Attenuation attenuation, float cutoff) {
-        super(color, intensity, attenuation);
-        this.cutoff = cutoff;
-
-        setShader(PhongSpot.getInstance());
+    public static PhongPoint getInstance() {
+        return instance;
     }
 
-    public Vector3f getDirection() {
-        return getTransform().getTransformedRotation().getForward();
+    private PhongPoint() {
+        super();
+
+        try {
+            this.program = ResourceLoader.getShaderProgram("forward.point");
+        } catch (Exception e) {
+            LOGGER.warn("Error Loading Bundled Point Shader GLSL files.", e);
+        }
+
     }
 }
