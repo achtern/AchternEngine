@@ -71,7 +71,7 @@ It currently works best with OpenGL, but I guess any system could work.
 The core engine is independent of the java binding. Currently it gets shipped
 with LWJGL 2, but it easy to make it work with JOGL, just implement a few wrappers and you're set.
 
-There are now util classes used, beside the ones stated in the `pom.xml`.
+There are no util classes used, beside the ones stated in the `pom.xml`.
 
 ## Contributing
 
