@@ -39,6 +39,7 @@ This will be an injectable enum, so the developer can add light types as needed.
 
 ### Roadmap
 
-[x] Create ShaderSuits which hold shaders for all Lighttypes. A Suite is for example "Phong"
-[x] Material should hold a Shader
-[x] Material binds shader based on Light ID
+- [x] Create ShaderSuits which hold shaders for all Lighttypes. A Suite is for example "Phong"
+- [x] Material should hold a Shader
+- [x] Material binds shader based on Light ID
+- [ ] Make System more generic
