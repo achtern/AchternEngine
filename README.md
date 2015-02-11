@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/achtern/AchternEngine.svg?branch=develop)](https://travis-ci.org/achtern/AchternEngine)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine)
+[![Documentation Status](https://readthedocs.org/projects/achternengine/badge/?version=latest)](http://docs.achtern.org)
 
 ## Java Game Engine by the Captain of Achtern - DaGardner ;)
 
