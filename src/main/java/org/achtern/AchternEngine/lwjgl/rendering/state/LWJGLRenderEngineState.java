@@ -158,7 +158,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     @Override
     public String getVersion() {
         if (version == null) {
-            LOGGER.debug("Calling glGetString(GL_VERSION)");
+            LOGGER.trace("Calling glGetString(GL_VERSION)");
             version = glGetString(GL_VERSION);
         } else {
             LOGGER.trace("Using cached Version string");
