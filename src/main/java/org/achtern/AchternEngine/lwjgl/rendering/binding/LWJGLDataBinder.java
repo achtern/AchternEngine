@@ -66,6 +66,9 @@ public class LWJGLDataBinder implements DataBinder {
 
     /**
      * An IntBuffer with a size of 16.
+     * This buffer is used to set draw buffers,
+     *  since glDrawBuffers only accepts an IntBuffer when dealing
+     *  with multiple color attachments.
      */
     private IntBuffer intBuffer = UBuffer.createIntBuffer(16);
 
