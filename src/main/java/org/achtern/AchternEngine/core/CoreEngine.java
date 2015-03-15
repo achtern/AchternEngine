@@ -61,7 +61,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     protected List<WindowChangeListener> windowChangeListenerList;
 
-    private static boolean stopRequest = false;
+    private boolean stopRequest = false;
 
     private boolean running;
 
@@ -75,7 +75,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Request a force stop of the engine
      */
-    public static void requestStop() {
+    public void requestStop() {
         stopRequest = true;
     }
 
@@ -83,7 +83,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * Whether a force stop was request via {@link CoreEngine#requestStop()}
      * @return stopRequest
      */
-    public static boolean stopRequested() {
+    public boolean stopRequested() {
         return stopRequest;
     }
 
