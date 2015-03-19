@@ -198,9 +198,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * @return Whether the remove was successful (false if Node did not exist in children List)
      */
     public boolean remove(Node node) {
-        node.removed();
-        Node t = getChildren().remove(node.getName());
-        return t != null;
+        return remove(node.getName());
     }
 
     /**
