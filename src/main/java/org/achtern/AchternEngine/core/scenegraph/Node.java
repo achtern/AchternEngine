@@ -207,9 +207,13 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * @return Whether the remove was successful (false if Node did not exist in children List)
      */
     public boolean remove(String nodeName) {
-        Node toBeRemoved = getChildren().get(nodeName);
-
-        if (toBeRemoved == null) return false;
+        Node toBeRemoved;
+        try {
+            toBeRemoved = getChildren().get(nodeName);
+            if (toBeRemoved == null) return false;
+        } catch (NullPointerException np) {
+            return false;
+        }
 
         toBeRemoved.removed();
 
