@@ -247,6 +247,35 @@ public class NodeTest {
         assertFalse("Should indicate whether the given Entity has been removed", return1);
     }
 
+    @Test
+    public void testSetEngine() {
+        CoreEngine engine1 = Mockito.mock(CoreEngine.class);
+
+        Node parent = new Node();
+        Node child = new Node();
+
+        Entity e = Mockito.mock(Entity.class);
+
+        parent.add(child);
+        parent.add(e);
+
+        // Inject it multiple times, so that we can check, if it does only pass it once to its children
+        parent.setEngine(engine1);
+        parent.setEngine(engine1);
+        parent.setEngine(engine1);
+
+        assertEquals("Should pass the engine to its children", engine1, child.getEngine());
+
+        verify(e, times(1)).setEngine(engine1);
+
+        parent.setEngine(engine);
+
+        assertEquals("Should pass the new engine to its children", engine, child.getEngine());
+
+        verify(e).setEngine(engine);
+
+
+    }
 
 
 }
