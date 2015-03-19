@@ -189,6 +189,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
     public Node add(Entity entity) {
         getEntities().add(entity);
         entity.setParent(this);
+        entity.setEngine(getEngine());
         return this;
     }
 
