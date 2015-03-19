@@ -26,6 +26,7 @@ package org.achtern.AchternEngine.core.scenegraph;
 
 import org.achtern.AchternEngine.core.CoreEngine;
 import org.achtern.AchternEngine.core.Transform;
+import org.achtern.AchternEngine.core.rendering.RenderEngine;
 import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +42,9 @@ public class NodeTest {
 
     @Mock
     CoreEngine engine;
+
+    @Mock
+    RenderEngine renderEngine;
 
     @Before
     public void before() {
@@ -129,5 +133,120 @@ public class NodeTest {
         verify(tcWN).setParent(tParent);
         verify(tcWN2).setParent(tParent);
     }
+
+    @Test
+    public void testUpdateAndRender() {
+        Node parent = new Node();
+
+        Node child0 = new Node();
+        Node child1 = new Node();
+
+        Entity entity0 = Mockito.mock(Entity.class);
+        Entity entity1 = Mockito.mock(Entity.class);
+
+        child0.add(entity0);
+        child1.add(entity1);
+
+        parent.add(child0);
+        parent.add(child1);
+
+        parent.update(3.2f);
+        parent.render(renderEngine);
+
+        verify(entity0).update(3.2f);
+        verify(entity1).update(3.2f);
+        verify(entity0).render(renderEngine);
+        verify(entity1).render(renderEngine);
+
+    }
+
+    @Test
+    public void testRemove() {
+        Node parent = new Node();
+        Node child = new Node();
+
+        parent.add(child);
+
+        assert !parent.getChildren().isEmpty();
+
+        child.remove();
+
+        assertTrue("Should remove itself from the parent", parent.getChildren().isEmpty());
+    }
+
+    @Test
+    public void testRemoveNode() {
+        Node parent = new Node();
+
+        Node child = new Node();
+
+        parent.add(child);
+
+        boolean return0 = parent.remove(child);
+
+        assertEquals("Should remove the child from the list", 0, parent.getChildren().size());
+
+        assertTrue("Should indicate whether the given Node has been removed", return0);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testRemoveNullNode() {
+        Node n = new Node();
+
+        n.remove((Node) null);
+    }
+
+    @Test
+    public void testRemoveByName() {
+        Node parent = new Node();
+        Node child = new Node("child");
+
+        parent.add(child);
+        boolean return0 = parent.remove(child.getName());
+        boolean return1 = parent.remove("nope");
+        boolean return2 = parent.remove((String) null);
+
+        assertEquals("Should remove the child from the list", 0, parent.getChildren().size());
+
+        assertTrue("Should indicate whether the given Node has been removed", return0);
+        assertFalse("Should indicate whether the given Node has been removed", return1);
+        assertFalse("Should return null, when the given string is null", return2);
+    }
+
+    @Test
+    public void testAddEntity() {
+        Node n = new Node();
+        n.setEngine(engine);
+
+        Entity e = Mockito.mock(Entity.class);
+
+        n.add(e);
+
+        verify(e).setParent(n);
+        verify(e).setEngine(engine);
+
+        assertEquals("Should add the entity to the entities list", 1, n.getEntities().size());
+        assertEquals("Should store the correct entity in the list", e, n.getEntities().get(0));
+    }
+
+    @Test
+    public void testRemoveEntity() {
+        Node n = new Node();
+        Entity e0 = Mockito.mock(Entity.class);
+        Entity e1 = Mockito.mock(Entity.class);
+
+        n.add(e0);
+        boolean return0 = n.remove(e0);
+        boolean return1 = n.remove(e1);
+
+        verify(e0).removed();
+
+        assertEquals("Entity has been removed", 0, n.getEntities().size());
+
+        assertTrue("Should indicate whether the given Entity has been removed", return0);
+        assertFalse("Should indicate whether the given Entity has been removed", return1);
+    }
+
+
 
 }
