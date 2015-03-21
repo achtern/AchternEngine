@@ -277,5 +277,25 @@ public class NodeTest {
 
     }
 
+    @Test
+    public void testAddToWorld() {
+
+        Node root = new Node();
+        Node child0 = new Node();
+        Node child1 = new Node();
+
+        root.add(child0);
+        child0.add(child1);
+
+        Node worldObject = new Node();
+
+        child1.addToWorld(worldObject);
+
+        assertTrue("Should add the Node to the World, and only the world", child1.getChildren().isEmpty());
+        assertEquals("Should add the Node to the World, and only the world", 1, child0.getChildren().size());
+        assertEquals("Should add the Node to the World", 2, root.getChildren().size());
+
+    }
+
 
 }
