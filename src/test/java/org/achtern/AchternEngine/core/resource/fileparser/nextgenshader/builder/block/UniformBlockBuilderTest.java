@@ -29,10 +29,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class UniformBlockBuilderTest {
 
@@ -68,7 +70,12 @@ public class UniformBlockBuilderTest {
             block.append(l).append("\n");
         }
 
-        assertEquals("Should use the line break delimiter by default", block.toString(), builder.get());
+        List<String> expected = Arrays.asList(block.toString().split("\n"));
+        List<String> actual = Arrays.asList(builder.get().split("\n"));
+
+        assertTrue("Should use the line break delimiter by default",
+                expected.containsAll(actual) && actual.containsAll(expected)
+        );
     }
 
     @Test
@@ -81,14 +88,20 @@ public class UniformBlockBuilderTest {
             block.append(l).append(del);
         }
 
-        assertEquals("Should use the correct delimiter", block.toString(), builder.get(del));
+
+        List<String> expected = Arrays.asList(block.toString().split(del));
+        List<String> actual = Arrays.asList(builder.get(del).split(del));
+
+        assertTrue("Should use the correct delimiter", expected.containsAll(actual) && actual.containsAll(expected));
     }
 
     @Test
     public void testGetLines() throws Exception {
         List<String> lines = builder.getLines();
         assertEquals("Generates correct amount of lines", correctLines.size(), lines.size());
-        assertEquals("Generates valid GLSL lines", correctLines, lines);
+        // This check ignores order, which is what we want,
+        // since the order doesn't matter when dealing with uniforms.
+        assertTrue("Generates valid GLSL lines", correctLines.containsAll(lines) && lines.containsAll(correctLines));
 
     }
 }

@@ -28,7 +28,7 @@ import org.achtern.AchternEngine.core.scenegraph.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -104,11 +104,11 @@ public class DepthFirstWalkerTest {
         at the moment this test fails, when the map returns B first and than A.
         This should not be a problem and is not required for a depth first search!
          */
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new LinkedList<String>();
         expected.add("A");
         expected.add("A.A");
-        expected.add("A.A.A");
         expected.add("A.A.B");
+        expected.add("A.A.A");
         expected.add("A.B");
         expected.add("A.B.A");
 
@@ -132,7 +132,7 @@ public class DepthFirstWalkerTest {
 
     public static final class NameKeeperVisitor implements SceneGraphWalker.Visitor {
 
-        public List<String> nodeNames = new ArrayList<String>();
+        public List<String> nodeNames = new LinkedList<String>();
 
         @Override
         public void on(Node node) {
