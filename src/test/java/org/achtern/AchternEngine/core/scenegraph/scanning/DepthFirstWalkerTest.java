@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DepthFirstWalkerTest {
 
@@ -99,24 +100,26 @@ public class DepthFirstWalkerTest {
                                 .add(new Node("A.B.A")))
         );
 
-        /*
-        TODO: Make this test not dependent on the order of children,
-        at the moment this test fails, when the map returns B first and than A.
-        This should not be a problem and is not required for a depth first search!
-         */
-        List<String> expected = new LinkedList<String>();
-        expected.add("A");
-        expected.add("A.A");
-        expected.add("A.A.B");
-        expected.add("A.A.A");
-        expected.add("A.B");
-        expected.add("A.B.A");
+        List<String> expected0 = new LinkedList<String>();
+        expected0.add("A");
+        expected0.add("A.A");
+        expected0.add("A.A.B");
+        expected0.add("A.A.A");
+        expected0.add("A.B");
+        expected0.add("A.B.A");
 
-        assertEquals("Should visit the first node and the first child and all its children and" +
-                        " then the second from the main Node, etc.",
-                expected,
-                v.nodeNames
-        );
+        List<String> expected1 = new LinkedList<String>();
+        expected1.add("A");
+        expected1.add("A.A");
+        expected1.add("A.A.A");
+        expected1.add("A.A.B");
+        expected1.add("A.B");
+        expected1.add("A.B.A");
+
+        boolean equals = expected0.equals(v.nodeNames) || expected1.equals(v.nodeNames);
+
+        assertTrue("Should visit the first node and the first child and all its children and" +
+                        " then the second from the main Node, etc.", equals);
 
     }
 
