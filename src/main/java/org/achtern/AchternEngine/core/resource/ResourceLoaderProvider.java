@@ -38,9 +38,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-/**
- * Created by Christian on 27.03.15.
- */
 public interface ResourceLoaderProvider {
     void addResourceLocation(ResourceLocation location);
 
