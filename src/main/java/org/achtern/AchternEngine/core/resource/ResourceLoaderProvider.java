@@ -38,6 +38,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * For javadoc see {@link org.achtern.AchternEngine.core.resource.ResourceLoader}
+ *
+ * This is just the interface to proxy, all methods should behave like described,
+ *  in the JavaDoc of the proxy.
+ *
+ * @see org.achtern.AchternEngine.core.resource.ResourceLoader
+ */
 public interface ResourceLoaderProvider {
     void addResourceLocation(ResourceLocation location);
 
