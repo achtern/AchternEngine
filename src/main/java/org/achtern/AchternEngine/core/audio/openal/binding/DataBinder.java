@@ -22,49 +22,7 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio;
+package org.achtern.AchternEngine.core.audio.openal.binding;
 
-import org.achtern.AchternEngine.core.scenegraph.Updatable;
-
-public interface AudioPlayer extends Updatable {
-
-    /**
-     * Initial Setup.
-     * Should be called before any other method.
-     */
-    public void init();
-
-    /**
-     * Playback the given Audio till the end
-     * @param audio to play
-     */
-    public void play(Audio audio);
-
-    /**
-     * Pauses the playback of the given audio,
-     *  use {@link #play(org.achtern.AchternEngine.core.audio.Audio)} to resume
-     * @param audio to pause
-     */
-    public void pause(Audio audio);
-
-    /**
-     * Stops the play of the given audio and removes any data from the AudioPlayer about the given audio
-     * @param audio to stop
-     */
-    public void stop(Audio audio);
-
-    /**
-     * Pause all audio playbacks
-     */
-    public void pauseAll();
-
-    /**
-     * Stop all audio playbacks
-     */
-    public void stopAll();
-
-    /**
-     * Resume all paused playbacks
-     */
-    public void playAll();
+public interface DataBinder {
 }

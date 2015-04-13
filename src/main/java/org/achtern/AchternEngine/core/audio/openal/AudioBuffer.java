@@ -22,17 +22,7 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.mixing;
+package org.achtern.AchternEngine.core.audio.openal;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.achtern.AchternEngine.core.audio.AudioPlayer;
-
-import java.util.List;
-
-public class AudioMixer {
-
-    @Getter @Setter protected AudioPlayer player;
-
-    protected List<MixingChannel> channels;
+public class AudioBuffer {
 }

@@ -22,15 +22,7 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.mixing;
+package org.achtern.AchternEngine.core.audio.openal.binding;
 
-import lombok.Data;
-
-@Data
-public class MixingChannel {
-
-    protected float gain;
-
-    protected float gate;
-
+public interface IDGenerator {
 }
