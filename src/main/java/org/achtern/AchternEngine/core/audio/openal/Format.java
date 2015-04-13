@@ -22,15 +22,23 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.openal.binding;
+package org.achtern.AchternEngine.core.audio.openal;
 
-public enum Error {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    AL_NO_ERROR,
-    AL_INVALID_NAME,
-    AL_INVALID_ENUM,
-    AL_INVALID_VALUE,
-    AL_INVALID_OPERATION,
-    AL_OUT_OF_MEMORY
+@AllArgsConstructor
+public enum Format {
 
+    MONO8,
+    MONO16,
+
+    STEREO8(true),
+    STEREO16(true);
+
+    @Getter protected final boolean stereo;
+
+    Format() {
+        this(false);
+    }
 }

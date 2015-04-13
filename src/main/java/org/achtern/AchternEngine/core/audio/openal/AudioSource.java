@@ -24,7 +24,19 @@
 
 package org.achtern.AchternEngine.core.audio.openal;
 
+import lombok.Getter;
 import org.achtern.AchternEngine.core.bootstrap.NativeObject;
+import org.achtern.AchternEngine.core.math.Vector3f;
 
+@Getter
 public class AudioSource extends NativeObject {
+
+    protected AudioBuffer buffer;
+
+    protected Vector3f position;
+
+    protected Vector3f velocity;
+
+    protected Vector3f up;
+
 }
