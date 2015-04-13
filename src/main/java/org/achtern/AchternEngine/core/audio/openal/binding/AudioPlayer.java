@@ -22,9 +22,18 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.openal;
+package org.achtern.AchternEngine.core.audio.openal.binding;
 
-import org.achtern.AchternEngine.core.bootstrap.NativeObject;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 
-public class AudioSource extends NativeObject {
+public interface AudioPlayer {
+
+    public void play(AudioSource source);
+
+    public void stop(AudioSource source);
+
+    public void rewind(AudioSource source);
+
+    public void pause(AudioSource source);
+
 }

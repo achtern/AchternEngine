@@ -24,5 +24,7 @@
 
 package org.achtern.AchternEngine.core.audio.openal;
 
-public class AudioBuffer {
+import org.achtern.AchternEngine.core.bootstrap.NativeObject;
+
+public class AudioBuffer extends NativeObject {
 }
