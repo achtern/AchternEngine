@@ -22,9 +22,15 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.openal;
+package org.achtern.AchternEngine.core.audio.openal.binding;
 
-import org.achtern.AchternEngine.core.bootstrap.NativeObject;
+public enum Error {
 
-public class AudioSource extends NativeObject {
+    AL_NO_ERROR,
+    AL_INVALID_NAME,
+    AL_INVALID_ENUM,
+    AL_INVALID_VALUE,
+    AL_INVALID_OPERATION,
+    AL_OUT_OF_MEMORY
+
 }
