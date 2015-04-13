@@ -22,30 +22,15 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.openal.binding;
+package org.achtern.AchternEngine.core.audio.openal;
 
-import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
-import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+public enum Error {
 
-/**
- * The DataBinder in OpenAL is used for data upload only.
- */
-public interface DataBinder {
-
-    /**
-     * Uploads the buffer.
-     * @param buffer to be uploaded
-     */
-    public void upload(AudioBuffer buffer);
-
-    /**
-     * Since sources cannot be 'uploaded' this assigns the buffer
-     *  in {@link org.achtern.AchternEngine.core.audio.openal.AudioSource} on the OpenAL Engine to the given source
-     *  and sets the paramters of the source
-     * @param source to be setup on the engine
-     */
-    public void upload(AudioSource source);
-
-    public IDGenerator getIDGenerator();
+    AL_NO_ERROR,
+    AL_INVALID_NAME,
+    AL_INVALID_ENUM,
+    AL_INVALID_VALUE,
+    AL_INVALID_OPERATION,
+    AL_OUT_OF_MEMORY
 
 }
