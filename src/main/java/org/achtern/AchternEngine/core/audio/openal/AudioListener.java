@@ -22,32 +22,7 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio;
+package org.achtern.AchternEngine.core.audio.openal;
 
-public interface Audio {
-
-    public enum Status {
-        PLAYING, PAUSED, STOPPED
-    }
-
-
-    /**
-     * PRIVATE API
-     *
-     * Set the status on the main AudioPlayer
-     * @param status new status
-     */
-    public void setStatus(Status status);
-
-    /**
-     * PRIVATE API
-     *
-     * Returns the status on the main AudioPlayer
-     * @return status
-     */
-    public Status getStatus();
-
-
-    public float getLength();
-
+public class AudioListener {
 }
