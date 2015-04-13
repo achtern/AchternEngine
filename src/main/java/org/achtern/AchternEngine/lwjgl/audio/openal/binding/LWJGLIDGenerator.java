@@ -22,26 +22,33 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio.openal.binding;
+package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
 import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.binding.IDGenerator;
 
-/**
- * The IDGenerator generates IDs for a given type, but will not upload any data.
- */
-public interface IDGenerator {
+import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.openal.AL10.alGenSources;
 
+public class LWJGLIDGenerator implements IDGenerator {
     /**
      * Generates an ID for the given AudioBuffer
+     *
      * @param buffer will be allocated on the OpenAL engine
      */
-    public void generate(AudioBuffer buffer);
+    @Override
+    public void generate(AudioBuffer buffer) {
+        buffer.setID(alGenBuffers());
+    }
 
     /**
      * Generates an ID for the given AudioSource
+     *
      * @param source will be allocated on the OpenAL engine
      */
-    public void generate(AudioSource source);
-
+    @Override
+    public void generate(AudioSource source) {
+        source.setID(alGenSources());
+    }
 }
