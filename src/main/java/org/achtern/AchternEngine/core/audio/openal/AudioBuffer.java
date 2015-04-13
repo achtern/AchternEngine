@@ -24,12 +24,14 @@
 
 package org.achtern.AchternEngine.core.audio.openal;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.achtern.AchternEngine.core.bootstrap.NativeObject;
 
 import java.nio.ByteBuffer;
 
 @Getter
+@AllArgsConstructor
 public class AudioBuffer extends NativeObject {
 
     protected ByteBuffer data;
