@@ -36,7 +36,7 @@ public interface LineBasedParser {
      * Should NOT add a trailing line break to the line.
      * @param line The line to load
      * @return The parsed line
-     * @throws Exception
+     * @throws Exception if parsing fails
      */
     public String parse(String line) throws Exception;
 

@@ -80,6 +80,7 @@ public class ResourceLoader {
     /**
      * @see org.achtern.AchternEngine.core.resource.ResourceLoader#addResourceLocation(ResourceLocation)
      * (Prepends)
+     * @param location This will get added to the front of the search path
      */
     public static void pushResourceLocation(ResourceLocation location) {
         provider.pushResourceLocation(location);
@@ -112,7 +113,7 @@ public class ResourceLoader {
      * Pre Load a Mesh, good at startup, to allow getting the Mesh at runtime.
      * @see #getMesh(String)
      * @param name The relative path (to various ResourceLocations) of the filename
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static void preLoadMesh(String name) throws Exception {
         provider.preLoadMesh(name);
@@ -122,7 +123,7 @@ public class ResourceLoader {
      * Pre Load a Texture, good at startup, to allow getting the Texture at runtime.
      * @see #getTexture(String)
      * @param name The relative path (to various ResourceLocations) of the filename
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static void preLoadTexture(String name) throws Exception {
         provider.preLoadTexture(name);
@@ -133,7 +134,7 @@ public class ResourceLoader {
      * Only parses the sourcefile, no binding or uniform adding at this stage!
      * @see #getShader(String)
      * @param name The relative path (to various ResourceLocations) of the filename
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static void preLoadShader(String name) throws Exception {
         provider.preLoadShader(name);
@@ -147,7 +148,7 @@ public class ResourceLoader {
      * thrown from the Figure itself.
      * @param name The name of the file to load
      * @return Figure (new instance)
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static Figure getFigure(String name) throws Exception {
         return provider.getFigure(name);
@@ -162,7 +163,7 @@ public class ResourceLoader {
      * @param name The name of the file to load
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return Figure (new instance)
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static Figure getFigure(String name, boolean forceLoading) throws Exception {
         return provider.getFigure(name, forceLoading);
@@ -176,7 +177,7 @@ public class ResourceLoader {
      * thrown from the GLSLProgramLoader itself.
      * @param name The relative path (to various ResourceLocations) of the filename
      * @return Mesh (new instance)
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static Mesh getMesh(String name) throws Exception {
         return provider.getMesh(name);
@@ -191,7 +192,7 @@ public class ResourceLoader {
      * @param name The relative path (to various ResourceLocations) of the filename
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return Mesh (new instance)
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static Mesh getMesh(String name, boolean forceLoading) throws Exception {
         return provider.getMesh(name, forceLoading);
@@ -263,7 +264,7 @@ public class ResourceLoader {
      * @param name The relative path (to various ResourceLocations) of the filename
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return ShaderSource String
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static String getShader(String name, boolean forceLoading) throws Exception {
         return provider.getShader(name, forceLoading);
@@ -279,7 +280,7 @@ public class ResourceLoader {
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @param parser The optional parser to modify the shader lines.
      * @return ShaderSource String
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static String getShader(String name, boolean forceLoading, LineBasedParser parser) throws Exception {
         return provider.getShader(name, forceLoading, parser);
@@ -291,7 +292,7 @@ public class ResourceLoader {
      * @see #getShaderProgram(String, boolean)
      * @param name Name of the program declaration
      * @return A GLSLProgram with loaded shader sources.
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static GLSLProgram getShaderProgram(String name) throws Exception {
         return provider.getShaderProgram(name);
@@ -306,7 +307,7 @@ public class ResourceLoader {
      * @param name Name of the program declaration
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return A GLSLProgram with loaded shader sources.
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static GLSLProgram getShaderProgram(String name, boolean forceLoading) throws Exception {
         return provider.getShaderProgram(name, forceLoading);
@@ -322,7 +323,7 @@ public class ResourceLoader {
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @param <T> The type of Object to load
      * @return The loaded object
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     public static <T> T load(String name, AsciiFileLoader<T> loader, boolean forceLoading) throws Exception {
         return provider.load(name, loader, forceLoading);
@@ -339,7 +340,7 @@ public class ResourceLoader {
      * @param <T> The type of Object to load
      * @param <C> The type to cache the data
      * @return The loaded object
-     * @throws Exception
+     * @throws Exception if loading/parsing/processing fails
      */
     @SuppressWarnings("unchecked")
     public static <T, C> T load(String name, BinaryLoader<T, C> loader, boolean forceLoading) throws Exception {
@@ -351,7 +352,7 @@ public class ResourceLoader {
      * If a file with the same name (the same file?) a cached value will be used.
      * @param name The name of the file to load
      * @return The read file
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static String readFile(String name) throws IOException {
         return provider.readFile(name);
@@ -363,7 +364,7 @@ public class ResourceLoader {
      * @param name The name of the file to load
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return The read file
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static String readFile(String name, boolean forceLoading) throws IOException {
         return provider.readFile(name, forceLoading);
@@ -378,7 +379,7 @@ public class ResourceLoader {
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @param parser The parser gets called on every line (can be null)
      * @return The read file
-     * @throws IOException
+     * @throws IOException if loading fails
      */
     public static String readFile(String name, boolean forceLoading, LineBasedParser parser) throws IOException {
         return provider.readFile(name, forceLoading, parser);

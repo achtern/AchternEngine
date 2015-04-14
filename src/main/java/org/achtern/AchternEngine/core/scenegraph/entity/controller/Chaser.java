@@ -77,6 +77,11 @@ public class Chaser extends QuickEntity implements GameDebugger.DebugStateListen
 
     /**
      * Create an Chaser Entity
+     *
+     * @param to Name of the Node chase
+     * @param speed speed of the Node
+     * @param minDist the minimum distance, before the chaser triggers
+     * @param maxDist the maximum distance, further away and the chaser won't trigger
      */
     public Chaser(String to, float speed, float minDist, float maxDist) {
         super("Chaser");

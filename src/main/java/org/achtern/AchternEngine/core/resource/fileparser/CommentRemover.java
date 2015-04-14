@@ -38,7 +38,7 @@ public class CommentRemover implements LineBasedParser {
      *
      * @param line The line to load
      * @return The parsed line
-     * @throws Exception
+     * @throws Exception if parsing fails
      */
     @Override
     public String parse(String line) throws Exception {

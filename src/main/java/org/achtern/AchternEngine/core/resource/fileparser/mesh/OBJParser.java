@@ -69,7 +69,7 @@ public class OBJParser implements Model, LineBasedParser {
      *
      * @param line The line to load
      * @return The parsed line
-     * @throws Exception
+     * @throws Exception if parsing fails
      */
     @Override
     public String parse(String line) throws Exception {

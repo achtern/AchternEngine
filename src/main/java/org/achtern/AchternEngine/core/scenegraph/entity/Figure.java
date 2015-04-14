@@ -47,6 +47,10 @@ public class Figure extends QuickEntity {
     /**
      * Override the renderEngine supplied drawStrategy
      * if not null
+     *
+     * @param drawStrategy the new DrawStrategy
+     *
+     * @return the DrawStrategy
      */
     @Getter @Setter protected DrawStrategy drawStrategy;
 
@@ -92,6 +96,7 @@ public class Figure extends QuickEntity {
     /**
      * Creates an untitled Figure with a mesh and a material
      * @param mesh The mesh
+     * @param material The material
      */
     public Figure(Mesh mesh, Material material) {
         this("Untitled Figure", mesh, material);

@@ -64,21 +64,23 @@ public class FigureProvider implements NodeProvider {
     }
 
     /**
-     * Returns the following Node Structure:
-     * FigureProvider f = new FigureProvider("name", "floor", "another");
-     * f.get();
-     * <code>
-     *     | Node(name)
-     *     |
-     *     | -> | Node(floor)
-     *     |    | -> Figure(floor)
-     *     |
-     *     | -> | Node(another)
-     *     |    | -> Figure(another)
+     * Returns the following Node Structure:<br>
+     * <code>FigureProvider f = new FigureProvider("name", "floor", "another");</code>
+     * <code>f.get();</code>
+     * <br>
+     * <pre>
+     * {@code
+     * | Node(name)
+     * |
+     * | -> | Node(floor)
+     * |    | -> Figure(floor)
+     * |
+     * | -> | Node(another)
+     * |    | -> Figure(another)
      *
      *
-     *
-     * </code>
+     * }
+     * </pre>
      *
      * @return Node Tree
      *

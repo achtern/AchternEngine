@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * Just a wrapper for a HashMap.
  * API optimised for basic caching operations.
- * @param <T>
+ * @param <T> the type of data in the cached
  */
 public class ResourceCache<T> {
 
