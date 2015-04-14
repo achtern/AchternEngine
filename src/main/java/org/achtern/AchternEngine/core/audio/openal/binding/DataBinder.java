@@ -25,6 +25,7 @@
 package org.achtern.AchternEngine.core.audio.openal.binding;
 
 import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
+import org.achtern.AchternEngine.core.audio.openal.AudioListener;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 
 /**
@@ -45,6 +46,12 @@ public interface DataBinder {
      * @param source to be setup on the engine
      */
     public void upload(AudioSource source);
+
+    /**
+     * This is not a real upload, but rather a parameter setting, since OpenAL allows one listener only
+     * @param listener data to be set
+     */
+    public void upload(AudioListener listener);
 
     public IDGenerator getIDGenerator();
 
