@@ -24,7 +24,7 @@
 
 package org.achtern.AchternEngine.core;
 
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import org.achtern.AchternEngine.core.bootstrap.BuildInfo;
 import org.achtern.AchternEngine.core.bootstrap.MainGraphicsBindingProvider;
 import org.achtern.AchternEngine.core.rendering.BasicRenderEngine;
@@ -90,25 +90,14 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Creates a new Game Holder and runner
      * @param game The game to run.
-     * @param provider The Graphics Binding
-     *
-     * @see org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider
-     */
-    public CoreEngine(Game game, GraphicsBindingProvider provider) {
-        this(game, new MainGraphicsBindingProvider(provider));
-    }
-
-    /**
-     * Creates a new Game Holder and runner
-     * @param game The game to run.
      * @param binding Binding Manager
      */
-    public CoreEngine(Game game, MainGraphicsBindingProvider binding) {
+    public CoreEngine(Game game, BindingProvider binding) {
         LOGGER.debug(BuildInfo.get());
         this.game = game;
         this.running = false;
         this.fps = new FPS();
-        this.bindingManager = binding;
+        this.bindingManager = new MainGraphicsBindingProvider(binding.getGraphicsBindingProvider());
         this.bindingManager.populateDrawStrategyFactory();
         this.windowChangeListenerList = new ArrayList<WindowChangeListener>();
     }
