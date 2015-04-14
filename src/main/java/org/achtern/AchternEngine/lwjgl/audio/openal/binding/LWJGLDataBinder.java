@@ -26,6 +26,7 @@ package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
 import lombok.AllArgsConstructor;
 import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
+import org.achtern.AchternEngine.core.audio.openal.AudioListener;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.binding.DataBinder;
 import org.achtern.AchternEngine.core.audio.openal.binding.IDGenerator;
@@ -86,6 +87,30 @@ public class LWJGLDataBinder implements DataBinder {
 
         Vector3f up = source.getUp();
         alSource3f(id, AL_VELOCITY, up.getX(), up.getY(), up.getZ());
+    }
+
+    /**
+     * This is not a real upload, but rather a parameter setting, since OpenAL allows one listener only
+     *
+     * @param listener data to be set
+     */
+    @Override
+    public void upload(AudioListener listener) {
+        alListener3f(AL_POSITION,
+                listener.getPosition().getX(),
+                listener.getPosition().getY(),
+                listener.getPosition().getZ()
+        );
+        alListener3f(AL_VELOCITY,
+                listener.getVelocity().getX(),
+                listener.getVelocity().getY(),
+                listener.getVelocity().getZ()
+        );
+        alListener3f(AL_ORIENTATION,
+                listener.getUp().getX(),
+                listener.getUp().getY(),
+                listener.getUp().getZ()
+        );
     }
 
     /**
