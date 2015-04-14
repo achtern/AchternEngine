@@ -22,72 +22,58 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.bootstrap;
 
 import org.achtern.AchternEngine.core.Window;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import org.achtern.AchternEngine.core.input.adapter.InputAdapter;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
+import org.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
+import org.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
 import org.achtern.AchternEngine.core.rendering.state.RenderEngineState;
-import org.achtern.AchternEngine.lwjgl.LWJGLWindow;
-import org.achtern.AchternEngine.lwjgl.input.LWJGLInput;
-import org.achtern.AchternEngine.lwjgl.rendering.binding.LWJGLDataBinder;
-import org.achtern.AchternEngine.lwjgl.rendering.state.LWJGLRenderEngineState;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class LWJGLProvider implements BindingProvider {
+public class MainGraphicsBindingProvider implements GraphicsBindingProvider {
 
-    protected LWJGLRenderEngineState state;
-    protected LWJGLDataBinder dataBinder;
-    protected LWJGLInput inputAdapter;
+    protected GraphicsBindingProvider binding;
 
-    public LWJGLProvider(LWJGLRenderEngineState state, LWJGLDataBinder dataBinder, LWJGLInput inputAdapter) {
-        this.state = state;
-        this.dataBinder = dataBinder;
-        this.inputAdapter = inputAdapter;
+    public MainGraphicsBindingProvider(GraphicsBindingProvider binding) {
+        this.binding = binding;
     }
 
-    public LWJGLProvider(boolean throwUnchanged) {
-        this.state = new LWJGLRenderEngineState(throwUnchanged);
-        this.dataBinder = new LWJGLDataBinder(state);
-        this.inputAdapter = new LWJGLInput();
-    }
-
-    public LWJGLProvider() {
-        this(false);
+    public void populateDrawStrategyFactory() {
+        DrawStrategyFactory.put(DrawStrategyFactory.Common.SOLID, new SolidDraw());
+        DrawStrategyFactory.put(DrawStrategyFactory.Common.WIREFRAME, new WireframeDraw());
+        for (DrawStrategyFactory.Common k : getDrawStrategies().keySet()) {
+            DrawStrategyFactory.put(k, getDrawStrategies().get(k));
+        }
     }
 
     @Override
     public Window getWindow(Dimension dimension) {
-        return new LWJGLWindow(dimension);
+        return binding.getWindow(dimension);
     }
 
     @Override
     public RenderEngineState getRenderEngineState() {
-        return state;
+        return binding.getRenderEngineState();
     }
 
     @Override
     public DataBinder getDataBinder() {
-        return dataBinder;
+        return binding.getDataBinder();
     }
 
     @Override
     public InputAdapter getInputAdapter() {
-        return inputAdapter;
+        return binding.getInputAdapter();
     }
 
     @Override
     public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies() {
-        /*
-        We do not have LWJGL specific DrawStrategies,
-        just return an empty map.
-         */
-        return new HashMap<DrawStrategyFactory.Common, DrawStrategy>(0);
+        return binding.getDrawStrategies();
     }
 }

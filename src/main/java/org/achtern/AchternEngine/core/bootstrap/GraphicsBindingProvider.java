@@ -24,8 +24,26 @@
 
 package org.achtern.AchternEngine.core.bootstrap;
 
-public interface BindingProvider {
+import org.achtern.AchternEngine.core.Window;
+import org.achtern.AchternEngine.core.input.adapter.InputAdapter;
+import org.achtern.AchternEngine.core.rendering.Dimension;
+import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
+import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
+import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
+import org.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 
-    public GraphicsBindingProvider getGraphicsBindingProvider();
+import java.util.Map;
+
+public interface GraphicsBindingProvider {
+
+    public Window getWindow(Dimension dimension);
+
+    public RenderEngineState getRenderEngineState();
+
+    public DataBinder getDataBinder();
+
+    public InputAdapter getInputAdapter();
+
+    public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies();
 
 }

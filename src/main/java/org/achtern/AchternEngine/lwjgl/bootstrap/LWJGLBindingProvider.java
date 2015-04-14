@@ -22,10 +22,24 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.bootstrap;
+package org.achtern.AchternEngine.lwjgl.bootstrap;
 
-public interface BindingProvider {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
 
-    public GraphicsBindingProvider getGraphicsBindingProvider();
+@Data
+@AllArgsConstructor
+public class LWJGLBindingProvider implements BindingProvider {
 
+    protected GraphicsBindingProvider graphicsBindingProvider;
+
+    public LWJGLBindingProvider(boolean throwUnchanged) {
+        this(new LWJGLGraphicsBindingProvider(throwUnchanged));
+    }
+
+    public LWJGLBindingProvider() {
+        this(false);
+    }
 }

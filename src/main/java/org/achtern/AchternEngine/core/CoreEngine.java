@@ -24,9 +24,9 @@
 
 package org.achtern.AchternEngine.core;
 
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
 import org.achtern.AchternEngine.core.bootstrap.BuildInfo;
-import org.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.MainGraphicsBindingProvider;
 import org.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
@@ -43,7 +43,7 @@ import java.util.List;
  * The CoreEngine is the main entry point of the
  * AchternEngine.
  * The Engine is running the main loop and manages Game and
- * RenderEngine, as well as the {@link org.achtern.AchternEngine.core.bootstrap.MainBindingProvider}.
+ * RenderEngine, as well as the {@link org.achtern.AchternEngine.core.bootstrap.MainGraphicsBindingProvider}.
  */
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
@@ -52,7 +52,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Only used during bootstrap to manage the hardware/graphics/native binding
      */
-    protected MainBindingProvider bindingManager;
+    protected MainGraphicsBindingProvider bindingManager;
 
     /**
      * The Main Render Window
@@ -92,10 +92,10 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param game The game to run.
      * @param provider The Graphics Binding
      *
-     * @see org.achtern.AchternEngine.core.bootstrap.BindingProvider
+     * @see org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider
      */
-    public CoreEngine(Game game, BindingProvider provider) {
-        this(game, new MainBindingProvider(provider));
+    public CoreEngine(Game game, GraphicsBindingProvider provider) {
+        this(game, new MainGraphicsBindingProvider(provider));
     }
 
     /**
@@ -103,7 +103,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param game The game to run.
      * @param binding Binding Manager
      */
-    public CoreEngine(Game game, MainBindingProvider binding) {
+    public CoreEngine(Game game, MainGraphicsBindingProvider binding) {
         LOGGER.debug(BuildInfo.get());
         this.game = game;
         this.running = false;
@@ -288,11 +288,11 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
         return game;
     }
 
-    public MainBindingProvider getBindingManager() {
+    public MainGraphicsBindingProvider getBindingManager() {
         return bindingManager;
     }
 
-    public void setBindingManager(MainBindingProvider bindingManager) {
+    public void setBindingManager(MainGraphicsBindingProvider bindingManager) {
         this.bindingManager = bindingManager;
     }
 

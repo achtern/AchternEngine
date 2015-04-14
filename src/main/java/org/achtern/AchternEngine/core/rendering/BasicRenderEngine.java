@@ -27,7 +27,7 @@ package org.achtern.AchternEngine.core.rendering;
 import lombok.Getter;
 import lombok.Setter;
 import org.achtern.AchternEngine.core.Window;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
 import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
@@ -65,9 +65,9 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     protected Map<Class, GlobalEntity> globalEntities;
 
-    public BasicRenderEngine(BindingProvider bindingProvider) {
-        this.state = bindingProvider.getRenderEngineState();
-        this.dataBinder = bindingProvider.getDataBinder();
+    public BasicRenderEngine(GraphicsBindingProvider graphicsBindingProvider) {
+        this.state = graphicsBindingProvider.getRenderEngineState();
+        this.dataBinder = graphicsBindingProvider.getDataBinder();
 
         this.setRenderTarget(Window.get());
 
