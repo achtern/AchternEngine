@@ -92,7 +92,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * Creates and untitled Node.
      * The name will be <code>NULL</code> until its
      * getting added as a child to another node.
-     * (Then name will be "PARENT-NODE >> Untitled Node X" where X is
+     * (Then name will be "PARENT-NODE &gt;&gt; Untitled Node X" where X is
      * the number of already existing subnodes.
      */
     public Node() {

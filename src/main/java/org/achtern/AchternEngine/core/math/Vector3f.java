@@ -372,9 +372,11 @@ public class Vector3f implements Cloneable {
     /**
      * Clamp all components to the constant c.
      * Just checks:
-     * <code>
-     *     COMPONENT > c
-     * </code>
+     * <pre>
+     * {@code
+     * COMPONENT > c
+     * }
+     * </pre>
      * -4 will stay the same if clamped to 3!
      * @param c constant
      * @return this

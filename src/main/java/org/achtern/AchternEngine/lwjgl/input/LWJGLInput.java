@@ -516,7 +516,7 @@ public class LWJGLInput implements InputAdapter {
 
     /**
      * Returns the mouse position delta
-     * <p/>
+     * <p>
      * aka. change in position since last {@link #update()} call
      *
      * @return mouse delta

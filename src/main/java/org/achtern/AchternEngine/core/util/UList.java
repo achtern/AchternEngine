@@ -35,6 +35,7 @@ public class UList {
     /**
      * Flatten a list of 2 times nested Items (T)
      * @param tree The tree
+     * @param <T> data type of the List to flatten
      * @return the flattend list
      */
     public static <T> List<T> flattenS(List<List<T>> tree) {

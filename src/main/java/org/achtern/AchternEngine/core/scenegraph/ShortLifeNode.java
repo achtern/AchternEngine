@@ -79,6 +79,9 @@ public class ShortLifeNode extends Node {
     /**
      * This callback gets called, when the life has end of this Node.
      * It gets called before {@link #removed()}.
+     *
+     * @param deathCallback new deathCallback
+     * @return the active deathCallback
      */
     @Getter @Setter protected Callback<ShortLifeNode> deathCallback;
 

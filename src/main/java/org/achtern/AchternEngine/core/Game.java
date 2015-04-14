@@ -134,6 +134,8 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Keep a reference to it, or the node's name,
      * in order to retrieve the node at a later point easily.
      * @param node The node which should get added.
+     *
+     * @see org.achtern.AchternEngine.core.scenegraph.Node#add(org.achtern.AchternEngine.core.scenegraph.Node)
      */
     public void add(Node node) {
         getSceneGraph().add(node);
@@ -145,6 +147,9 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Keep a reference to it, or the node's name,
      * in order to retrieve the node at a later point easily.
      * @param node The node which should get added.
+     * @param forceName wether or not to force the name
+     *
+     * @see org.achtern.AchternEngine.core.scenegraph.Node#add(org.achtern.AchternEngine.core.scenegraph.Node,boolean)
      */
     public void add(Node node, boolean forceName) {
         getSceneGraph().add(node, forceName);
@@ -242,6 +247,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * FAST FAST FAST
      * If the texture is null, no loading screen will be shown.
      * @return A texture | null
+     * @throws java.lang.Exception from {@link org.achtern.AchternEngine.core.resource.ResourceLoader}
      */
     public Texture getSplashScreen() throws Exception {
         return ResourceLoader.getTexture(LoadingScreen.DEFAULT_TEXTURE_NAME);
