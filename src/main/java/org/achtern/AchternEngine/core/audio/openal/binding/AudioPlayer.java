@@ -36,4 +36,6 @@ public interface AudioPlayer {
 
     public void pause(AudioSource source);
 
+    public DataBinder getDataBinder();
+
 }

@@ -24,6 +24,7 @@
 
 package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
+import lombok.AllArgsConstructor;
 import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.binding.DataBinder;
@@ -34,6 +35,7 @@ import static org.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.achtern.AchternEngine.lwjgl.util.GLEnum.getGLEnum;
 import static org.lwjgl.openal.AL10.*;
 
+@AllArgsConstructor
 public class LWJGLDataBinder implements DataBinder {
 
     protected LWJGLIDGenerator idGen;
