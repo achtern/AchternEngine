@@ -26,10 +26,12 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.achtern.AchternEngine.core.bootstrap.NativeObject;
 import org.achtern.AchternEngine.core.math.Vector3f;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class AudioSource extends NativeObject {
 

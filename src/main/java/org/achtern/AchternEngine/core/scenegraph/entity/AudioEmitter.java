@@ -25,8 +25,8 @@
 package org.achtern.AchternEngine.core.scenegraph.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.math.Vector3f;
 
 public class AudioEmitter extends QuickEntity {
 
@@ -37,14 +37,21 @@ public class AudioEmitter extends QuickEntity {
      * The AudioSource to playback
      *
      * @return assoc. AudioSource
-     * @param audioSource sets the AudioSource to play
      */
-    @Getter @Setter protected AudioSource audioSource;
+    @Getter protected AudioSource audioSource;
 
     /**
      * Create an "Untitled AudioEmitter"
      */
     public AudioEmitter() {
         super(NAME_UNTITLED_AUDIO_ENTITY);
+    }
+
+
+    public void setAudioSource(AudioSource audioSource) {
+        audioSource.setPosition(getTransform().getPosition());
+        audioSource.setUp(Vector3f.UNIT_Y);
+        audioSource.setVelocity(Vector3f.ZERO);
+        this.audioSource = audioSource;
     }
 }
