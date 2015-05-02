@@ -26,6 +26,15 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import org.achtern.AchternEngine.core.scenegraph.Node;
 
+/**
+ * The AudioEngine handles playback of AudioSources in 3D space.
+ *
+ * In contrast to the {@link org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer} the engine handles,
+ *  AudioSources associated with {@link org.achtern.AchternEngine.core.scenegraph.Node}s and setting
+ *  of the {@link org.achtern.AchternEngine.core.audio.openal.AudioListener}.
+ *
+ * The AudioEngine shouldn't play AudioSources which are too far away to hear anyway and handle environment sound.
+ */
 public interface AudioEngine {
 
     /**
