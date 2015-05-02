@@ -24,51 +24,41 @@
 
 package org.achtern.AchternEngine.core.audio.openal;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.achtern.AchternEngine.core.audio.AudioEmitter;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.scenegraph.Node;
+import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
-/**
- * The AudioEngine handles playback of AudioSources in 3D space.
- *
- * In contrast to the {@link org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer} the engine handles,
- *  AudioSources associated with {@link org.achtern.AchternEngine.core.scenegraph.Node}s and setting
- *  of the {@link org.achtern.AchternEngine.core.audio.openal.AudioListener}.
- *
- * The AudioEngine shouldn't play AudioSources which are too far away to hear anyway and handle environment sound.
- */
-public interface AudioEngine {
+public class BasicAudioEngine implements AudioEngine {
+
+    @Getter @Setter protected AudioListener audioListener;
+
+    @Getter @Setter protected AudioPlayer audioPlayer;
 
     /**
      * Starts to playback all audiofiles for the given scenegraph.
      * This method walks the scenegraph recursively.
+     *
      * @param node scenegraph
      */
-    public void play(Node node);
+    @Override
+    public void play(Node node) {
 
-    /**
-     * Sets the {@link org.achtern.AchternEngine.core.audio.openal.AudioListener} to use.
-     * This will be required to have 3D audio effects.
-     * @param listener the current listener
-     */
-    public void setAudioListener(AudioListener listener);
+        // Cycle through all child nodes
+        for (Node n : node.getChildren().values()) {
+            this.play(node);
+        }
 
-    /**
-     * Returns the currently associated {@link org.achtern.AchternEngine.core.audio.openal.AudioListener} with this
-     *  AudioEngine.
-     * @return current listener
-     */
-    public AudioListener getAudioListener();
+        // Get all Entities
+        for (Entity e : node.getEntities()) {
+            if (!(e instanceof AudioEmitter)) {
+                continue;
+            }
+            AudioEmitter emitter = (AudioEmitter) e;
 
-    /**
-     * Sets the {@link org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer} to use
-     * @param audioPlayer this will be used to playback sources
-     */
-    public void setAudioPlayer(AudioPlayer audioPlayer);
-
-    /**
-     * Returns the current {@link org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer}
-     * @return currently used AudioPlayer
-     */
-    public AudioPlayer getAudioPlayer();
-
+            getAudioPlayer().play(emitter.getAudioSource());
+        }
+    }
 }
