@@ -322,9 +322,9 @@ public class ResourceLoader {
      * thrown from the TODO: CLASS itself.
      * @param name Name of the audio file
      * @return OpenAL AudioSource (not yet uploaded)
-     * @throws Exception
+     * @throws Exception if loading/processing fails
      */
-    public AudioSource getAudioSource(String name) throws Exception {
+    public static AudioSource getAudioSource(String name) throws Exception {
         return provider.getAudioSource(name);
     }
 
@@ -337,9 +337,9 @@ public class ResourceLoader {
      * @param name Name of the audio file
      * @param forceLoading if set to true the file will get read again and not read from cache
      * @return OpenAL AudioSource (not yet uploaded)
-     * @throws Exception
+     * @throws Exception if loading/processing fails
      */
-    public AudioSource getAudioSource(String name, boolean forceLoading) throws Exception {
+    public static AudioSource getAudioSource(String name, boolean forceLoading) throws Exception {
         return provider.getAudioSource(name, forceLoading);
     }
 
