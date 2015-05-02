@@ -436,12 +436,18 @@ public class BasicResourceLoader implements ResourceLoaderProvider {
             }
         }
 
+        InputStream stream;
+
         // Load it
-        loader.load(name, getStream(name));
+        loader.load(name, stream = getStream(name));
         // get it
         T value = loader.get();
         // cache it
         binaryCache.add(name, loader.getCache());
+
+        // close the stream
+        stream.close();
+
         // return it
         return value;
     }
