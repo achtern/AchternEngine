@@ -26,10 +26,27 @@ package org.achtern.AchternEngine.core.resource.loader;
 
 import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.Format;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 
 public class AudioSourceLoader extends BinaryLoader<AudioSource,AudioBuffer> {
+
+
+    protected ByteBuffer data;
+
+    protected Format format;
+
+    protected int frequency;
+
     /**
      * This method should construct the object from a cached
      * value provided by the ResourceLoader
@@ -64,7 +81,98 @@ public class AudioSourceLoader extends BinaryLoader<AudioSource,AudioBuffer> {
      */
     @Override
     public void load(String name, InputStream input) throws LoadingException {
-        // TODO: loading here.
+
+        AudioInputStream ais;
+        try {
+            ais = AudioSystem.getAudioInputStream(input);
+        } catch (UnsupportedAudioFileException e) {
+            throw new LoadingException("Unssported Audio format", e);
+        } catch (IOException e) {
+            throw new LoadingException("Could not read audio", e);
+        }
+
+        AudioFormat javaFormat = ais.getFormat();
+        int ssib = javaFormat.getSampleSizeInBits();
+
+        if (ssib != 8 && ssib != 16) {
+            throw new LoadingException("Illegal SampleSize <" + ssib + ">");
+        }
+
+        Format format = null;
+
+        switch (javaFormat.getChannels()) {
+            case 1:
+                if (ssib == 8) {
+                    format = Format.MONO8;
+                } else {
+                    format = Format.MONO16;
+                }
+                break;
+
+            case 2:
+                if (ssib == 8) {
+                    format = Format.STEREO8;
+                } else {
+                    format = Format.STEREO16;
+                }
+                break;
+            default:
+                throw new LoadingException("Support for mono / stereo files only.");
+        }
+
+        try {
+            int available = ais.available();
+
+            if (available <= 0) {
+                available = javaFormat.getChannels() * (int) ais.getFrameLength() * ssib / 8;
+            }
+
+            byte[] bbuffer = new byte[available];
+
+            int r, total = 0;
+
+            while ((r = ais.read(bbuffer, total, bbuffer.length - total)) != -1 && total < bbuffer.length) {
+                total += r;
+            }
+
+
+            ByteBuffer buffer = ByteBuffer.allocateDirect(bbuffer.length);
+
+            buffer.order(ByteOrder.nativeOrder());
+
+            ByteBuffer src = ByteBuffer.wrap(bbuffer);
+
+            src.order(javaFormat.isBigEndian() ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
+
+
+            if (ssib == 16) {
+                // Stereo
+                ShortBuffer buffer_s = buffer.asShortBuffer();
+                ShortBuffer src_s = src.asShortBuffer();
+
+                while (src_s.hasRemaining()) {
+                    buffer_s.put(src_s.get());
+                }
+
+            } else {
+                // Mono
+                while (src.hasRemaining()) {
+                    buffer.put(src.get());
+                }
+            }
+
+            buffer.rewind();
+
+
+            this.data = buffer;
+            this.format = format;
+            this.frequency = (int) javaFormat.getSampleRate();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
@@ -76,7 +184,11 @@ public class AudioSourceLoader extends BinaryLoader<AudioSource,AudioBuffer> {
      */
     @Override
     public AudioSource get() throws Exception {
-        //TODO: :/
-        return new AudioSource(null, null, null, null);
+        AudioBuffer buffer = new AudioBuffer(data, frequency, format);
+
+        cache(buffer);
+        this.data.clear();
+
+        return new AudioSource(buffer, null, null, null);
     }
 }
