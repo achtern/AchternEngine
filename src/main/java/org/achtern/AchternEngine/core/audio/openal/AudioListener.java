@@ -39,6 +39,9 @@ public class AudioListener {
 
     /**
      * Position of the listener, most of the times this will be the camera itself
+     *
+     * @return current position
+     * @param position new position
      */
     protected Vector3f position;
 
@@ -46,11 +49,17 @@ public class AudioListener {
      * The velocity of the listener, for doppler effects etc.
      *
      * Not needed in most cases.
+     *
+     * @return current velocity
+     * @param velocity new velocity
      */
     protected Vector3f velocity;
 
     /**
      * Direction of the Listener, used for 3D (stereo) sound
+     *
+     * @return current up vector
+     * @param up new up vector
      */
     protected Vector3f up;
 
