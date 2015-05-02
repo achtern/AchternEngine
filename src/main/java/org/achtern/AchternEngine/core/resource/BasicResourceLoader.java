@@ -24,6 +24,7 @@
 
 package org.achtern.AchternEngine.core.resource;
 
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import org.achtern.AchternEngine.core.rendering.texture.Texture;
@@ -381,6 +382,17 @@ public class BasicResourceLoader implements ResourceLoaderProvider {
     public GLSLProgram getShaderProgram(String name, boolean forceLoading) throws Exception {
         LOGGER.info("Loading Shader Program {}", name);
         return load(name + SHADER_PROGRAM_EXT, new GLSLProgramLoader(), forceLoading);
+    }
+
+    @Override
+    public AudioSource getAudioSource(String name) throws Exception {
+        return getAudioSource(name, false);
+    }
+
+    @Override
+    public AudioSource getAudioSource(String name, boolean forceLoading) throws Exception {
+        LOGGER.info("Loading AudioSource {}", name);
+        return load(name, new AudioSourceLoader(), forceLoading);
     }
 
     /**
