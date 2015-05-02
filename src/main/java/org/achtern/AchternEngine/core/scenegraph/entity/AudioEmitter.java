@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.audio;
+package org.achtern.AchternEngine.core.scenegraph.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
-import org.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 
 public class AudioEmitter extends QuickEntity {
 

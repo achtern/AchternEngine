@@ -26,7 +26,7 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.achtern.AchternEngine.core.audio.AudioEmitter;
+import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.scenegraph.Node;
 import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
