@@ -26,6 +26,8 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.scenegraph.Node;
+import org.achtern.AchternEngine.core.scenegraph.Updatable;
+import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
 
 /**
  * The AudioEngine handles playback of AudioSources in 3D space.
@@ -36,14 +38,20 @@ import org.achtern.AchternEngine.core.scenegraph.Node;
  *
  * The AudioEngine shouldn't play AudioSources which are too far away to hear anyway and handle environment sound.
  */
-public interface AudioEngine {
+public interface AudioEngine extends Updatable {
 
     /**
-     * Starts to playback all audiofiles for the given scenegraph.
-     * This method walks the scenegraph recursively.
-     * @param node scenegraph
+     * Add this {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} to the engine.
+     * @param emitter will be added
      */
-    public void play(Node node);
+    public void addEmitter(AudioEmitter emitter);
+
+    /**
+     * Add all {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} containing in the Node
+     *  (and its children) to the engine.
+     * @param node emitter in the node will be added
+     */
+    public void addEmitter(Node node);
 
     /**
      * Sets the {@link org.achtern.AchternEngine.core.audio.openal.AudioListener} to use.

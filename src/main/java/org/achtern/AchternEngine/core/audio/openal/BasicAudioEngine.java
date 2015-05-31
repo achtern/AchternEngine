@@ -26,10 +26,12 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.scenegraph.Node;
-import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
+import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
+import org.achtern.AchternEngine.core.scenegraph.scanning.SingleEntityRetriever;
+
+import java.util.List;
 
 public class BasicAudioEngine implements AudioEngine {
 
@@ -37,28 +39,45 @@ public class BasicAudioEngine implements AudioEngine {
 
     @Getter @Setter protected AudioPlayer audioPlayer;
 
+    protected List<AudioEmitter> emitter;
+
     /**
-     * Starts to playback all audiofiles for the given scenegraph.
-     * This method walks the scenegraph recursively.
+     * Add this {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} to the engine.
      *
-     * @param node scenegraph
+     * @param emitter will be added
      */
     @Override
-    public void play(Node node) {
+    public void addEmitter(AudioEmitter emitter) {
+        this.emitter.add(emitter);
+    }
 
-        // Cycle through all child nodes
-        for (Node n : node.getChildren().values()) {
-            this.play(node);
+    /**
+     * Add all {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} containing in the Node
+     * (and its children) to the engine.
+     *
+     * @param node emitter in the node will be added
+     */
+    @Override
+    public void addEmitter(Node node) {
+        SingleEntityRetriever ser = new SingleEntityRetriever();
+
+        for (AudioEmitter e : ser.getAll(AudioEmitter.class)) {
+            addEmitter(e);
         }
+    }
 
-        // Get all Entities
-        for (Entity e : node.getEntities()) {
-            if (!(e instanceof AudioEmitter)) {
-                continue;
+    /**
+     * Trigger an update.
+     * Do you regular updating of nodes/entities in here.
+     *
+     * @param delta The delta time
+     */
+    @Override
+    public void update(float delta) {
+        for (AudioEmitter e : emitter) {
+            if (e.checkTrigger()) {
+                getAudioPlayer().play(e.getAudioSource());
             }
-            AudioEmitter emitter = (AudioEmitter) e;
-
-            getAudioPlayer().play(emitter.getAudioSource());
         }
     }
 }
