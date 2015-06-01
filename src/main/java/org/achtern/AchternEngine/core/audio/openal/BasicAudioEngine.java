@@ -31,6 +31,7 @@ import org.achtern.AchternEngine.core.scenegraph.Node;
 import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
 import org.achtern.AchternEngine.core.scenegraph.scanning.SingleEntityRetriever;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BasicAudioEngine implements AudioEngine {
@@ -39,7 +40,7 @@ public class BasicAudioEngine implements AudioEngine {
 
     @Getter @Setter protected AudioPlayer audioPlayer;
 
-    protected List<AudioEmitter> emitter;
+    protected List<AudioEmitter> emitter = new ArrayList<AudioEmitter>();
 
     /**
      * Add this {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} to the engine.
@@ -78,10 +79,6 @@ public class BasicAudioEngine implements AudioEngine {
      */
     @Override
     public void update(float delta) {
-        for (AudioEmitter e : emitter) {
-            if (e.checkTrigger()) {
-                getAudioPlayer().play(e.getAudioSource());
-            }
-        }
+        getAudioPlayer().getDataBinder().upload(getAudioListener());
     }
 }

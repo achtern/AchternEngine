@@ -39,9 +39,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
 
     @Override
     public void play(AudioSource source) {
-        if (source.getID() == INVALID_ID) {
-            getDataBinder().upload(source);
-        }
+        getDataBinder().upload(source);
         alSourcePlay(source.getID());
     }
 
