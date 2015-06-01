@@ -43,4 +43,13 @@ public class AudioSource extends NativeObject {
 
     protected Vector3f up;
 
+    protected boolean loop;
+
+    public AudioSource(AudioBuffer buffer) {
+        this(buffer, null, null, null, false);
+    }
+
+    public AudioSource(AudioBuffer buffer, Vector3f position, Vector3f velocity, Vector3f up) {
+        this(buffer, position, velocity, up, false);
+    }
 }

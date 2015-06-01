@@ -87,6 +87,9 @@ public class LWJGLDataBinder implements DataBinder {
 
         Vector3f up = source.getUp();
         alSource3f(id, AL_VELOCITY, up.getX(), up.getY(), up.getZ());
+
+        boolean loop = source.isLoop();
+        alSourcei(id, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
     }
 
     /**

@@ -49,6 +49,10 @@ public class BasicAudioEngine implements AudioEngine {
     @Override
     public void addEmitter(AudioEmitter emitter) {
         this.emitter.add(emitter);
+        if (emitter.getAudioSource().isLoop()) {
+            // TODO: check if it should start immediately
+            getAudioPlayer().play(emitter.getAudioSource());
+        }
     }
 
     /**
