@@ -58,11 +58,4 @@ public class AudioEmitter extends QuickEntity {
         this.audioSource.setUp(Vector3f.UNIT_Y);
         this.audioSource.setVelocity(Vector3f.ZERO);
     }
-
-    /**
-     * This method gets called
-     */
-    public boolean checkTrigger() {
-        return false;
-    }
 }
