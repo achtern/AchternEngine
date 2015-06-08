@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Christian Gärtner
+ * Copyright (c) 2015 Christian Gärtner
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,49 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering;
+package org.achtern.AchternEngine.core.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.math.Vector3f;
+import org.achtern.AchternEngine.core.rendering.Vertex;
 
-@AllArgsConstructor
-@Data
-public class Vertex {
+import java.util.ArrayList;
 
-    public static final int SIZE = 8;
+public class UVertex {
 
-    protected Vector3f pos;
-    protected Vector2f texCor;
-    protected Vector3f normal;
+    public static Vertex[] toArray(float[] positions) {
+        ArrayList<Vertex> r = new ArrayList<Vertex>(positions.length / 3);
 
-    public Vertex(Vector3f pos) {
-        this(pos, new Vector2f(0, 0));
+        for (int i = 0; i < positions.length; i += 3) {
+            r.add(new Vertex(new Vector3f(positions[i], positions[i + 1], positions[i + 2])));
+        }
+
+
+        return r.toArray(new Vertex[r.size()]);
     }
 
-    public Vertex(Vector3f pos, Vector2f texCor) {
-        this(pos, texCor, new Vector3f(0, 0, 0));
+    public static Vertex[] toArray(float[] positions, float[] texCoords) {
+        Vertex[] r = toArray(positions);
+
+
+        for (int i = 0; i < texCoords.length; i += 2) {
+            r[i].setTexCor(new Vector2f(texCoords[i], texCoords[i + 1]));
+        }
+
+        return r;
+
     }
 
-    public Vertex(float x, float y, float z, float texX, float texY) {
-        this(new Vector3f(x, y, z), new Vector2f(texX, texY));
+    public static Vertex[] toArray(float[] positions, float[] texCoords, float[] normals) {
+        Vertex[] r = toArray(positions, texCoords);
+
+
+        for (int i = 0; i < normals.length; i += 3) {
+            r[i].setNormal(new Vector3f(texCoords[i], texCoords[i + 1], texCoords[i + 2]));
+        }
+
+        return r;
+
     }
+
 }
