@@ -31,6 +31,9 @@ import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.binding.DataBinder;
 import org.achtern.AchternEngine.core.audio.openal.binding.IDGenerator;
 import org.achtern.AchternEngine.core.math.Vector3f;
+import org.achtern.AchternEngine.core.util.UBuffer;
+
+import java.nio.FloatBuffer;
 
 import static org.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.achtern.AchternEngine.lwjgl.util.GLEnum.getGLEnum;
@@ -109,10 +112,15 @@ public class LWJGLDataBinder implements DataBinder {
                 listener.getVelocity().getY(),
                 listener.getVelocity().getZ()
         );
-        alListener3f(AL_ORIENTATION,
-                listener.getUp().getX(),
-                listener.getUp().getY(),
-                listener.getUp().getZ()
+        alListener(AL_ORIENTATION,
+                (FloatBuffer) UBuffer.createFloatBuffer(6).put(new float[]{
+                        -listener.getForward().getX(),
+                        -listener.getForward().getY(),
+                        -listener.getForward().getZ(),
+                        listener.getUp().getX(),
+                        listener.getUp().getY(),
+                        listener.getUp().getZ()
+                }).rewind()
         );
     }
 

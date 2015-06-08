@@ -26,7 +26,10 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.achtern.AchternEngine.core.Transform;
 import org.achtern.AchternEngine.core.math.Vector3f;
+import org.achtern.AchternEngine.core.scenegraph.Node;
+import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
 
 /**
  * The AudioListener represents the 'ears' of the 'camera'.
@@ -56,18 +59,71 @@ public class AudioListener {
     protected Vector3f velocity;
 
     /**
-     * Direction of the Listener, used for 3D (stereo) sound
+     * Up vector of the Listener, used for 3D (stereo) sound
      *
      * @return current up vector
      * @param up new up vector
      */
     protected Vector3f up;
 
+    /**
+     * Direction of the Listener, used for 3D (stereo) sound
+     *
+     * @return current forward vector
+     * @param forward new forward vector
+     */
+    protected Vector3f forward;
+
+
+    /**
+     * Creates an AudioListener from a {@link org.achtern.AchternEngine.core.Transform}.
+     * @param transform source
+     * @return new AudioListener
+     */
+    public static AudioListener fromTransform(Transform transform) {
+        return new AudioListener().updateFrom(transform);
+    }
 
     /**
      * Creates an AudioListener at (0/0/0) with no velocity and the Y axis as up vector
      */
     public AudioListener() {
-        this(Vector3f.ZERO.get(), Vector3f.ZERO.get(), Vector3f.UNIT_Y.get());
+        this(Vector3f.ZERO.get(), Vector3f.ZERO.get(), Vector3f.UNIT_Y.get(), Vector3f.UNIT_Z.get());
+    }
+
+    /**
+     * Gets the values 'up', 'forward' and 'position' from {@link org.achtern.AchternEngine.core.Transform},
+     *  (this uses the transformed values) and sets them.
+     * @param transform data source
+     * @return SELF
+     */
+    public AudioListener updateFrom(Transform transform) {
+        setPosition(transform.getTransformedPosition());
+        setForward(transform.getTransformedRotation().getForward());
+        setUp(transform.getTransformedRotation().getUp());
+
+        return this;
+    }
+
+    /**
+     * Calls {@link #updateFrom(org.achtern.AchternEngine.core.Transform)}
+     *
+     * @see #updateFrom(org.achtern.AchternEngine.core.Transform)
+     * @param entity transform of this entity will be used
+     * @return SELF
+     */
+    public AudioListener updateFrom(Entity entity) {
+        return updateFrom(entity.getTransform());
+    }
+
+    /**
+     * Calls {@link #updateFrom(org.achtern.AchternEngine.core.Transform)}
+     *
+     * @see #updateFrom(org.achtern.AchternEngine.core.Transform)
+     * @param node transform of this node will be used
+     * @return SELF
+     */
+    public AudioListener updateFrom(Node node) {
+        return updateFrom(node.getTransform());
     }
 }
