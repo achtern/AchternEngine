@@ -26,6 +26,7 @@ package org.achtern.AchternEngine.core.scenegraph;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
 import org.achtern.AchternEngine.core.util.Callback;
 
 /**
@@ -150,6 +151,12 @@ public class ShortLifeNode extends Node {
             if (getDeathCallback() != null) {
                 getDeathCallback().call(this);
             }
+            if (this.mode == Mode.DESTROY) {
+                for (Entity e : getEntities()) {
+                    e.destroy();
+                }
+            }
+
             this.getParent().remove(this);
         }
     }
