@@ -70,15 +70,15 @@ AchternEngine tries to be independent of the Graphics Binding.
 It currently works best with OpenGL, but I guess any system could work.
 
 The core engine is independent of the java binding. Currently it gets shipped
-with LWJGL 2, but it easy to make it work with JOGL, just implement a few wrappers and you're set.
+with LWJGL 2, but it easy to make it work with LWJGL 3 or JOGL, just implement a few wrappers and you're set.
 
-There are no util classes used, beside the ones stated in the `pom.xml`.
 
 ## Contributing
 
-I'm happy if somebody wants to write code for the engine.
+__All__ contributions are welcome: bug reports, patches, documentation (!) and everything you can think of.
 
-This project is using [Lombok](http://projectlombok.org/) so your IDE should support this.
 
-Please send PR only to the develop branch.
+If and only if you want to contribute code to this projects you have to be aware of the fact, that this project is using [Project Lombok](http://projectlombok.org/) so your IDE should support this.
+
+Please send PR only to the `develop` branch.
 
