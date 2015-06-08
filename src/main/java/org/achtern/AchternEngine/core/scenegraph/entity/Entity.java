@@ -39,6 +39,32 @@ import org.achtern.AchternEngine.core.scenegraph.Node;
 public interface Entity extends Updatable {
 
     /**
+     * Marks this Entity to be no longer needed.
+     *  This is just a hint for the various engines operating
+     *  with this Entity.
+     *
+     * The {@link org.achtern.AchternEngine.core.rendering.RenderEngine} for example could decide to delete the
+     *  resources for a given Entity from the graphics card's memory, etc.
+     */
+    public void destroy();
+
+    /**
+     * Set whether or not the resources assoc. with this Entity can be destroyed.
+     *
+     * @see #destroy()
+     * @param shouldbeDestroyed whether or not to destroy this Entity
+     */
+    public void destroy(boolean shouldbeDestroyed);
+
+    /**
+     * If true, the Entity is no longer needed.
+     *
+     * @see #destroy()
+     * @return whether or not to destroy this Entity
+     */
+    public boolean shouldBeDestroyed();
+
+    /**
      * Called on render, draw stuff here
      * @param renderEngine The active renderEngine (caller)
      */

@@ -47,6 +47,8 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
     protected CoreEngine engine;
     protected String name;
 
+    protected boolean destroy = false;
+
     /**
      * Create an "Untitled Entity"
      */
@@ -92,6 +94,42 @@ public abstract class QuickEntity implements Entity, EngineHolder<CoreEngine> {
      */
     @Override
     public void attached() {
+    }
+
+    /**
+     * Marks this Entity to be no longer needed.
+     *  This is just a hint for the various engines operating
+     *  with this Entity.
+     *
+     *
+     * The {@link org.achtern.AchternEngine.core.rendering.RenderEngine} for example could decide to delete the
+     *  resources for a given Entity from the graphics card's memory, etc.
+     */
+    @Override
+    public void destroy() {
+        this.destroy(true);
+    }
+
+    /**
+     * Set whether or not the resources assoc. with this Entity can be destroyed.
+     *
+     * @param shouldbeDestroyed whether or not to destroy this Entity
+     * @see #destroy()
+     */
+    @Override
+    public void destroy(boolean shouldbeDestroyed) {
+        this.destroy = shouldbeDestroyed;
+    }
+
+    /**
+     * If true, the Entity is no longer needed.
+     *
+     * @return whether or not to destroy this Entity
+     * @see #destroy()
+     */
+    @Override
+    public boolean shouldBeDestroyed() {
+        return this.destroy;
     }
 
     /**
