@@ -227,6 +227,17 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
     }
 
     /**
+     * Simply counts the number of Entities and fetches number of Entities
+     *  from all its children.
+     *
+     * @see Node#numberOfEntities()
+     * @return number of entities
+     */
+    public int numberOfEntities() {
+        return getSceneGraph().numberOfEntities();
+    }
+
+    /**
      * Creates a new root Node, if it was null before.
      * @return The scenegraph
      */

@@ -248,6 +248,25 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
     }
 
     /**
+     * Simply counts the number of Entities and fetches number of Entities
+     *  from all its children.
+     *
+     * This method doesn't give the guarantee to be 100% accurate.
+     *
+     * If two Entites are in this Node and in one child node, it will
+     *  get counted twice!
+     * @return number of entities
+     */
+    public int numberOfEntities() {
+        int size = getEntities().size();
+        for (Node child : getChildren().values()) {
+            size += child.numberOfEntities();
+        }
+
+        return size;
+    }
+
+    /**
      * When this Node has been removed from it's parent, this method
      * will get called and notifies all children and child-entites.
      */
