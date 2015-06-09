@@ -84,11 +84,23 @@ public class AudioSource extends NativeObject {
      */
     protected boolean relative;
 
+    /**
+     * Gain of this AudioSource. 0.0f is minimum and 1.0f maximum.
+     *
+     * Defaults to 1.0f
+     *
+     * NOTE: the 1.0f maximum is NOT enforced. Some drivers may allow gain over 1.0f
+     *
+     * @param gain gain of the AudioSource
+     * @return current gain of the AudioSource.
+     */
+    protected float gain;
+
     public AudioSource(AudioBuffer buffer) {
-        this(buffer, null, null, false, false);
+        this(buffer, null, null);
     }
 
     public AudioSource(AudioBuffer buffer, Vector3f position, Vector3f velocity) {
-        this(buffer, position, velocity, false, false);
+        this(buffer, position, velocity, false, false, 1.0f);
     }
 }

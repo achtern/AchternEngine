@@ -80,5 +80,8 @@ public class BasicAudioEngine implements AudioEngine {
     @Override
     public void update(float delta) {
         getAudioPlayer().getDataBinder().upload(getAudioListener());
+        for (AudioEmitter e : this.emitter) {
+            getAudioPlayer().getDataBinder().upload(e.getAudioSource());
+        }
     }
 }

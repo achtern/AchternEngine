@@ -94,6 +94,8 @@ public class LWJGLDataBinder implements DataBinder {
 
         boolean loop = source.isLoop();
         alSourcei(id, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+
+        alSourcef(id, AL_GAIN, source.getGain());
     }
 
     /**
