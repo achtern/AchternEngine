@@ -35,21 +35,60 @@ import org.achtern.AchternEngine.core.math.Vector3f;
 @AllArgsConstructor
 public class AudioSource extends NativeObject {
 
+    /**
+     * Associated {@link org.achtern.AchternEngine.core.audio.openal.AudioBuffer}
+     *
+     * @param buffer New buffer to use with this AudioSource
+     * @return the currently assoc. AudioBuffer
+     */
     protected AudioBuffer buffer;
 
+    /**
+     * Position of this AudioSource in 3D space.
+     *
+     * This can be both in absolute or relative coordinates to the
+     *  {@link org.achtern.AchternEngine.core.audio.openal.AudioListener}.
+     *
+     * @see org.achtern.AchternEngine.core.audio.openal.AudioSource#isRelative()
+     *
+     * @param position Sets the new position
+     * @return current position
+     */
     protected Vector3f position;
 
+    /**
+     * The velocity of the AudioSource, for doppler effects etc.
+     *
+     * Not needed in most cases.
+     *
+     * @param velocity new velocity
+     * @return current velocity
+     */
     protected Vector3f velocity;
 
-    protected Vector3f up;
-
+    /**
+     * Indicates whether this AudioSource should be played in a loop.
+     *
+     * @param loop if it should be looped
+     * @return if it will loop
+     */
     protected boolean loop;
 
+    /**
+     * If this AudioSource is not relative, {@link #getPosition()} will be interpreted
+     *  as absolute world coordiantes, otherwise as offset from the
+     *  {@link org.achtern.AchternEngine.core.audio.openal.AudioListener}.
+     *
+     * @param relative if position is relative
+     * @return if position is relative
+     */
+    protected boolean relative;
+
     public AudioSource(AudioBuffer buffer) {
-        this(buffer, null, null, null, false);
+        this(buffer, null, null, false, false);
     }
 
-    public AudioSource(AudioBuffer buffer, Vector3f position, Vector3f velocity, Vector3f up) {
-        this(buffer, position, velocity, up, false);
+    public AudioSource(AudioBuffer buffer, Vector3f position, Vector3f velocity) {
+        this(buffer, position, velocity, false, false);
     }
 }
