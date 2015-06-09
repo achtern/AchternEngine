@@ -26,6 +26,7 @@ package org.achtern.AchternEngine.core.rendering.shader.forward;
 
 import org.achtern.AchternEngine.core.rendering.RenderPass;
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
+import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay;
 import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight;
 
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import java.util.Map;
  *  @see org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.Light
  *
  * This adds a default Shader for {@link org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.AmbientLight}
+ *  and {@link org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.WireframeDisplay}.
  */
 public abstract class ShaderSuit {
 
@@ -50,6 +52,7 @@ public abstract class ShaderSuit {
         this.shaders = shaders;
 
         setShaderFor(AmbientLight.class, Ambient.getInstance());
+        setShaderFor(WireframeDisplay.class, Wireframe.getInstance());
     }
 
     /**
