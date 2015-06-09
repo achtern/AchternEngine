@@ -82,14 +82,15 @@ public class LWJGLDataBinder implements DataBinder {
 
         alSourcei(id, AL_BUFFER, source.getBuffer().getID());
 
+        boolean relative = source.isRelative();
+        alSourcei(id, AL_SOURCE_RELATIVE, relative ? AL_TRUE : AL_FALSE);
+        alSourcei(id, AL_SOURCE_ABSOLUTE, relative ? AL_FALSE : AL_TRUE);
+
         Vector3f pos = source.getPosition();
         alSource3f(id, AL_POSITION, pos.getX(), pos.getY(), pos.getZ());
 
         Vector3f vel = source.getVelocity();
         alSource3f(id, AL_VELOCITY, vel.getX(), vel.getY(), vel.getZ());
-
-        Vector3f up = source.getUp();
-        alSource3f(id, AL_VELOCITY, up.getX(), up.getY(), up.getZ());
 
         boolean loop = source.isLoop();
         alSourcei(id, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
