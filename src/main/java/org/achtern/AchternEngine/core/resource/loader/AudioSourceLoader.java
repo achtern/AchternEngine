@@ -57,7 +57,7 @@ public class AudioSourceLoader extends BinaryLoader<AudioSource,AudioBuffer> {
      */
     @Override
     public AudioSource fromCache(AudioBuffer value) throws Exception {
-        return new AudioSource(value, null, null, null);
+        return new AudioSource(value);
     }
 
     /**
@@ -189,6 +189,6 @@ public class AudioSourceLoader extends BinaryLoader<AudioSource,AudioBuffer> {
         cache(buffer);
         this.data.clear();
 
-        return new AudioSource(buffer, null, null, null);
+        return new AudioSource(buffer);
     }
 }
