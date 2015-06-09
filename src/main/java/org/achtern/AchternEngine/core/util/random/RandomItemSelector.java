@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is a helper class for selecting random items from lists, etc.
+ */
 public class RandomItemSelector {
 
     /**
@@ -40,8 +43,30 @@ public class RandomItemSelector {
         return items.get(RandomNumberGenerator.getRandom(items.size()));
     }
 
-    public static <T> T getRandom(Map<T, Float> items) {
-        return getRandom(items, 100);
+    /**
+     * Returns are random value from the given map
+     * @param items source
+     * @param <T> type of the items (values)
+     * @return random item (value) from the given items
+     */
+    public static <T> T getRandom(Map<?,T> items) {
+        return getRandom(new ArrayList<T>(items.values()));
+    }
+
+    /**
+     * Wrapper for {@link #getSpecificRandom(java.util.Map, int)}.
+     *
+     * Uses default resolution of 100, this means the lowest possible
+     *  percentage for each item is 1% or 0.01
+     *
+     * @see #getSpecificRandom(java.util.Map, int)
+     *
+     * @param items items and their probability
+     * @param <T> type of the items
+     * @return random item from the given items
+     */
+    public static <T> T getSpecificRandom(Map<T, Float> items) {
+        return getSpecificRandom(items, 100);
     }
 
     /**
@@ -65,7 +90,7 @@ public class RandomItemSelector {
      * @param <T> type of the items
      * @return random item from the given items
      */
-    public static <T> T getRandom(Map<T, Float> items, int resolution) {
+    public static <T> T getSpecificRandom(Map<T, Float> items, int resolution) {
         List<T> source = new ArrayList<T>(resolution);
 
         for (Map.Entry<T, Float> entry : items.entrySet()) {
