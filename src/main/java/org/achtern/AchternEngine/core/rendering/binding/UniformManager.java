@@ -35,13 +35,32 @@ import org.achtern.AchternEngine.core.rendering.shader.Shader;
 import org.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.*;
 
+/**
+ * The UniformManager is responsible for adding, registering and setting uniform and it's data.
+ */
 public interface UniformManager {
 
+    /**
+     * This should register the uniform to the given shader on the graphics card
+     * @param shader assoc. shader
+     * @param uniform uniform to register
+     */
     public void registerUniform(Shader shader, Uniform uniform);
 
+    /**
+     * This method will call
+     *  {@link #registerUniform(org.achtern.AchternEngine.core.rendering.shader.Shader, org.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform)}
+     *  for all uniforms in the Shader.
+     * @param shader shader to add all uniforms
+     */
     public void addUniforms(Shader shader);
 
-
+    /**
+     * This will determine if the uniform should be set and if and only if
+     *  will determine the type of value and set the data accordingly.
+     * @param shader assoc. shader
+     * @param uniform uniform to set its data
+     */
     public void setUniform(Shader shader, Uniform uniform);
 
     public void setUniform(Shader shader, String name, Vector3f vec);

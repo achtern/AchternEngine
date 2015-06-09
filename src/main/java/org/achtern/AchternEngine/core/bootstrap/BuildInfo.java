@@ -27,6 +27,11 @@ package org.achtern.AchternEngine.core.bootstrap;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * BuildInfo provides information about the engine at runtime, like the version and properties of the latest git commit.
+ *
+ * This class uses 'git-commit-id-plugin' maven-plugin and reads it's output.
+ */
 public class BuildInfo {
 
     public static final String ENGINE_VERSION = "0.4-SNAPSHOT";
