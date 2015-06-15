@@ -24,11 +24,18 @@
 
 package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.audio.openal.binding.DataBinder;
+import org.achtern.AchternEngine.core.util.async.AsyncHandler;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 import static org.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.lwjgl.openal.AL10.*;
@@ -38,11 +45,25 @@ public class LWJGLAudioPlayer implements AudioPlayer {
 
     protected LWJGLDataBinder dataBinder;
 
+    @Getter(AccessLevel.PROTECTED)
+    protected Map<AudioSource, ScheduledFuture> futures = new HashMap<AudioSource, ScheduledFuture>();
+
     @Override
-    public void play(AudioSource source) {
+    public void play(final AudioSource source) {
         getDataBinder().upload(source);
         alSourcePlay(source.getID());
         updateState(source);
+
+        addFuture(source, new AsyncHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateState(source);
+            }
+            /*
+            We could just cast to long and use SECONDS as TimeUnit,
+            but this way is more precise, since we have 3 more digits.
+             */
+        }, (long) source.getBuffer().getLengthInSeconds() * 1000));
     }
 
     @Override
@@ -52,6 +73,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
         }
         alSourceStop(source.getID());
         updateState(source);
+        cancelFuture(source);
     }
 
     @Override
@@ -61,6 +83,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
         }
         alSourceRewind(source.getID());
         updateState(source);
+        cancelFuture(source);
     }
 
     @Override
@@ -70,6 +93,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
         }
         alSourcePause(source.getID());
         updateState(source);
+        cancelFuture(source);
     }
 
     @Override
@@ -98,6 +122,18 @@ public class LWJGLAudioPlayer implements AudioPlayer {
                 OpenAL.
                  */
                 return AudioSourceState.STOPPED;
+        }
+    }
+
+    protected void addFuture(AudioSource source, ScheduledFuture future) {
+        getFutures().put(source, future);
+    }
+
+    protected void cancelFuture(AudioSource source) {
+        // Cancel any futures there may be.
+        if (getFutures().containsKey(source)) {
+            getFutures().get(source).cancel(true);
+            getFutures().remove(source);
         }
     }
 }

@@ -31,14 +31,19 @@ import lombok.Getter;
 public enum Format {
 
     MONO8,
-    MONO16,
+    MONO16(16),
 
-    STEREO8(true),
-    STEREO16(true);
+    STEREO8(true, 8),
+    STEREO16(true, 16);
 
     @Getter protected final boolean stereo;
+    @Getter protected final int bits;
 
     Format() {
-        this(false);
+        this(false, 8);
+    }
+
+    Format(int bits) {
+        this(false, bits);
     }
 }

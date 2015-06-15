@@ -34,10 +34,25 @@ import java.nio.ByteBuffer;
 @AllArgsConstructor
 public class AudioBuffer extends NativeObject {
 
+    public static int getSampleSize(int bits, int channels) {
+        return (bits / 8) * channels;
+    }
+
     protected ByteBuffer data;
 
     protected int frequency;
 
     protected Format format;
+
+    public float getLengthInSamples() {
+        int size = data.capacity();
+        int channels = format.isStereo() ? 2 : 1;
+        int bits = format.getBits();
+        return size / getSampleSize(bits, channels);
+    }
+
+    public float getLengthInSeconds() {
+        return getLengthInSamples() / getFrequency();
+    }
 
 }
