@@ -96,11 +96,25 @@ public class AudioSource extends NativeObject {
      */
     protected float gain;
 
+    /**
+     * Stores the current state of this AudioSource.
+     */
+    protected AudioSourceState state;
+
     public AudioSource(AudioBuffer buffer) {
         this(buffer, null, null);
     }
 
     public AudioSource(AudioBuffer buffer, Vector3f position, Vector3f velocity) {
-        this(buffer, position, velocity, false, false, 1.0f);
+        this(buffer, position, velocity, false, false, 1.0f, AudioSourceState.STOPPED);
+    }
+
+    /**
+     * internal use only.
+     * Stores the current state of this AudioSource
+     * @param playing the new state
+     */
+    public void setState(AudioSourceState playing) {
+        this.state = playing;
     }
 }

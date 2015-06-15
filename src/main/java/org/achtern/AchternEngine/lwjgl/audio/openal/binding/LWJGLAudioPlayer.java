@@ -26,6 +26,7 @@ package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
 import lombok.AllArgsConstructor;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.audio.openal.binding.DataBinder;
 
@@ -41,6 +42,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
     public void play(AudioSource source) {
         getDataBinder().upload(source);
         alSourcePlay(source.getID());
+        updateState(source);
     }
 
     @Override
@@ -49,6 +51,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
             throw new IllegalArgumentException("Source is not uploaded yet, thus cannot be running");
         }
         alSourceStop(source.getID());
+        updateState(source);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class LWJGLAudioPlayer implements AudioPlayer {
             throw new IllegalArgumentException("Source is not uploaded yet, thus cannot be running");
         }
         alSourceRewind(source.getID());
+        updateState(source);
     }
 
     @Override
@@ -65,10 +69,35 @@ public class LWJGLAudioPlayer implements AudioPlayer {
             throw new IllegalArgumentException("Source is not uploaded yet, thus cannot be running");
         }
         alSourcePause(source.getID());
+        updateState(source);
     }
 
     @Override
     public DataBinder getDataBinder() {
         return dataBinder;
+    }
+
+    protected void updateState(AudioSource source) {
+        AudioSourceState state = getState(alGetSourcei(source.getID(), AL_SOURCE_STATE));
+
+        source.setState(state);
+    }
+
+    protected AudioSourceState getState(int code) {
+        switch (code) {
+            case AL_PLAYING:
+                return AudioSourceState.PLAYING;
+            case AL_STOPPED:
+                return AudioSourceState.STOPPED;
+            case AL_PAUSED:
+                return AudioSourceState.PAUSED;
+            default: /* falls through */
+            case AL_INITIAL:
+                /*
+                I know this not the same, but the end user doesn't need to know the implementation details of
+                OpenAL.
+                 */
+                return AudioSourceState.STOPPED;
+        }
     }
 }

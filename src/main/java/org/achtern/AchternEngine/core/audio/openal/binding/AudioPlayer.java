@@ -26,10 +26,41 @@ package org.achtern.AchternEngine.core.audio.openal.binding;
 
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 
+/**
+ * The AudioPlayer handles basic playback operations for {@link org.achtern.AchternEngine.core.audio.openal.AudioSource}s
+ *
+ * This should set the state variable <code>state</code> correctly.
+ *
+ * @see org.achtern.AchternEngine.core.audio.openal.AudioSource#setState(org.achtern.AchternEngine.core.audio.openal.AudioSourceState)
+ */
 public interface AudioPlayer {
 
+    /**
+     * Plays the given AudioSource.
+     *
+     * If the source is already playing, it will play the same source again from start.
+     *
+     * If the source is currently paused, it will resume it.
+     *
+     * Implementation Hint:
+     *
+     * This should set a timer to set the playing state of the AudioSource back to
+     *  {@link org.achtern.AchternEngine.core.audio.openal.AudioSourceState#STOPPED}.
+     * @param source AudioSource to play.
+     */
     public void play(AudioSource source);
 
+    /**
+     * Stops the given AudioSource.
+     *
+     * If the source is not playing, this method will exit silently.
+     *
+     * Implementation Hint:
+     *
+     * This should cancel the timer, set in {@link #play(org.achtern.AchternEngine.core.audio.openal.AudioSource)} and
+     *  update the playing state in AudioSource
+     * @param source AudioSource to stop.
+     */
     public void stop(AudioSource source);
 
     public void rewind(AudioSource source);
