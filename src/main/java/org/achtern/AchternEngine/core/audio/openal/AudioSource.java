@@ -98,6 +98,8 @@ public class AudioSource extends NativeObject {
 
     /**
      * Stores the current state of this AudioSource.
+     *
+     * @return current state
      */
     protected AudioSourceState state;
 
