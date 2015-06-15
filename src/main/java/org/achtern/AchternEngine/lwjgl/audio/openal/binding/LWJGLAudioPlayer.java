@@ -56,6 +56,12 @@ public class LWJGLAudioPlayer implements AudioPlayer {
         alSourcePlay(source.getID());
         updateState(source);
 
+        if (source.isLoop()) {
+            // we do not need to update the state after the first playback,
+            // since it will loop FOREVER..., or a very long time.
+            return;
+        }
+
         addFuture(source, new AsyncHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
