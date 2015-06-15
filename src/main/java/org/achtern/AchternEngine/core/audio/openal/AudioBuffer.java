@@ -55,4 +55,13 @@ public class AudioBuffer extends NativeObject {
         return getLengthInSamples() / getFrequency();
     }
 
+    @Override
+    public String toString() {
+        return "AudioBuffer{" +
+                "data=" + data +
+                ", frequency=" + frequency +
+                ", format=" + format +
+                ", length=" + getLengthInSeconds() + "sec" +
+                '}';
+    }
 }

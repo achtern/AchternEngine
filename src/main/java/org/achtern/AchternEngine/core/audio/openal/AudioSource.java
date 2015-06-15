@@ -119,4 +119,17 @@ public class AudioSource extends NativeObject {
     public void setState(AudioSourceState playing) {
         this.state = playing;
     }
+
+    @Override
+    public String toString() {
+        return "AudioSource{" +
+                "buffer=" + buffer +
+                ", position=" + position +
+                ", velocity=" + velocity +
+                ", loop=" + loop +
+                ", relative=" + relative +
+                ", gain=" + gain +
+                ", state=" + state +
+                '}';
+    }
 }
