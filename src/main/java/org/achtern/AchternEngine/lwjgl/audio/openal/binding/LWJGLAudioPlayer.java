@@ -25,7 +25,6 @@
 package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
@@ -40,13 +39,16 @@ import java.util.concurrent.ScheduledFuture;
 import static org.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.lwjgl.openal.AL10.*;
 
-@AllArgsConstructor
 public class LWJGLAudioPlayer implements AudioPlayer {
 
     protected LWJGLDataBinder dataBinder;
 
     @Getter(AccessLevel.PROTECTED)
     protected Map<AudioSource, ScheduledFuture> futures = new HashMap<AudioSource, ScheduledFuture>();
+
+    public LWJGLAudioPlayer(LWJGLDataBinder dataBinder) {
+        this.dataBinder = dataBinder;
+    }
 
     @Override
     public void play(final AudioSource source) {
