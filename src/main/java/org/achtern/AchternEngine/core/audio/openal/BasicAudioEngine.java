@@ -81,7 +81,13 @@ public class BasicAudioEngine implements AudioEngine {
     public void update(float delta) {
         getAudioPlayer().getDataBinder().upload(getAudioListener());
         for (AudioEmitter e : this.emitter) {
-            getAudioPlayer().getDataBinder().upload(e.getAudioSource());
+            if (isPlaying(e)) {
+                getAudioPlayer().getDataBinder().upload(e.getAudioSource());
+            }
         }
+    }
+
+    public boolean isPlaying(AudioEmitter emitter) {
+        return emitter.getAudioSource().getState() == AudioSourceState.PLAYING;
     }
 }
