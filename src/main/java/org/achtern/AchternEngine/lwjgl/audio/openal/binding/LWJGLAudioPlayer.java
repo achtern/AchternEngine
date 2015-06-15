@@ -31,6 +31,8 @@ import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.audio.openal.binding.DataBinder;
 import org.achtern.AchternEngine.core.util.async.AsyncHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +42,8 @@ import static org.achtern.AchternEngine.core.bootstrap.Native.INVALID_ID;
 import static org.lwjgl.openal.AL10.*;
 
 public class LWJGLAudioPlayer implements AudioPlayer {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(AudioPlayer.class);
 
     protected LWJGLDataBinder dataBinder;
 
@@ -61,7 +65,11 @@ public class LWJGLAudioPlayer implements AudioPlayer {
             // since it will loop FOREVER..., or a very long time.
             return;
         }
-
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Adding future for {}, exec in {} seconds",
+                source, source.getBuffer().getLengthInSeconds()
+            );
+        }
         addFuture(source, new AsyncHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -140,7 +148,11 @@ public class LWJGLAudioPlayer implements AudioPlayer {
     protected void cancelFuture(AudioSource source) {
         // Cancel any futures there may be.
         if (getFutures().containsKey(source)) {
-            getFutures().get(source).cancel(true);
+            LOGGER.trace("Canceling future for {}", source);
+            boolean success = getFutures().get(source).cancel(true);
+            if (!success && LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Future has already been canceled or by the engine stopped.");
+            }
             getFutures().remove(source);
         }
     }
