@@ -82,6 +82,10 @@ public class Material extends CommonDataStore {
         }
     }
 
+    @Override
+    public boolean hasTexture(String name) {
+        return name.equals("normalMap") || super.hasTexture(name);
+    }
 
     public void setColor(Color color) {
         addColor("color", color);
