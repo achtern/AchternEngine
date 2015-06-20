@@ -38,6 +38,19 @@ public class Material extends CommonDataStore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
 
+    public static Texture DEFAULT_NORMAL;
+
+    public static Texture MISSING_TEXTURE;
+
+    static {
+        try {
+            DEFAULT_NORMAL = ResourceLoader.getTexture("default_normal.jpg");
+            MISSING_TEXTURE = ResourceLoader.getTexture("missing.jpg");
+        } catch (Exception e) {
+            LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
+        }
+    }
+
     @Getter protected boolean wireframe = false;
 
     @Getter @Setter protected ShaderSuit shader;
@@ -49,6 +62,9 @@ public class Material extends CommonDataStore {
      */
     public Material(ShaderSuit shader) {
         this.shader = shader;
+
+        // load default normalMap
+        addTexture("normalMap", DEFAULT_NORMAL);
     }
 
     /**
@@ -65,23 +81,8 @@ public class Material extends CommonDataStore {
             return r;
         }
 
-        if (name.equals("normalMap")) {
-            try {
-                addTexture(name, ResourceLoader.getTexture("default_normal.jpg"));
-                return getTexture(name);
-            } catch (Exception e) {
-                LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
-            }
-        }
-
-        try {
-            addTexture(name, ResourceLoader.getTexture("missing.jpg"));
-            return getTexture(name);
-        } catch (Exception e) {
-            // WILL NEVER HAPPEN... But log it and return null.
-            LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
-            return null;
-        }
+        addTexture(name, MISSING_TEXTURE);
+        return MISSING_TEXTURE;
     }
 
     public void setColor(Color color) {
