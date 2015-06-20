@@ -44,6 +44,10 @@ public class Vertex {
         this(pos, new Vector2f(0, 0));
     }
 
+    public Vertex(Vector3f pos, Vector2f texCor, Vector3f normal) {
+        this(pos, texCor, normal, Vector3f.ZERO.get());
+    }
+
     public Vertex(Vector3f pos, Vector2f texCor) {
         this(pos, texCor, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
     }

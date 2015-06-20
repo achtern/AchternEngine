@@ -112,6 +112,7 @@ public class MeshLoader extends AsciiFileLoader<Mesh> {
             Vector2f texCoord = model.getTexCoord().get(i);
             Vector3f normal = model.getNormal().get(i);
 
+            // TODO: load actual tangents
             vertices.add(new Vertex(position, texCoord, normal));
         }
 
