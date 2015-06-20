@@ -45,7 +45,7 @@ public class Vertex {
     }
 
     public Vertex(Vector3f pos, Vector2f texCor, Vector3f normal) {
-        this(pos, texCor, normal, Vector3f.ZERO.get());
+        this(pos, texCor, normal, null);
     }
 
     public Vertex(Vector3f pos, Vector2f texCor) {

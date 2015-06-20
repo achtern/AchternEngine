@@ -66,7 +66,7 @@ public class Mesh {
             calcNormals(vertices, indices);
         }
 
-        if (calcTangents) {
+        if (calcTangents && vertices[0].getTangent() == null) {
             calcTangents(vertices, indices);
         }
 
