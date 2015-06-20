@@ -62,6 +62,11 @@ public class UBuffer {
             buffer.put(vertex.getNormal().getX());
             buffer.put(vertex.getNormal().getY());
             buffer.put(vertex.getNormal().getZ());
+
+            // Tangents
+            buffer.put(vertex.getTangent().getX());
+            buffer.put(vertex.getTangent().getY());
+            buffer.put(vertex.getTangent().getZ());
         }
 
         return buffer;

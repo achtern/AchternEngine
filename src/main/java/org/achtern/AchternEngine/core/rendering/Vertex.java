@@ -33,18 +33,19 @@ import org.achtern.AchternEngine.core.math.Vector3f;
 @Data
 public class Vertex {
 
-    public static final int SIZE = 8;
+    public static final int SIZE = 11;
 
     protected Vector3f pos;
     protected Vector2f texCor;
     protected Vector3f normal;
+    protected Vector3f tangent;
 
     public Vertex(Vector3f pos) {
         this(pos, new Vector2f(0, 0));
     }
 
     public Vertex(Vector3f pos, Vector2f texCor) {
-        this(pos, texCor, new Vector3f(0, 0, 0));
+        this(pos, texCor, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
     }
 
     public Vertex(float x, float y, float z, float texX, float texY) {

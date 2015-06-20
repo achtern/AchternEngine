@@ -204,6 +204,9 @@ public class LWJGLDataBinder implements DataBinder {
         LOGGER.trace("Calling glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4 = {}, 20)", Vertex.SIZE * 4);
         // Normals
         glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20);
+        LOGGER.trace("Calling glVertexAttribPointer(3, 3, GL_FLOAT, false, Vertex.SIZE * 4 = {}, 32)", Vertex.SIZE * 4);
+        // Tangents
+        glVertexAttribPointer(3, 3, GL_FLOAT, false, Vertex.SIZE * 4, 32);
 
         LOGGER.trace("Calling glEnableVertexAttribArray(0)");
         // Position
@@ -214,6 +217,9 @@ public class LWJGLDataBinder implements DataBinder {
         LOGGER.trace("Calling glEnableVertexAttribArray(2)");
         // Normals
         glEnableVertexAttribArray(2);
+        LOGGER.trace("Calling glEnableVertexAttribArray(3)");
+        // Normals
+        glEnableVertexAttribArray(3);
 
         // Unbind
         bind((Mesh) null);
