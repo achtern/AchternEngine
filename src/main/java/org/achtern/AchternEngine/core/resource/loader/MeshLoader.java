@@ -104,6 +104,7 @@ public class MeshLoader extends AsciiFileLoader<Mesh> {
 
         IndexedModel model = objParser.toIndexedModel();
         model.calcNormals();
+        model.calcTangents();
 
         ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 
@@ -111,9 +112,9 @@ public class MeshLoader extends AsciiFileLoader<Mesh> {
             Vector3f position = model.getPositions().get(i);
             Vector2f texCoord = model.getTexCoord().get(i);
             Vector3f normal = model.getNormal().get(i);
+            Vector3f tangent = model.getTangent().get(i);
 
-            // TODO: load actual tangents
-            vertices.add(new Vertex(position, texCoord, normal));
+            vertices.add(new Vertex(position, texCoord, normal, tangent));
         }
 
         Vertex[] vData = new Vertex[vertices.size()];
