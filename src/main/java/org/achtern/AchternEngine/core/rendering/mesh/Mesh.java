@@ -57,9 +57,17 @@ public class Mesh {
     }
 
     protected void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals) {
+        setVertices(vertices, indices, calcNormals, true);
+    }
+
+    protected void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals, boolean calcTangents) {
 
         if (calcNormals) {
             calcNormals(vertices, indices);
+        }
+
+        if (calcTangents) {
+            calcTangents(vertices, indices);
         }
 
         this.data.set(vertices, indices);
