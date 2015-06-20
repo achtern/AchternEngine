@@ -65,6 +65,14 @@ public class Material extends CommonDataStore {
             return r;
         }
 
+        if (name.equals("normalMap")) {
+            try {
+                return ResourceLoader.getTexture("default_normal.jpg");
+            } catch (Exception e) {
+                LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
+            }
+        }
+
         try {
             return ResourceLoader.getTexture("missing.jpg");
         } catch (Exception e) {
