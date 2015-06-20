@@ -131,6 +131,16 @@ public class Mesh {
                     f * (deltaV2 * e1.getZ() - deltaV1 * e2.getZ())
             );
 
+            if (v0.getTangent() == null) {
+                v0.setTangent(Vector3f.ZERO.get());
+            }
+            if (v1.getTangent() == null) {
+                v1.setTangent(Vector3f.ZERO.get());
+            }
+            if (v2.getTangent() == null) {
+                v2.setTangent(Vector3f.ZERO.get());
+            }
+
             v0.getTangent().addLocal(tangent);
             v1.getTangent().addLocal(tangent);
             v2.getTangent().addLocal(tangent);
