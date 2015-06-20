@@ -67,24 +67,21 @@ public class Material extends CommonDataStore {
 
         if (name.equals("normalMap")) {
             try {
-                return ResourceLoader.getTexture("default_normal.jpg");
+                addTexture(name, ResourceLoader.getTexture("default_normal.jpg"));
+                return getTexture(name);
             } catch (Exception e) {
                 LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
             }
         }
 
         try {
-            return ResourceLoader.getTexture("missing.jpg");
+            addTexture(name, ResourceLoader.getTexture("missing.jpg"));
+            return getTexture(name);
         } catch (Exception e) {
             // WILL NEVER HAPPEN... But log it and return null.
             LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
             return null;
         }
-    }
-
-    @Override
-    public boolean hasTexture(String name) {
-        return name.equals("normalMap") || super.hasTexture(name);
     }
 
     public void setColor(Color color) {
