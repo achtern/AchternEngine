@@ -27,6 +27,7 @@ package org.achtern.AchternEngine.core.resource.fileparser.mesh;
 import lombok.Data;
 import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.math.Vector3f;
+import org.achtern.AchternEngine.core.util.TangentGenerator;
 
 import java.util.ArrayList;
 
@@ -72,56 +73,6 @@ public class IndexedModel {
     }
 
     public void calcTangents() {
-        for (int i = 0; i <= getIndices().size(); i++) {
-            // fill tangent with empty vector3fs
-            getTangent().add(i, Vector3f.ZERO.get());
-        }
-        for (int i = 0; i < getIndices().size(); i +=3) {
-            int i0 = getIndices().get(i);
-            int i1 = getIndices().get(i + 1);
-            int i2 = getIndices().get(i + 2);
-
-            Vector3f v0 = getPositions().get(i0);
-            Vector3f v1 = getPositions().get(i1);
-            Vector3f v2 = getPositions().get(i2);
-
-            Vector2f tex0 = getTexCoord().get(i0);
-            Vector2f tex1 = getTexCoord().get(i1);
-            Vector2f tex2 = getTexCoord().get(i2);
-
-            Vector3f e1 = v1.sub(v0);
-            Vector3f e2 = v2.sub(v0);
-
-            float deltaU1 = tex1.getX() - tex0.getX();
-            float deltaV1 = tex1.getY() - tex0.getY();
-            float deltaU2 = tex2.getX() - tex0.getX();
-            float deltaV2 = tex2.getY() - tex0.getY();
-
-            float f = 1.0f / (deltaU1 * deltaV2 - deltaU2 * deltaV1);
-
-            Vector3f tangent = new Vector3f(
-                    f * (deltaV2 * e1.getX() - deltaV1 * e2.getX()),
-                    f * (deltaV2 * e1.getY() - deltaV1 * e2.getY()),
-                    f * (deltaV2 * e1.getZ() - deltaV1 * e2.getZ())
-            );
-//            Vector3f biTangent = new Vector3f(
-//                    f * (-deltaU2 * e1.getX() - deltaU2 * e2.getX()),
-//                    f * (-deltaU2 * e1.getY() - deltaU2 * e2.getY()),
-//                    f * (-deltaU2 * e1.getZ() - deltaU2 * e2.getZ())
-//            );
-
-
-            Vector3f t0 = getTangent().get(i);
-            Vector3f t1 = getTangent().get(i + 1);
-            Vector3f t2 = getTangent().get(i + 2);
-
-            getTangent().set(i    , t0.add(tangent));
-            getTangent().set(i + 1, t1.add(tangent));
-            getTangent().set(i + 2, t2.add(tangent));
-        }
-
-        for (Vector3f tangent : getTangent()) {
-            tangent.normalize();
-        }
+        setTangent((ArrayList<Vector3f>) TangentGenerator.calculate(getPositions(), getIndices(), getTexCoord()));
     }
 }

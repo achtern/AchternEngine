@@ -24,10 +24,26 @@
 
 package org.achtern.AchternEngine.core.util;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.rendering.Vertex;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TangentGenerator {
+
+
+    @AllArgsConstructor
+    static @Data class TriangleDelta {
+        float u1;
+        float v1;
+
+        float u2;
+        float v2;
+    }
 
     public static void calculate(Vertex[] vertices, int[] indices) {
         for (int i = 0; i < indices.length; i +=3) {
@@ -42,18 +58,9 @@ public class TangentGenerator {
             Vector3f e1 = v1.getPos().sub(v0.getPos());
             Vector3f e2 = v2.getPos().sub(v0.getPos());
 
-            float deltaU1 = v1.getTexCor().getX() - v0.getTexCor().getX();
-            float deltaV1 = v1.getTexCor().getY() - v0.getTexCor().getY();
-            float deltaU2 = v2.getTexCor().getX() - v0.getTexCor().getX();
-            float deltaV2 = v2.getTexCor().getY() - v0.getTexCor().getY();
+            TriangleDelta delta = getTriangleDelta(v0.getTexCor(), v1.getTexCor(), v2.getTexCor());
 
-            float f = 1.0f / (deltaU1 * deltaV2 - deltaU2 * deltaV1);
-
-            Vector3f tangent = new Vector3f(
-                    f * (deltaV2 * e1.getX() - deltaV1 * e2.getX()),
-                    f * (deltaV2 * e1.getY() - deltaV1 * e2.getY()),
-                    f * (deltaV2 * e1.getZ() - deltaV1 * e2.getZ())
-            );
+            Vector3f tangent = getTangent(delta, e1, e2);
 
             if (v0.getTangent() == null) {
                 v0.setTangent(Vector3f.ZERO.get());
@@ -73,6 +80,70 @@ public class TangentGenerator {
         for (Vertex vertex : vertices) {
             vertex.getTangent().normalize();
         }
+    }
+
+    public static List<Vector3f> calculate(List<Vector3f> positions, List<Integer> indices, List<Vector2f> texCoords) {
+        List<Vector3f> tangents = new ArrayList<Vector3f>(indices.size());
+        for (int i = 0; i <= indices.size(); i++) {
+            // fill tangent with empty vector3fs
+            tangents.add(i, Vector3f.ZERO.get());
+        }
+
+        for (int i = 0; i < indices.size(); i +=3) {
+            int i0 = indices.get(i);
+            int i1 = indices.get(i + 1);
+            int i2 = indices.get(i + 2);
+
+            Vector3f v0 = positions.get(i0);
+            Vector3f v1 = positions.get(i1);
+            Vector3f v2 = positions.get(i2);
+
+            Vector2f tex0 = texCoords.get(i0);
+            Vector2f tex1 = texCoords.get(i1);
+            Vector2f tex2 = texCoords.get(i2);
+
+            Vector3f e1 = v1.sub(v0);
+            Vector3f e2 = v2.sub(v0);
+
+            TriangleDelta delta = getTriangleDelta(tex0, tex1, tex2);
+
+            Vector3f tangent = getTangent(delta, e1, e2);
+
+
+            Vector3f t0 = tangents.get(i);
+            Vector3f t1 = tangents.get(i + 1);
+            Vector3f t2 = tangents.get(i + 2);
+
+            tangents.set(i, t0.add(tangent));
+            tangents.set(i + 1, t1.add(tangent));
+            tangents.set(i + 2, t2.add(tangent));
+        }
+
+
+        return tangents;
+    }
+
+    protected static Vector3f getTangent(TriangleDelta delta, Vector3f e1, Vector3f e2) {
+        float f = getFactor(delta);
+
+        return new Vector3f(
+                f * (delta.v2 * e1.getX() - delta.v1 * e2.getX()),
+                f * (delta.v2 * e1.getY() - delta.v1 * e2.getY()),
+                f * (delta.v2 * e1.getZ() - delta.v1 * e2.getZ())
+        );
+    }
+
+    protected static float getFactor(TriangleDelta delta) {
+        return 1.0f / (delta.u1 * delta.v2 - delta.u2 * delta.v1);
+    }
+
+    protected static TriangleDelta getTriangleDelta(Vector2f tex0, Vector2f tex1, Vector2f tex2) {
+        return new TriangleDelta(
+                tex1.getX() - tex0.getX(),
+                tex1.getY() - tex0.getY(),
+                tex2.getX() - tex0.getX(),
+                tex2.getY() - tex0.getY()
+        );
     }
 
 }
