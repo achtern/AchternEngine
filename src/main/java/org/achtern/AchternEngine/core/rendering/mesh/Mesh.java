@@ -28,6 +28,7 @@ import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.rendering.Vertex;
 import org.achtern.AchternEngine.core.scenegraph.bounding.BoundingBox;
 import lombok.Getter;
+import org.achtern.AchternEngine.core.util.TangentGenerator;
 
 public class Mesh {
 
@@ -67,7 +68,7 @@ public class Mesh {
         }
 
         if (calcTangents && vertices[0].getTangent() == null) {
-            calcTangents(vertices, indices);
+            TangentGenerator.calculate(vertices, indices);
         }
 
         this.data.set(vertices, indices);
@@ -103,52 +104,6 @@ public class Mesh {
             vertex.getNormal().normalize();
         }
 
-    }
-
-    protected void calcTangents(Vertex[] vertices, int[] indices) {
-        for (int i = 0; i < indices.length; i +=3) {
-            int i0 = indices[i];
-            int i1 = indices[i + 1];
-            int i2 = indices[i + 2];
-
-            Vertex v0 = vertices[i0];
-            Vertex v1 = vertices[i1];
-            Vertex v2 = vertices[i2];
-
-            Vector3f e1 = v1.getPos().sub(v0.getPos());
-            Vector3f e2 = v2.getPos().sub(v0.getPos());
-
-            float deltaU1 = v1.getTexCor().getX() - v0.getTexCor().getX();
-            float deltaV1 = v1.getTexCor().getY() - v0.getTexCor().getY();
-            float deltaU2 = v2.getTexCor().getX() - v0.getTexCor().getX();
-            float deltaV2 = v2.getTexCor().getY() - v0.getTexCor().getY();
-
-            float f = 1.0f / (deltaU1 * deltaV2 - deltaU2 * deltaV1);
-
-            Vector3f tangent = new Vector3f(
-                    f * (deltaV2 * e1.getX() - deltaV1 * e2.getX()),
-                    f * (deltaV2 * e1.getY() - deltaV1 * e2.getY()),
-                    f * (deltaV2 * e1.getZ() - deltaV1 * e2.getZ())
-            );
-
-            if (v0.getTangent() == null) {
-                v0.setTangent(Vector3f.ZERO.get());
-            }
-            if (v1.getTangent() == null) {
-                v1.setTangent(Vector3f.ZERO.get());
-            }
-            if (v2.getTangent() == null) {
-                v2.setTangent(Vector3f.ZERO.get());
-            }
-
-            v0.getTangent().addLocal(tangent);
-            v1.getTangent().addLocal(tangent);
-            v2.getTangent().addLocal(tangent);
-        }
-
-        for (Vertex vertex : vertices) {
-            vertex.getTangent().normalize();
-        }
     }
 
     protected void setData(MeshData data) {
