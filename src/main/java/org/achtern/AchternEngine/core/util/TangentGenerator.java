@@ -110,13 +110,9 @@ public class TangentGenerator {
             Vector3f tangent = getTangent(delta, e1, e2);
 
 
-            Vector3f t0 = tangents.get(i);
-            Vector3f t1 = tangents.get(i + 1);
-            Vector3f t2 = tangents.get(i + 2);
-
-            tangents.set(i, t0.add(tangent));
-            tangents.set(i + 1, t1.add(tangent));
-            tangents.set(i + 2, t2.add(tangent));
+            tangents.get(i).addLocal(tangent);
+            tangents.get(i + 1).addLocal(tangent);
+            tangents.get(i + 2).addLocal(tangent);
         }
 
 
