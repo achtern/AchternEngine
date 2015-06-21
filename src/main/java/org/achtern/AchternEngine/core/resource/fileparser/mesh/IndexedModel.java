@@ -24,9 +24,10 @@
 
 package org.achtern.AchternEngine.core.resource.fileparser.mesh;
 
+import lombok.Data;
 import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.math.Vector3f;
-import lombok.Data;
+import org.achtern.AchternEngine.core.util.TangentGenerator;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class IndexedModel {
     protected ArrayList<Vector3f> positions;
     protected ArrayList<Vector2f> texCoord;
     protected ArrayList<Vector3f> normal;
+    protected ArrayList<Vector3f> tangent;
     protected ArrayList<Integer> indices;
 
 
@@ -43,6 +45,7 @@ public class IndexedModel {
         positions = new ArrayList<Vector3f>();
         texCoord = new ArrayList<Vector2f>();
         normal = new ArrayList<Vector3f>();
+        tangent = new ArrayList<Vector3f>();
         indices = new ArrayList<Integer>();
     }
 
@@ -67,5 +70,9 @@ public class IndexedModel {
             normal.normalize();
         }
 
+    }
+
+    public void calcTangents() {
+        setTangent((ArrayList<Vector3f>) TangentGenerator.calculate(getPositions(), getIndices(), getTexCoord()));
     }
 }
