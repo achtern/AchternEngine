@@ -84,7 +84,7 @@ public class TangentGenerator {
 
     public static List<Vector3f> calculate(List<Vector3f> positions, List<Integer> indices, List<Vector2f> texCoords) {
         List<Vector3f> tangents = new ArrayList<Vector3f>(indices.size());
-        for (int i = 0; i <= indices.size(); i++) {
+        for (int i = 0; i < indices.size(); i++) {
             // fill tangent with empty vector3fs
             tangents.add(i, Vector3f.ZERO.get());
         }
