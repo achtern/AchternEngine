@@ -103,7 +103,6 @@ public class MeshLoader extends AsciiFileLoader<Mesh> {
     public Mesh get() throws Exception {
 
         IndexedModel model = objParser.toIndexedModel();
-        model.calcNormals();
         model.calcTangents();
 
         ArrayList<Vertex> vertices = new ArrayList<Vertex>();
