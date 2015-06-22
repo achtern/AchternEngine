@@ -30,15 +30,16 @@ import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.util.TangentGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class IndexedModel {
 
-    protected ArrayList<Vector3f> positions;
-    protected ArrayList<Vector2f> texCoord;
-    protected ArrayList<Vector3f> normal;
-    protected ArrayList<Vector3f> tangent;
-    protected ArrayList<Integer> indices;
+    protected List<Vector3f> positions;
+    protected List<Vector2f> texCoord;
+    protected List<Vector3f> normal;
+    protected List<Vector3f> tangent;
+    protected List<Integer> indices;
 
 
     public IndexedModel() {
@@ -73,6 +74,6 @@ public class IndexedModel {
     }
 
     public void calcTangents() {
-        setTangent((ArrayList<Vector3f>) TangentGenerator.calculate(getPositions(), getIndices(), getTexCoord()));
+        setTangent(TangentGenerator.calculate(getPositions(), getIndices(), getTexCoord()));
     }
 }

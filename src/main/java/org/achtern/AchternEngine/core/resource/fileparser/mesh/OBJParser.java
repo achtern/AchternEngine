@@ -27,6 +27,7 @@ package org.achtern.AchternEngine.core.resource.fileparser.mesh;
 import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.resource.fileparser.LineBasedParser;
+import org.achtern.AchternEngine.core.resource.loader.LoadingException;
 import org.achtern.AchternEngine.core.util.UString;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,14 @@ import java.util.HashMap;
 public class OBJParser implements Model, LineBasedParser {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(OBJParser.class);
+
+
+    public static final String COMMENT = "#";
+    public static final String VERTEX = "v";
+    public static final String NORMAL = "vn";
+    public static final String UV = "vt";
+    public static final String FACE = "f";
+    public static final String GROUP = "g";
 
     @Getter @Setter protected ArrayList<Vector3f> positions;
     @Getter @Setter protected ArrayList<Vector2f> texCoord;
@@ -85,10 +94,10 @@ public class OBJParser implements Model, LineBasedParser {
             return line;
         }
 
-        if (tokens[0].startsWith("#")) {
+        if (tokens[0].startsWith(COMMENT)) {
             // Comment Line
             LOGGER.trace("Skipping commented line");
-        } else if (tokens[0].equalsIgnoreCase("g")){
+        } else if (tokens[0].equalsIgnoreCase(GROUP)){
             // We have a multi object OBJ Model.
             // At this point in time the parser
             // doesn't support these files.
@@ -100,24 +109,24 @@ public class OBJParser implements Model, LineBasedParser {
                         "the objects in the 3D Editor of your choice.");
                 no_mulit_object_warned = true;
             }
-        } else if (tokens[0].equalsIgnoreCase("v")) {
+        } else if (tokens[0].equalsIgnoreCase(VERTEX)) {
             positions.add(new Vector3f(
                     Float.valueOf(tokens[1]),
                     Float.valueOf(tokens[2]),
                     Float.valueOf(tokens[3])
             ));
-        } else if (tokens[0].equalsIgnoreCase("vt")){
+        } else if (tokens[0].equalsIgnoreCase(UV)){
             texCoord.add(new Vector2f(
                     Float.valueOf(tokens[1]),
                     Float.valueOf(tokens[2])
             ));
-        } else if (tokens[0].equalsIgnoreCase("vn")){
+        } else if (tokens[0].equalsIgnoreCase(NORMAL)){
             normal.add(new Vector3f(
                     Float.valueOf(tokens[1]),
                     Float.valueOf(tokens[2]),
                     Float.valueOf(tokens[3])
             ));
-        } else if (tokens[0].equalsIgnoreCase("f")){
+        } else if (tokens[0].equalsIgnoreCase(FACE)){
 
             for (int i = 0; i < tokens.length - 3; i++) {
 
@@ -210,19 +219,32 @@ public class OBJParser implements Model, LineBasedParser {
         return rMain;
     }
 
-    protected OBJIndex parseOBJIndex(String token) {
+    /**
+     * An OBJIndex contains indicies to various types of data.
+     *
+     * - vertex/tex_coord/normal
+     * @param token single input token
+     * @return parsed OBJIndex
+     * @throws org.achtern.AchternEngine.core.resource.loader.LoadingException if integer parsing fails
+     */
+    protected OBJIndex parseOBJIndex(String token) throws LoadingException {
         String[] values = token.split("/");
 
         OBJIndex result = new OBJIndex();
-        result.setVertex(Integer.parseInt(values[0]) - 1);
 
-        if (values.length > 1) {
-            this.hasTexCoords = true;
-            result.setTexCoord(Integer.parseInt(values[1]) - 1);
+        try {
+            result.setVertex(Integer.parseInt(values[0]) - 1);
+
+            if (values.length > 1 && !values[1].isEmpty()) {
+                this.hasTexCoords = true;
+                result.setTexCoord(Integer.parseInt(values[1]) - 1);
+            }
             if (values.length > 2) {
                 this.hasNormals = true;
                 result.setNormal(Integer.parseInt(values[2]) - 1);
             }
+        } catch (NumberFormatException e) {
+            throw new LoadingException("Failed to parse integer in OBJ f index, token<" + token + ">");
         }
 
         return result;
