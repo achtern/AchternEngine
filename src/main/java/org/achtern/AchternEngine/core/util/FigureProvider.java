@@ -26,7 +26,6 @@ package org.achtern.AchternEngine.core.util;
 
 import org.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.achtern.AchternEngine.core.scenegraph.Node;
-import org.achtern.AchternEngine.core.scenegraph.entity.Figure;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +55,8 @@ public class FigureProvider implements NodeProvider {
 
     /**
      * Construct a new FigureProvider...
+     *
+     * The first name parameter can be ignored, if one is using {@link #inject(Node)} exclusively.
      * @param name Name of the root Node returned
      * @param names Names of json figure declarations
      */
@@ -84,23 +85,39 @@ public class FigureProvider implements NodeProvider {
      *
      * @return Node Tree
      *
-     * @throws java.lang.RuntimeException when an Excpetion is thrown from the ResourceLoader
+     * @throws java.lang.RuntimeException when an exception is thrown from the ResourceLoader
      */
     @Override
     public Node get() {
+        return inject(new Node(this.name));
+    }
 
-        final Node n = new Node(this.name);
-
+    /**
+     * The figure names were given in the constructor.
+     *
+     * This method will load all the given figures and inject them into the target node:
+     * <br>
+     * <code>
+     * target.add(ResourceLoader.getFigure(name).boxed());
+     * </code>
+     *
+     * This method just returns the given target, for easier method chaining.
+     *
+     * @param target all loaded boxed figures will be added to the target's children
+     * @return target parameter
+     *
+     * @throws java.lang.RuntimeException when an exception is thrown from the ResourceLoader
+     */
+    public Node inject(Node target) {
         for (String name : this.names) {
             try {
-                Figure f = ResourceLoader.getFigure(name);
-                n.add(f.boxed());
+                target.add(ResourceLoader.getFigure(name).boxed());
             } catch (Exception e) {
-                // We just a rethrow a checked excretion.
+                // We just a rethrow a checked exception.
                 throw new RuntimeException(e);
             }
         }
 
-        return n;
+        return target;
     }
 }
