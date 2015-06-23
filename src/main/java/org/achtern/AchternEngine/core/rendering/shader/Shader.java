@@ -152,6 +152,8 @@ public abstract class Shader {
                     u.setValue(material.getMatrix(n));
                 } else if ((u.getType().equalsIgnoreCase("vec4") && material.hasColor(n))) {
                     u.setValue(material.getColor(n));
+                } else if (u.getType().equalsIgnoreCase("int")) {
+                    u.setValue(material.getInteger(n));
                 }
             }
 

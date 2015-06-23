@@ -52,6 +52,18 @@ public class MaterialLoader extends JsonLoader<Material> {
             }
         }
 
+        // All ints
+        if (json.has("int")) {
+            JSONObject ints = json.getJSONObject("int");
+
+            for (Object oKey : ints.keySet()) {
+                String key = (String) oKey;
+
+                material.addInteger(key, ints.getInt(key));
+
+            }
+        }
+
         // All Colors
         if (json.has("Color")) {
             JSONObject colors = json.getJSONObject("Color");
