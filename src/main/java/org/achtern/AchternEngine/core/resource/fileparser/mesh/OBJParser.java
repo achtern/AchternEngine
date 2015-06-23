@@ -118,7 +118,7 @@ public class OBJParser implements Model, LineBasedParser {
         } else if (tokens[0].equalsIgnoreCase(UV)){
             texCoord.add(new Vector2f(
                     Float.valueOf(tokens[1]),
-                    Float.valueOf(tokens[2])
+                    1 - Float.valueOf(tokens[2])
             ));
         } else if (tokens[0].equalsIgnoreCase(NORMAL)){
             normal.add(new Vector3f(
