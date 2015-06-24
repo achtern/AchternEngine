@@ -44,7 +44,7 @@ public class PhongShaderSuit extends ShaderSuit {
 
     public static PhongShaderSuit get() { return instance; }
 
-    private PhongShaderSuit() {
+    protected PhongShaderSuit() {
         super();
 
         setShaderFor(DirectionalLight.class, PhongDirectional.getInstance());
