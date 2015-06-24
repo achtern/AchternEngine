@@ -77,7 +77,11 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Returns the title of the window.
      * @return The window title
      */
-    public abstract String getWindowTitle();
+    public String getWindowTitle() {
+        // This will return the simple name
+        // of the implementation, not this abstract class
+        return getClass().getSimpleName();
+    }
 
 
     /**
