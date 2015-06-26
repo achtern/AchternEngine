@@ -63,6 +63,8 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     @Getter @Setter protected DrawStrategy drawStrategy;
 
+    public boolean first;
+
     protected Map<Class, GlobalEntity> globalEntities;
 
     public BasicRenderEngine(GraphicsBindingProvider graphicsBindingProvider) {
@@ -128,8 +130,11 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
         // Bind Shader, just bind the default shader, if there is no specified in Material
         getDataBinder().bind(this.activePass.getShader());
+        // Update internal state
+        first = true;
         // Render first pass
         node.render(this);
+        first = false;
 
         // Now we enter the forward specific part
 
