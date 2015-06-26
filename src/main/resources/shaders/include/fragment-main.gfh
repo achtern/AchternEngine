@@ -10,9 +10,20 @@ void main()
     vec3 normal = normalize(tbnMatrix * (255.0/128.0 * texture(normalMap, texCoord0.xy).xyz - 1));
 
     vec4 c = color
-            * texture(diffuse, texCoord0.xy)
-            * CalcLightEffect(normal, worldPos0);
+            * texture(diffuse, texCoord0.xy);
+
+    if (receiveLight == 0) {
+        c = c * CalcLightEffect(normal, worldPos0);
+    } else {
+        c = vec4(0);
+    }
 
     float fogCoord = abs(position0.z/position0.w);
-    fragColor = mix(c, fog.color, getFogFactor(fog, fogCoord));
+
+    if (receiveFog == 0) {
+        fragColor = mix(c, fog.color, getFogFactor(fog, fogCoord));
+    } else {
+        fragColor = c;
+    }
+
 }

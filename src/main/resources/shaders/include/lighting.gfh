@@ -17,3 +17,6 @@ uniform vec4 color;
 uniform sampler2D diffuse;
 uniform sampler2D normalMap;
 uniform sampler2D shadowMap;
+
+uniform int receiveLight;
+uniform int receiveFog;
