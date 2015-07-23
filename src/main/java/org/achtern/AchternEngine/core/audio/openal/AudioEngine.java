@@ -25,6 +25,8 @@
 package org.achtern.AchternEngine.core.audio.openal;
 
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
+import org.achtern.AchternEngine.core.audio.openal.trigger.AudioTrigger;
+import org.achtern.AchternEngine.core.audio.openal.trigger.PlayAudioTrigger;
 import org.achtern.AchternEngine.core.scenegraph.Node;
 import org.achtern.AchternEngine.core.scenegraph.Updatable;
 import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
@@ -40,15 +42,34 @@ import org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter;
  */
 public interface AudioEngine extends Updatable {
 
+    public static final PlayAudioTrigger PLAY_AUDIO_TRIGGER = new PlayAudioTrigger();
+
     /**
-     * Add this {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} to the engine.
+     * Add this {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} to the engine under the given
+     *  trigger.
+     * @param trigger will trigger playback of the emitter
+     * @param emitter the emitter to add
+     */
+    public void addEmitter(AudioTrigger trigger, AudioEmitter emitter);
+
+    /**
+     * Add all emitter in a given node (first level only) to the engine
+     * @see #addEmitter(org.achtern.AchternEngine.core.audio.openal.trigger.AudioTrigger, org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter)
+     * @param trigger will trigger playback of the emitter
+     * @param node all emitter in the node will be added
+     */
+    public void addEmitter(AudioTrigger trigger, Node node);
+
+    /**
+     * Add this {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} to the engine with a
+     *  {@link org.achtern.AchternEngine.core.audio.openal.trigger.PlayAudioTrigger}
      * @param emitter will be added
      */
     public void addEmitter(AudioEmitter emitter);
 
     /**
      * Add all {@link org.achtern.AchternEngine.core.scenegraph.entity.AudioEmitter} containing in the Node
-     *  (and its children) to the engine.
+     *  (and its children) to the engine with a  {@link org.achtern.AchternEngine.core.audio.openal.trigger.PlayAudioTrigger}
      * @param node emitter in the node will be added
      */
     public void addEmitter(Node node);
