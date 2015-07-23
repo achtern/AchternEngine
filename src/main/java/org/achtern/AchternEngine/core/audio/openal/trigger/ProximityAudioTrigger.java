@@ -40,6 +40,7 @@ public class ProximityAudioTrigger implements AudioTrigger {
 
     @Getter @Setter protected Node target;
     @Getter protected float maxDistance;
+    @Getter @Setter protected AudioSourceState onExit = AudioSourceState.PAUSED;
 
 
     /**
@@ -47,7 +48,7 @@ public class ProximityAudioTrigger implements AudioTrigger {
      * @param target target of the AudioTrigger
      */
     public ProximityAudioTrigger(Node target) {
-        this(target, 10);
+        this(target, 10, AudioSourceState.PAUSED);
     }
 
     /**
@@ -65,12 +66,12 @@ public class ProximityAudioTrigger implements AudioTrigger {
         Vector3f subtracted = c.sub(t);
         if (subtracted.getX() + subtracted.getY() + subtracted.getZ() > maxDistance) {
             // cannot be in distance
-            return AudioSourceState.PAUSED;
+            return onExit;
         }
 
-        // perform percise check
+        // perform precise check
         if (Vector3f.distance(c, t) > maxDistance) {
-            return AudioSourceState.PAUSED;
+            return onExit;
         }
 
         // in proximity, play the source!
