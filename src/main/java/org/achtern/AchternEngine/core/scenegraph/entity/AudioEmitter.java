@@ -57,4 +57,13 @@ public class AudioEmitter extends QuickEntity {
         this.audioSource.setPosition(getTransform().getPosition());
         this.audioSource.setVelocity(Vector3f.ZERO);
     }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        // update the position of the audioSource
+        this.audioSource.setPosition(getTransform().getPosition());
+
+    }
 }
