@@ -40,6 +40,16 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A Shader wraps a {@link org.achtern.AchternEngine.core.resource.fileparser.GLSLProgram},
+ *  this class is meant to be extended by all shader one might write.
+ *  This allows the sub-classes to load the GLSLProgram and inject it all by themselves.
+ * <br />
+ * This Shader class (abstract) also handles uniform setting aka getting the correct values from the
+ *  {@link org.achtern.AchternEngine.core.rendering.Material}, {@link org.achtern.AchternEngine.core.rendering.RenderEngine}
+ *  and {@link org.achtern.AchternEngine.core.scenegraph.Node}. The actual sending of the data to the GPU is getting
+ *  handled by the implementation.
+ */
 public abstract class Shader {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Shader.class);

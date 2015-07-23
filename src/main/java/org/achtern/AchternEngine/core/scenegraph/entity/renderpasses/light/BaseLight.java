@@ -29,6 +29,11 @@ import lombok.EqualsAndHashCode;
 import org.achtern.AchternEngine.core.rendering.Color;
 import org.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 
+/**
+ * A BaseLight holds basic data, which lots of light type needs.
+ * <br />
+ * This is an exact copy of the GLSL struct version!
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class BaseLight extends Light {
