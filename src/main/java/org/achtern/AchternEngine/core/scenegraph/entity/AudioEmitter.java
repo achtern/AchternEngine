@@ -26,13 +26,14 @@ package org.achtern.AchternEngine.core.scenegraph.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.achtern.AchternEngine.core.audio.openal.Audio;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
 import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.audio.openal.trigger.AudioTrigger;
 import org.achtern.AchternEngine.core.math.Vector3f;
 
-public class AudioEmitter extends QuickEntity {
+public class AudioEmitter extends QuickEntity implements Audio {
 
 
     public static final String NAME_UNTITLED_AUDIO_ENTITY = "Untitled AudioEmitter";

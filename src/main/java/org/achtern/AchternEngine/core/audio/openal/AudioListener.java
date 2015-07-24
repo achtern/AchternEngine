@@ -39,7 +39,7 @@ import org.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class AudioListener extends QuickEntity {
+public class AudioListener extends QuickEntity implements Audio {
 
     /**
      * The velocity of the listener, for doppler effects etc.
