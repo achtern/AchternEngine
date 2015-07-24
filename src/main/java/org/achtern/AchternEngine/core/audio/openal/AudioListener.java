@@ -26,27 +26,20 @@ package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.achtern.AchternEngine.core.Transform;
+import lombok.EqualsAndHashCode;
+import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.math.Vector3f;
-import org.achtern.AchternEngine.core.scenegraph.Node;
-import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
+import org.achtern.AchternEngine.core.scenegraph.entity.QuickEntity;
 
 /**
  * The AudioListener represents the 'ears' of the 'camera'.
  *
  * There can only be one tied to the OpenAL engine at all times.
  */
+@EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class AudioListener {
-
-    /**
-     * Position of the listener, most of the times this will be the camera itself
-     *
-     * @return current position
-     * @param position new position
-     */
-    protected Vector3f position;
+public class AudioListener extends QuickEntity {
 
     /**
      * The velocity of the listener, for doppler effects etc.
@@ -58,72 +51,29 @@ public class AudioListener {
      */
     protected Vector3f velocity;
 
-    /**
-     * Up vector of the Listener, used for 3D (stereo) sound
-     *
-     * @return current up vector
-     * @param up new up vector
-     */
-    protected Vector3f up;
+    protected AudioPlayer audioPlayer;
 
     /**
-     * Direction of the Listener, used for 3D (stereo) sound
-     *
-     * @return current forward vector
-     * @param forward new forward vector
-     */
-    protected Vector3f forward;
-
-
-    /**
-     * Creates an AudioListener from a {@link org.achtern.AchternEngine.core.Transform}.
-     * @param transform source
-     * @return new AudioListener
-     */
-    public static AudioListener fromTransform(Transform transform) {
-        return new AudioListener().updateFrom(transform);
-    }
-
-    /**
-     * Creates an AudioListener at (0/0/0) with no velocity and the Y axis as up vector
+     * Creates an AudioListener with no velocity
      */
     public AudioListener() {
-        this(Vector3f.ZERO.get(), Vector3f.ZERO.get(), Vector3f.UNIT_Y.get(), Vector3f.UNIT_Z.get());
+        this(Vector3f.ZERO.get(), null);
     }
 
-    /**
-     * Gets the values 'up', 'forward' and 'position' from {@link org.achtern.AchternEngine.core.Transform},
-     *  (this uses the transformed values) and sets them.
-     * @param transform data source
-     * @return SELF
-     */
-    public AudioListener updateFrom(Transform transform) {
-        setPosition(transform.getTransformedPosition());
-        setForward(transform.getTransformedRotation().getForward());
-        setUp(transform.getTransformedRotation().getUp());
-
-        return this;
+    @Override
+    public void update(float delta) {
+        getAudioPlayer().getDataBinder().upload(this);
     }
 
-    /**
-     * Calls {@link #updateFrom(org.achtern.AchternEngine.core.Transform)}
-     *
-     * @see #updateFrom(org.achtern.AchternEngine.core.Transform)
-     * @param entity transform of this entity will be used
-     * @return SELF
-     */
-    public AudioListener updateFrom(Entity entity) {
-        return updateFrom(entity.getTransform());
+    public Vector3f getUp() {
+        return getTransform().getTransformedRotation().getUp();
     }
 
-    /**
-     * Calls {@link #updateFrom(org.achtern.AchternEngine.core.Transform)}
-     *
-     * @see #updateFrom(org.achtern.AchternEngine.core.Transform)
-     * @param node transform of this node will be used
-     * @return SELF
-     */
-    public AudioListener updateFrom(Node node) {
-        return updateFrom(node.getTransform());
+    public Vector3f getForward() {
+        return getTransform().getTransformedRotation().getForward();
+    }
+
+    public Vector3f getPosition() {
+        return getTransform().getTransformedPosition();
     }
 }

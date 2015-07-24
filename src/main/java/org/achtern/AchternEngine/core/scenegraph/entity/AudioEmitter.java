@@ -27,12 +27,17 @@ package org.achtern.AchternEngine.core.scenegraph.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
+import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
+import org.achtern.AchternEngine.core.audio.openal.trigger.AudioTrigger;
 import org.achtern.AchternEngine.core.math.Vector3f;
 
 public class AudioEmitter extends QuickEntity {
 
 
     public static final String NAME_UNTITLED_AUDIO_ENTITY = "Untitled AudioEmitter";
+
+    @Getter @Setter protected AudioTrigger trigger;
 
     /**
      * The AudioSource to playback
@@ -41,6 +46,8 @@ public class AudioEmitter extends QuickEntity {
      * @return assoc. AudioSource
      */
     @Getter @Setter protected AudioSource audioSource;
+
+    @Getter @Setter protected AudioPlayer audioPlayer;
 
     /**
      * Create an "Untitled AudioEmitter"
@@ -64,6 +71,29 @@ public class AudioEmitter extends QuickEntity {
 
         // update the position of the audioSource
         this.audioSource.setPosition(getTransform().getPosition());
+
+        AudioSourceState next = getTrigger().next(getAudioSource());
+
+        if (!next.equals(getAudioSource().getState())) {
+
+            switch (next) {
+                case PLAYING:
+                    getAudioPlayer().play(getAudioSource());
+                    break;
+                case PAUSED:
+                    getAudioPlayer().pause(getAudioSource());
+                    break;
+                case STOPPED:
+                    getAudioPlayer().stop(getAudioSource());
+                    break;
+            }
+
+        }
+
+        // upload data from playing sources (position, etc)
+        if (getAudioSource().getState().equals(AudioSourceState.PLAYING)) {
+            getAudioPlayer().getDataBinder().upload(getAudioSource());
+        }
 
     }
 }
