@@ -65,6 +65,11 @@ public class AudioListener extends QuickEntity implements Audio {
         getAudioPlayer().getDataBinder().upload(this);
     }
 
+    @Override
+    public void attached() {
+        // TODO: get AudioPlayer
+    }
+
     public Vector3f getUp() {
         return getTransform().getTransformedRotation().getUp();
     }

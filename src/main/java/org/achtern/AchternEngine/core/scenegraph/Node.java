@@ -27,7 +27,6 @@ package org.achtern.AchternEngine.core.scenegraph;
 import org.achtern.AchternEngine.core.CoreEngine;
 import org.achtern.AchternEngine.core.EngineHolder;
 import org.achtern.AchternEngine.core.Transform;
-import org.achtern.AchternEngine.core.audio.openal.Audio;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
 import org.achtern.AchternEngine.core.rendering.Renderable;
 import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
@@ -185,8 +184,6 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * All Entices attached to this node, will share
      * the same {@link org.achtern.AchternEngine.core.Transform}.
      *
-     * This method will inject the {@link org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer} if the
-     *  given Entity implements the {@link org.achtern.AchternEngine.core.audio.openal.Audio} interface
      * @param entity New Entity to add
      * @return this
      */
@@ -194,10 +191,6 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
         getEntities().add(entity);
         entity.setParent(this);
         entity.setEngine(getEngine());
-
-        if (entity instanceof Audio) {
-            // TODO, get and inject AudioPlayer
-        }
         return this;
     }
 
