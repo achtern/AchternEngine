@@ -90,4 +90,12 @@ public class LWJGLGraphicsBindingProvider implements GraphicsBindingProvider {
          */
         return new HashMap<DrawStrategyFactory.Common, DrawStrategy>(0);
     }
+
+    @Override
+    public void populateDrawStrategyFactory() {
+        /*
+        We do not have LWJGL specific DrawStrategies,
+        just do nothing
+         */
+    }
 }

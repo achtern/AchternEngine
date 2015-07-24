@@ -24,9 +24,11 @@
 
 package org.achtern.AchternEngine.core;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import org.achtern.AchternEngine.core.bootstrap.BuildInfo;
-import org.achtern.AchternEngine.core.bootstrap.MainGraphicsBindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.CommonDrawStrategyFactoryPopulator;
 import org.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
@@ -43,16 +45,20 @@ import java.util.List;
  * The CoreEngine is the main entry point of the
  * AchternEngine.
  * The Engine is running the main loop and manages Game and
- * RenderEngine, as well as the {@link org.achtern.AchternEngine.core.bootstrap.MainGraphicsBindingProvider}.
+ * RenderEngine.
  */
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CoreEngine.class);
 
     /**
-     * Only used during bootstrap to manage the hardware/graphics/native binding
+     * Only used during bootstrap to manage the hardware/native binding and provide
+     *  the bindings during runtime
+     *
+     * @param bindingProvider the new binding provider
+     * @return current binding provider
      */
-    protected MainGraphicsBindingProvider bindingManager;
+    @Getter @Setter protected BindingProvider bindingProvider;
 
     /**
      * The Main Render Window
@@ -97,9 +103,11 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
         this.game = game;
         this.running = false;
         this.fps = new FPS();
-        this.bindingManager = new MainGraphicsBindingProvider(binding.getGraphicsBindingProvider());
-        this.bindingManager.populateDrawStrategyFactory();
+        this.bindingProvider = binding;
         this.windowChangeListenerList = new ArrayList<WindowChangeListener>();
+
+        this.bindingProvider.getGraphicsBindingProvider().populateDrawStrategyFactory();
+        CommonDrawStrategyFactoryPopulator.populate();
     }
 
     /**
@@ -108,9 +116,9 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param dimensions The window's dimensions
      */
     protected void createWindow(String title, Dimension dimensions) {
-        window = bindingManager.getWindow(dimensions);
+        window = bindingProvider.getGraphicsBindingProvider().getWindow(dimensions);
         window.create(title);
-        this.renderEngine = new BasicRenderEngine(bindingManager);
+        this.renderEngine = new BasicRenderEngine(bindingProvider.getGraphicsBindingProvider());
         LOGGER.debug("OpenGL Version: {}", this.renderEngine.getState().getVersion());
     }
 
@@ -275,14 +283,6 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public Game getGame() {
         return game;
-    }
-
-    public MainGraphicsBindingProvider getBindingManager() {
-        return bindingManager;
-    }
-
-    public void setBindingManager(MainGraphicsBindingProvider bindingManager) {
-        this.bindingManager = bindingManager;
     }
 
     public Window getWindow() {

@@ -24,56 +24,14 @@
 
 package org.achtern.AchternEngine.core.bootstrap;
 
-import org.achtern.AchternEngine.core.Window;
-import org.achtern.AchternEngine.core.input.adapter.InputAdapter;
-import org.achtern.AchternEngine.core.rendering.Dimension;
-import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import org.achtern.AchternEngine.core.rendering.drawing.SolidDraw;
 import org.achtern.AchternEngine.core.rendering.drawing.WireframeDraw;
-import org.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 
-import java.util.Map;
+public class CommonDrawStrategyFactoryPopulator {
 
-public class MainGraphicsBindingProvider implements GraphicsBindingProvider {
-
-    protected GraphicsBindingProvider binding;
-
-    public MainGraphicsBindingProvider(GraphicsBindingProvider binding) {
-        this.binding = binding;
-    }
-
-    public void populateDrawStrategyFactory() {
+    public static void populate() {
         DrawStrategyFactory.put(DrawStrategyFactory.Common.SOLID, new SolidDraw());
         DrawStrategyFactory.put(DrawStrategyFactory.Common.WIREFRAME, new WireframeDraw());
-        for (DrawStrategyFactory.Common k : getDrawStrategies().keySet()) {
-            DrawStrategyFactory.put(k, getDrawStrategies().get(k));
-        }
-    }
-
-    @Override
-    public Window getWindow(Dimension dimension) {
-        return binding.getWindow(dimension);
-    }
-
-    @Override
-    public RenderEngineState getRenderEngineState() {
-        return binding.getRenderEngineState();
-    }
-
-    @Override
-    public DataBinder getDataBinder() {
-        return binding.getDataBinder();
-    }
-
-    @Override
-    public InputAdapter getInputAdapter() {
-        return binding.getInputAdapter();
-    }
-
-    @Override
-    public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies() {
-        return binding.getDrawStrategies();
     }
 }

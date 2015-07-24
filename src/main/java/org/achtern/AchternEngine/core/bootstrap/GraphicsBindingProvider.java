@@ -46,4 +46,6 @@ public interface GraphicsBindingProvider {
 
     public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies();
 
+    public void populateDrawStrategyFactory();
+
 }
