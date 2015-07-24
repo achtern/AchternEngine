@@ -191,6 +191,9 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
         getEntities().add(entity);
         entity.setParent(this);
         entity.setEngine(getEngine());
+        if (getEngine() != null) {
+            entity.attached();
+        }
         return this;
     }
 
