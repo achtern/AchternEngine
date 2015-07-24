@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Christian Gärtner
+ * Copyright (c) 2015 Christian Gärtner
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,18 @@
 
 package org.achtern.AchternEngine.lwjgl.bootstrap;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import org.achtern.AchternEngine.lwjgl.audio.openal.binding.LWJGLAudioPlayer;
+import org.achtern.AchternEngine.lwjgl.audio.openal.binding.LWJGLDataBinder;
+import org.achtern.AchternEngine.lwjgl.audio.openal.binding.LWJGLIDGenerator;
 
-@Data
-@AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+public class LWJGLAudioBindingProvider implements AudioBindingProvider {
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
+    @Getter protected final AudioPlayer audioPlayer;
 
-    protected AudioBindingProvider audioBindingProvider;
-
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
-    }
-
-    public LWJGLBindingProvider() {
-        this(false);
+    public LWJGLAudioBindingProvider() {
+        this.audioPlayer = new LWJGLAudioPlayer(new LWJGLDataBinder(new LWJGLIDGenerator()));
     }
 }
