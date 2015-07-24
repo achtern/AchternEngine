@@ -67,7 +67,7 @@ public class AudioListener extends QuickEntity implements Audio {
 
     @Override
     public void attached() {
-        // TODO: get AudioPlayer
+        setAudioPlayer(getEngine().getBindingProvider().getAudioBindingProvider().getAudioPlayer());
     }
 
     public Vector3f getUp() {

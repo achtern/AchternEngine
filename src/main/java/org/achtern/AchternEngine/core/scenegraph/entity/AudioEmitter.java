@@ -64,7 +64,7 @@ public class AudioEmitter extends QuickEntity implements Audio {
     public void attached() {
         this.audioSource.setPosition(getTransform().getPosition());
         this.audioSource.setVelocity(Vector3f.ZERO);
-        // TODO: get AudioPlayer
+        setAudioPlayer(getEngine().getBindingProvider().getAudioBindingProvider().getAudioPlayer());
     }
 
     @Override
