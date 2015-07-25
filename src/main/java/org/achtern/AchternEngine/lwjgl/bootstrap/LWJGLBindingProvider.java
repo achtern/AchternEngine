@@ -22,30 +22,27 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering.shader.forward;
+package org.achtern.AchternEngine.lwjgl.bootstrap;
 
-import org.achtern.AchternEngine.core.rendering.shader.Shader;
-import org.achtern.AchternEngine.core.resource.ResourceLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
 
-public class Point extends Shader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Point.class);
+@Data
+@AllArgsConstructor
+public class LWJGLBindingProvider implements BindingProvider {
 
-    private static final Point instance = new Point();
+    protected GraphicsBindingProvider graphicsBindingProvider;
 
-    public static Point getInstance() {
-        return instance;
+    protected AudioBindingProvider audioBindingProvider;
+
+    public LWJGLBindingProvider(boolean throwUnchanged) {
+        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
     }
 
-    private Point() {
-        super();
-
-        try {
-            this.program = ResourceLoader.getShaderProgram("forward.point");
-        } catch (Exception e) {
-            LOGGER.warn("Error Loading Bundled Point Shader GLSL files.", e);
-        }
-
+    public LWJGLBindingProvider() {
+        this(false);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Christian Gärtner
+ * Copyright (c) 2015 Christian Gärtner
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,12 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering.shader.forward;
+package org.achtern.AchternEngine.core.bootstrap;
 
-import org.achtern.AchternEngine.core.rendering.shader.Shader;
-import org.achtern.AchternEngine.core.resource.ResourceLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.achtern.AchternEngine.core.audio.openal.binding.AudioPlayer;
 
-public class Directional extends Shader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Directional.class);
+public interface AudioBindingProvider {
 
-    private static final Directional instance = new Directional();
+    public AudioPlayer getAudioPlayer();
 
-    public static Directional getInstance() {
-        return instance;
-    }
-
-    private Directional() {
-        try {
-            this.program = ResourceLoader.getShaderProgram("forward.directional");
-        } catch (Exception e) {
-            LOGGER.warn("Error Loading Bundled Directional Shader GLSL files.", e);
-        }
-    }
 }

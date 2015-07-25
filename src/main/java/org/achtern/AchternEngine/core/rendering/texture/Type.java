@@ -25,7 +25,7 @@
 package org.achtern.AchternEngine.core.rendering.texture;
 
 /**
- * TODO: check on how to do arrays, buffer & rectangle
+ * TODO: check on how to do arrays, buffer &amp; rectangle
  */
 public enum Type {
     ONE_DIMENSIONAL,

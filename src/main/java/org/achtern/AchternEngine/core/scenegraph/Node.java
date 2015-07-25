@@ -33,9 +33,9 @@ import org.achtern.AchternEngine.core.scenegraph.entity.Entity;
 import org.achtern.AchternEngine.core.scenegraph.scanning.SingleEntityRetriever;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A Node represents a part of the scenegraph.
@@ -82,7 +82,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * @param name The name of the node
      */
     public Node(String name) {
-        this.children = new HashMap<String, Node>();
+        this.children = new ConcurrentHashMap<String, Node>();
         this.entities = new ArrayList<Entity>();
         this.transform = new Transform();
         this.name = name;
@@ -92,7 +92,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * Creates and untitled Node.
      * The name will be <code>NULL</code> until its
      * getting added as a child to another node.
-     * (Then name will be "PARENT-NODE >> Untitled Node X" where X is
+     * (Then name will be "PARENT-NODE &gt;&gt; Untitled Node X" where X is
      * the number of already existing subnodes.
      */
     public Node() {
@@ -118,7 +118,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     /**
      * Trigger an render.
-     * Do rendering releated stuff here.
+     * Do rendering related stuff here.
      *
      * @param renderEngine The active RenderEngine
      */
@@ -181,14 +181,19 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
 
     /**
      * Add an Entity to this Node.
-     * All Entites attached to this node, will share
+     * All Entices attached to this node, will share
      * the same {@link org.achtern.AchternEngine.core.Transform}.
+     *
      * @param entity New Entity to add
      * @return this
      */
     public Node add(Entity entity) {
         getEntities().add(entity);
         entity.setParent(this);
+        entity.setEngine(getEngine());
+        if (getEngine() != null) {
+            entity.attached();
+        }
         return this;
     }
 
@@ -198,9 +203,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * @return Whether the remove was successful (false if Node did not exist in children List)
      */
     public boolean remove(Node node) {
-        node.removed();
-        Node t = getChildren().remove(node.getName());
-        return t != null;
+        return remove(node.getName());
     }
 
     /**
@@ -209,9 +212,13 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * @return Whether the remove was successful (false if Node did not exist in children List)
      */
     public boolean remove(String nodeName) {
-        Node toBeRemoved = getChildren().get(nodeName);
-
-        if (toBeRemoved == null) return false;
+        Node toBeRemoved;
+        try {
+            toBeRemoved = getChildren().get(nodeName);
+            if (toBeRemoved == null) return false;
+        } catch (NullPointerException np) {
+            return false;
+        }
 
         toBeRemoved.removed();
 
@@ -232,6 +239,16 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
     public boolean remove(Entity entity) {
         entity.removed();
         return getEntities().remove(entity);
+    }
+
+    /**
+     * Removes the Node from the parent.
+     *
+     * @see #getParent()
+     * @see #remove(Node)
+     */
+    public void remove() {
+        getParent().remove(this);
     }
 
     /**
@@ -258,7 +275,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * and scans this node.
      * Returns the first {@link org.achtern.AchternEngine.core.scenegraph.entity.Entity} if
      * there were multiple of the given type!
-     * NOTE: This wall ALWAYS scan this whole node.
+     * NOTE: This wall ALWAYS scans this whole node.
      * @param type Class of type of Entity
      * @param <T> type of Entity
      * @return Entity | null
@@ -271,6 +288,28 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
         singleEntityRetriever.scan(this);
 
         return singleEntityRetriever.get(type);
+    }
+
+    /**
+     * This method allows to attach Nodes to the "World" Node
+     * Useful for adding independent nodes/entities to the world,
+     *  from deep in the scenegraph. This method calls this function on the parent {@link #getParent()},
+     *  unless the parent is null, then it calls {@link #add(Node)} on itself.
+     *
+     * The "World" is just the Node without a parent, if you want to have your own world
+     *  class, under the root Node, just extend {@link org.achtern.AchternEngine.core.scenegraph.Node} and
+     *  override this method.
+     *
+     * @see #add(Node)
+     * @see #getParent()
+     * @param node The Node to attach to the world
+     */
+    public void addToWorld(Node node) {
+        if (getParent() != null) {
+            getParent().addToWorld(node);
+        } else {
+            add(node);
+        }
     }
 
     @Override
@@ -343,7 +382,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * Inject the engine
      * CoreEngine.
      * Passes Engine to the children/entities
-     * if diffrent from currently stored.
+     * if different from currently stored.
      * @param engine The engine to store
      */
     @Override

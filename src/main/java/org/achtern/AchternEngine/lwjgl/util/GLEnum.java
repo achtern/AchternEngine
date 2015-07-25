@@ -32,15 +32,13 @@ import org.achtern.AchternEngine.core.rendering.texture.InternalFormat;
 import org.achtern.AchternEngine.core.rendering.texture.Type;
 import org.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA_SATURATE;
 import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
@@ -359,6 +357,25 @@ public class GLEnum {
                 return GL_FILL;
             default:
                 throw new UnsupportedOperationException("FillMode " + mode + " not supported in LWJGLRenderEngine");
+        }
+    }
+
+    // ---
+    // OpenAL DataBinder
+    // --
+
+    public static int getGLEnum(org.achtern.AchternEngine.core.audio.openal.Format format) {
+        switch (format) {
+            case MONO8:
+                return AL_FORMAT_MONO8;
+            case MONO16:
+                return AL_FORMAT_MONO16;
+            case STEREO8:
+                return AL_FORMAT_STEREO16;
+            case STEREO16:
+                return AL_FORMAT_STEREO16;
+            default:
+                throw new UnsupportedOperationException("OpenAL Format " + format + " not supported by LWJGL OpenAl");
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Christian Gärtner
+ * Copyright (c) 2015 Christian Gärtner
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,22 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.core.rendering.shader.forward;
+package org.achtern.AchternEngine.core.audio.openal.trigger;
 
-import org.achtern.AchternEngine.core.rendering.shader.Shader;
-import org.achtern.AchternEngine.core.resource.ResourceLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
 
-public class Spot extends Shader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Spot.class);
+/**
+ * AudioTrigger are used to change the playing state of one(many) AudioSource(s).
+ * <br>
+ * AudioTrigger should always return a value and never null, even if the state should not be changed.
+ */
+public interface AudioTrigger {
 
-    private static final Spot instance = new Spot();
-
-    public static Spot getInstance() {
-        return instance;
-    }
-
-    private Spot() {
-        super();
-
-        try {
-            this.program = ResourceLoader.getShaderProgram("forward.spot");
-        } catch (Exception e) {
-            LOGGER.warn("Error Loading Bundled Spot Shader GLSL files.", e);
-        }
-    }
+    /**
+     * This tells the AudioEngine the desired state for any given AudioSource.
+     * @param as AudioSource to test
+     * @return desired state
+     */
+    public AudioSourceState next(AudioSource as);
 }

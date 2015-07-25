@@ -53,7 +53,7 @@ public class FigureLoader extends JsonLoader<Figure> {
      * loading and construct an Object.
      * This reads the {@link org.json.JSONObject} and constructs the Figure.
      * @return The new object
-     * @throws Exception
+     * @throws Exception on json formatting or custom format spec violations
      */
     @Override
     public Figure get() throws Exception {

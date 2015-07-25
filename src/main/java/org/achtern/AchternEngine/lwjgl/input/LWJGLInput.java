@@ -514,6 +514,18 @@ public class LWJGLInput implements InputAdapter {
         Mouse.setCursorPosition((int)position.getX(), (int)position.getY());
     }
 
+    /**
+     * Returns the mouse position delta
+     * <p>
+     * aka. change in position since last {@link #update()} call
+     *
+     * @return mouse delta
+     */
+    @Override
+    public Vector2f getMouseDelta() {
+        return new Vector2f(Mouse.getDX(), Mouse.getDY());
+    }
+
     @Override
     public void setCursor(boolean enabled) {
         Mouse.setGrabbed(!enabled);

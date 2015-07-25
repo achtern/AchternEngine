@@ -57,6 +57,7 @@ public interface RenderEngine extends DataStore {
 
     /**
      * internal use only
+     * @param active new active RenderPass
      */
     public void setActiveRenderPass(RenderPass active);
 

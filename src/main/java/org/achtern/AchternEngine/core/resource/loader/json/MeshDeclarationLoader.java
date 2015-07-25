@@ -51,7 +51,7 @@ public class MeshDeclarationLoader extends JsonLoader<Mesh> {
 
         if (!className.contains(".")) {
             // If we have just a name. Search in the default mesh package
-            className = "io.github.achtern.AchternEngine.core.rendering.mesh." + className;
+            className = "org.achtern.AchternEngine.core.rendering.mesh." + className;
         }
 
         if (json.has("args")) {

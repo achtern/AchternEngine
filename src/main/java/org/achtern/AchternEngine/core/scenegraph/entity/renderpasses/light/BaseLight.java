@@ -24,10 +24,10 @@
 
 package org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
 
-import org.achtern.AchternEngine.core.rendering.Color;
-import org.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.achtern.AchternEngine.core.rendering.Color;
+import org.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

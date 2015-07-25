@@ -24,8 +24,10 @@
 
 package org.achtern.AchternEngine.core.rendering;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.achtern.AchternEngine.core.Window;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
 import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
@@ -47,25 +49,25 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngine.class);
 
-    protected RenderEngineState state;
-    protected DataBinder dataBinder;
+    @Getter protected RenderEngineState state;
+    @Getter protected DataBinder dataBinder;
 
-    protected RenderTarget renderTarget;
+    @Getter @Setter protected RenderTarget renderTarget;
 
     protected List<RenderPass> renderPasses;
     protected RenderPass activePass;
 
     protected List<PassFilter> passFilters;
 
-    protected Camera camera;
+    @Getter @Setter protected Camera camera;
 
-    protected DrawStrategy drawStrategy;
+    @Getter @Setter protected DrawStrategy drawStrategy;
 
     protected Map<Class, GlobalEntity> globalEntities;
 
-    public BasicRenderEngine(BindingProvider bindingProvider) {
-        this.state = bindingProvider.getRenderEngineState();
-        this.dataBinder = bindingProvider.getDataBinder();
+    public BasicRenderEngine(GraphicsBindingProvider graphicsBindingProvider) {
+        this.state = graphicsBindingProvider.getRenderEngineState();
+        this.dataBinder = graphicsBindingProvider.getDataBinder();
 
         this.setRenderTarget(Window.get());
 
@@ -124,7 +126,7 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
             }
         }
 
-        // Bind Shader
+        // Bind Shader, just bind the default shader, if there is no specified in Material
         getDataBinder().bind(this.activePass.getShader());
         // Render first pass
         node.render(this);
@@ -165,26 +167,6 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
     }
 
     @Override
-    public RenderEngineState getState() {
-        return state;
-    }
-
-    @Override
-    public DataBinder getDataBinder() {
-        return dataBinder;
-    }
-
-    @Override
-    public void setRenderTarget(RenderTarget target) {
-        this.renderTarget = target;
-    }
-
-    @Override
-    public RenderTarget getRenderTarget() {
-        return renderTarget;
-    }
-
-    @Override
     public void addRenderPass(RenderPass pass) {
         renderPasses.add(pass);
     }
@@ -207,26 +189,6 @@ public class BasicRenderEngine extends CommonDataStore implements RenderEngine {
     @Override
     public void setActiveRenderPass(RenderPass active) {
         this.activePass = active;
-    }
-
-    @Override
-    public Camera getCamera() {
-        return camera;
-    }
-
-    @Override
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
-
-    @Override
-    public DrawStrategy getDrawStrategy() {
-        return drawStrategy;
-    }
-
-    @Override
-    public void setDrawStrategy(DrawStrategy drawStrategy) {
-        this.drawStrategy = drawStrategy;
     }
 
     @Override

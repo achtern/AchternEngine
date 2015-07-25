@@ -26,7 +26,7 @@ package org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
 
 import org.achtern.AchternEngine.core.rendering.Color;
 import org.achtern.AchternEngine.core.rendering.light.Attenuation;
-import org.achtern.AchternEngine.core.rendering.shader.forward.Point;
+import org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong.PhongPoint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -49,6 +49,6 @@ public class PointLight extends BaseLight {
 
         this.range = (float) (-l + Math.sqrt(l * l - 4 * e * c)) / (2 * e);
 
-        setShader(Point.getInstance());
+        setShader(PhongPoint.getInstance());
     }
 }

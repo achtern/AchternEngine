@@ -44,27 +44,31 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     public static final Logger LOGGER = LoggerFactory.getLogger(GLSLParser.class);
 
     /**
-     * CUSTOM TOKEN. NOT PART OF THE GLSL LANGUAGE!
-     * #include MUST be first statement in the line
+     * CUSTOM TOKEN. NOT PART OF THE GLSL LANGUAGE!<br>
+     *
+     * <code>#include</code> MUST be first statement in the line!
      * Any two characters after that are allowed.
      * The 3rd character after '#include' has to be part
      * of the filename. The rest of the line will get treated
      * as the filename, BUT the last character!
      * (Trailing whitespaces will get trimmed automatically!)
-     *
-     * It is advised to stick with either '<' or '"' as delimiter
+     * <br>
+     * It is advised to stick with either {@code <} or {@code "} as delimiter
      * because the parser might switch to regex based parsing.
-     *
+     * <br>
      * Example:
-     * <code>
-     *     #include "file.ext"
-     *     // or
-     *     #include <file.ext>
-     *     // or even
-     *     #include $file.ext$
      *
-     *     // You could also use two spaces..
-     * </code>
+     * <pre>
+     * {@code
+     * #include "file.ext"
+     * // or
+     * #include <file.ext>
+     * // or even
+     * #include $file.ext$
+     *
+     * // You could also use two spaces..
+     * }
+     * </pre>
      */
     public static final String CUSTOM_TOKEN_INCLUDE = "#include";
 
@@ -626,19 +630,23 @@ public class GLSLParser extends VariableBasedLanguageParser implements LineBased
     /**
      * Prints a list of GLSLStruct s in an XML like format:
      * (Only if trace logging is enabled!)
-     * <code>
-     *     Struct Foo
-     *     {
-     *         float x;
-     *         vec4 y;
-     *     };
      *
-     *     will yield
-     *     <Foo>
-     *         <float>x</float>
-     *         <vec3>y</vec3>
-     *     </Foo>
-     * </code>
+     * <pre>
+     * {@code
+     *  Struct Foo
+     *  {
+     *      float x;
+     *      float y;
+     *  };
+     *
+     *  // will yield
+     *  <Foo>
+     *      <float>x</float>
+     *      <vec3>y</vec3>
+     *  </Foo>
+     * }
+     * </pre>
+     *
      * @param structs A list of GLSLStructs to print
      */
     protected static void printStructs(List<GLSLStruct> structs) {

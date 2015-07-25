@@ -33,10 +33,12 @@ public abstract class VariableTransportManager {
 
     /**
      * This keeps track off all transport statements.
-     * Maps name to type (name => type)
+     * Maps name to type (name =&gt; type)
      * This order seems confusing, but is the only way
      * to avoid overrides when handling multiple values
      * of the same type. The name - however - is unique!
+     *
+     * @return transports
      */
     @Getter protected Map<String, String> transports;
 

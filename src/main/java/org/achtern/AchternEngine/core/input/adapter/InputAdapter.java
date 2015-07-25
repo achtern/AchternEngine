@@ -107,6 +107,14 @@ public interface InputAdapter {
     public void setMousePosition(Vector2f position);
 
     /**
+     * Returns the mouse position delta
+     *
+     * aka. change in position since last {@link #update()} call
+     * @return mouse delta
+     */
+    public Vector2f getMouseDelta();
+
+    /**
      * Hides the cursor, when disabled (enabled = false)
      * @param enabled true shows cursor, false hides it
      */

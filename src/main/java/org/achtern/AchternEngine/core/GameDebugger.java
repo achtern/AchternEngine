@@ -66,8 +66,8 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
     }
 
     /**
-     * Adds an listener
-     * @param l
+     * Adds an listener without pushing the current state
+     * @param l this listener will be registered to this debugger
      */
     public void register(DebugStateListener l) {
         register(l, false);
@@ -80,7 +80,10 @@ public class GameDebugger implements Updatable, EngineHolder<CoreEngine>, KeyLis
      */
     public void register(DebugStateListener l, boolean pushState) {
         hooks.add(l);
-        l.changed(true);
+        if (pushState) {
+            //TODO: actual state detection
+            l.changed(true);
+        }
     }
 
     @Override

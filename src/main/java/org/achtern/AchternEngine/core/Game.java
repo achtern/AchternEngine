@@ -25,6 +25,7 @@
 package org.achtern.AchternEngine.core;
 
 import org.achtern.AchternEngine.core.rendering.Renderable;
+import org.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.achtern.AchternEngine.core.scenegraph.Updatable;
 import org.achtern.AchternEngine.core.input.InputManager;
 import org.achtern.AchternEngine.core.rendering.Dimension;
@@ -96,7 +97,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     public final void preInit(CoreEngine engine) {
         setEngine(engine);
-        setInputManager(new InputManager(engine.getBindingManager().getInputAdapter()));
+        setInputManager(new InputManager(engine.getBindingProvider().getGraphicsBindingProvider().getInputAdapter()));
         getSceneGraph().setEngine(engine);
 
         // And init the user's game
@@ -133,6 +134,8 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Keep a reference to it, or the node's name,
      * in order to retrieve the node at a later point easily.
      * @param node The node which should get added.
+     *
+     * @see org.achtern.AchternEngine.core.scenegraph.Node#add(org.achtern.AchternEngine.core.scenegraph.Node)
      */
     public void add(Node node) {
         getSceneGraph().add(node);
@@ -144,6 +147,9 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Keep a reference to it, or the node's name,
      * in order to retrieve the node at a later point easily.
      * @param node The node which should get added.
+     * @param forceName wether or not to force the name
+     *
+     * @see org.achtern.AchternEngine.core.scenegraph.Node#add(org.achtern.AchternEngine.core.scenegraph.Node,boolean)
      */
     public void add(Node node, boolean forceName) {
         getSceneGraph().add(node, forceName);
@@ -239,12 +245,12 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      * Returns the loading/splash image.
      * Should only do minimal stuff!
      * FAST FAST FAST
-     * If the texture is null, the engine's
-     * default image will get shown.
+     * If the texture is null, no loading screen will be shown.
      * @return A texture | null
+     * @throws java.lang.Exception from {@link org.achtern.AchternEngine.core.resource.ResourceLoader}
      */
-    public Texture getSplashScreen() {
-        return null;
+    public Texture getSplashScreen() throws Exception {
+        return ResourceLoader.getTexture(LoadingScreen.DEFAULT_TEXTURE_NAME);
     }
 
     /**

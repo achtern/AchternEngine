@@ -97,7 +97,7 @@ public class MeshLoader extends AsciiFileLoader<Mesh> {
      * This should used the information, generated during
      * loading and construct an Object.
      * @return The new object
-     * @throws Exception
+     * @throws Exception on parsing and processing errors
      */
     @Override
     public Mesh get() throws Exception {

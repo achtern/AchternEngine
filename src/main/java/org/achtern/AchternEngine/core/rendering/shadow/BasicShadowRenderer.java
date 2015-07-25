@@ -26,7 +26,6 @@ package org.achtern.AchternEngine.core.rendering.shadow;
 
 import org.achtern.AchternEngine.core.math.Matrix4f;
 import org.achtern.AchternEngine.core.rendering.Dimension;
-import org.achtern.AchternEngine.core.rendering.QuickPassFilter;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
 import org.achtern.AchternEngine.core.rendering.RenderPass;
 import org.achtern.AchternEngine.core.rendering.framebuffer.FrameBuffer;
@@ -42,7 +41,7 @@ import org.achtern.AchternEngine.core.scenegraph.Node;
 import org.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.BaseLight;
 
-public class BasicShadowRenderer extends QuickPassFilter implements RenderPass {
+public class BasicShadowRenderer extends Shadow {
 
     protected FrameBuffer shadowMap;
 

@@ -100,7 +100,7 @@ public class UBuffer {
 
     /**
      * Create an integer buffer.
-     * The size will get << shifted by 2 (integers allocate 2 bytes!)
+     * The size will get &lt;&lt; shifted by 2 (integers allocate 2 bytes!)
      * @param size the size of the buffer (amount of integers!)
      * @return the buffer
      */
@@ -110,7 +110,7 @@ public class UBuffer {
 
     /**
      * Create an float buffer.
-     * The size will get << shifted by 2 (floats allocate 2 bytes!)
+     * The size will get &lt;&lt; shifted by 2 (floats allocate 2 bytes!)
      * @param size the size of the buffer (amount of integers!)
      * @return the buffer
      */

@@ -50,7 +50,7 @@ public abstract class BinaryLoader<T, C> implements Loader<T, InputStream> {
      * value provided by the ResourceLoader
      * @param value Cache
      * @return Object
-     * @throws Exception
+     * @throws Exception could be anything (from loading over parsing to memory errors)
      */
     public abstract T fromCache(C value) throws Exception;
 

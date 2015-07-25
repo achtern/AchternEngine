@@ -66,6 +66,9 @@ public class LWJGLDataBinder implements DataBinder {
 
     /**
      * An IntBuffer with a size of 16.
+     * This buffer is used to set draw buffers,
+     *  since glDrawBuffers only accepts an IntBuffer when dealing
+     *  with multiple color attachments.
      */
     private IntBuffer intBuffer = UBuffer.createIntBuffer(16);
 
@@ -94,8 +97,13 @@ public class LWJGLDataBinder implements DataBinder {
         if (state.getBoundTexture() != null && state.getBoundTexture().getID() == texture.getID()) {
             return;
         }
+
+        int type = getGLEnum(texture.getType());
+
+        LOGGER.trace("Calling glActiveTexture({})", GL_TEXTURE0 + samplerslot);
         glActiveTexture(GL_TEXTURE0 + samplerslot);
-        glBindTexture(getGLEnum(texture.getType()), texture.getID());
+        LOGGER.trace("Calling glBindTexture({}, {})", type, texture.getID());
+        glBindTexture(type, texture.getID());
         state.setBound(texture);
     }
 
@@ -105,11 +113,30 @@ public class LWJGLDataBinder implements DataBinder {
 
         int type = getGLEnum(texture.getType());
 
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Calling glTexParamteri() 4 times, CLAMP_TO_EDGE and MIN/MAG Filter {}/{}",
+                    getGLEnum(texture.getMinFilter()),
+                    getGLEnum(texture.getMagFilter())
+            );
+        }
+
         glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(type, GL_TEXTURE_MIN_FILTER, getGLEnum(texture.getMinFilter()));
         glTexParameteri(type, GL_TEXTURE_MAG_FILTER, getGLEnum(texture.getMagFilter()));
 
+
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Calling glTexImage2D({}, 0, {}, {}, {}, 0, {}, GL_UNSIGNED_BYTE, {})",
+                    type,
+                    0,
+                    getGLEnum(texture.getInternalFormat()),
+                    texture.getDimension().getWidth(),
+                    texture.getDimension().getHeight(),
+                    getGLEnum(texture.getFormat()),
+                    texture.getData()
+            );
+        }
 
         glTexImage2D(
                 type,
@@ -123,7 +150,9 @@ public class LWJGLDataBinder implements DataBinder {
                 texture.getData()
         );
 
+        LOGGER.trace("Calling glTexParamteri({}, GL_TEXTURE_BASE_LEVEL, 0)", type);
         glTexParameteri(type, GL_TEXTURE_BASE_LEVEL, 0);
+        LOGGER.trace("Calling glTexParamteri({}, GL_TEXTURE_MAX_LEVEL, 0)", type);
         glTexParameteri(type, GL_TEXTURE_MAX_LEVEL, 0);
 
     }
@@ -131,12 +160,14 @@ public class LWJGLDataBinder implements DataBinder {
     @Override
     public void bind(Mesh mesh) {
         if (mesh == null) {
+            LOGGER.trace("Calling glBindVertexArray(0)");
             glBindVertexArray(0);
         } else {
             int id = mesh.getData().getID();
             if (state.getBoundMesh() != null && state.getBoundMesh().getData().getID() == id) {
                 return;
             }
+            LOGGER.trace("Calling glBindVertexArray({})", id);
             glBindVertexArray(id);
         }
         state.setBound(mesh);
@@ -153,24 +184,34 @@ public class LWJGLDataBinder implements DataBinder {
 
         bind(mesh);
 
+        LOGGER.trace("Calling glBindBuffer(GL_ARRAY_BUFFER, {})", data.getVbo());
         glBindBuffer(GL_ARRAY_BUFFER, data.getVbo());
 
+        LOGGER.trace("Calling glBufferData(GL_ARRAY_BUFFER, <data=vertices>, GL_STATIC_DRAW)");
         glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) UBuffer.create(data.getVertices()).flip(), GL_STATIC_DRAW);
 
+        LOGGER.trace("Calling glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, {})", data.getIbo());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data.getIbo());
+        LOGGER.trace("Calling glBufferData(GL_ELEMENT_ARRAY_BUFFER, <data=indices>, GL_STATIC_DRAW)");
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) UBuffer.create(data.getIndices()).flip(), GL_STATIC_DRAW);
 
+        LOGGER.trace("Calling glVertexAttribPointer(0, 3, GL_FLOAT, false, Vertex.SIZE * 4 = {}, 0)", Vertex.SIZE * 4);
         // Position
         glVertexAttribPointer(0, 3, GL_FLOAT, false, Vertex.SIZE * 4, 0);
+        LOGGER.trace("Calling glVertexAttribPointer(1, 2, GL_FLOAT, false, Vertex.SIZE * 4 = {}, 12)", Vertex.SIZE * 4);
         // Texture Coordinates
         glVertexAttribPointer(1, 2, GL_FLOAT, false, Vertex.SIZE * 4, 12);
+        LOGGER.trace("Calling glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4 = {}, 20)", Vertex.SIZE * 4);
         // Normals
         glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20);
 
+        LOGGER.trace("Calling glEnableVertexAttribArray(0)");
         // Position
         glEnableVertexAttribArray(0);
+        LOGGER.trace("Calling glEnableVertexAttribArray(1)");
         // Texture Coordinates
         glEnableVertexAttribArray(1);
+        LOGGER.trace("Calling glEnableVertexAttribArray(2)");
         // Normals
         glEnableVertexAttribArray(2);
 
@@ -185,6 +226,14 @@ public class LWJGLDataBinder implements DataBinder {
             upload(mesh);
         }
         bind(mesh);
+
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Calling glDrawElements({}, {}, GL_UNSIGNED_INT, 0)",
+                    getGLEnum(mesh.getData().getMode()),
+                    mesh.getData().getSize()
+            );
+        }
+
         glDrawElements(getGLEnum(mesh.getData().getMode()), mesh.getData().getSize(), GL_UNSIGNED_INT, 0);
     }
 
@@ -196,6 +245,7 @@ public class LWJGLDataBinder implements DataBinder {
         if (state.getBoundShader() != null && state.getBoundShader().getProgram().getID() == shader.getProgram().getID()) {
             return;
         }
+        LOGGER.trace("Calling glUseProgram({})", shader.getProgram().getID());
         glUseProgram(shader.getProgram().getID());
         state.setBound(shader);
     }
@@ -211,29 +261,39 @@ public class LWJGLDataBinder implements DataBinder {
         // Attach all shader sources
         for (GLSLScript script : program.getScripts()) {
 
+            LOGGER.trace("Calling glShaderSource({}, <data=shader_source>)", script.getID());
             glShaderSource(script.getID(), script.getSource());
+            LOGGER.trace("Calling glCompileShader({})", script.getID());
             glCompileShader(script.getID());
 
+            LOGGER.trace("Calling glGetShaderi({}, GL_COMPILE_STATUS)", script.getID());
             if (glGetShaderi(script.getID(), GL_COMPILE_STATUS) == 0) {
                 LOGGER.warn(glGetShaderInfoLog(script.getID(), 1024));
             }
 
+            LOGGER.trace("Calling glAttachShader({}, {})", program.getID(), script.getID());
             glAttachShader(program.getID(), script.getID());
         }
 
+        LOGGER.trace("Calling glLinkProgram({})", program.getID());
         // compile
         glLinkProgram(program.getID());
 
+        LOGGER.trace("Calling glGetProgrami({}, GL_LINK_STATUS)", program.getID());
         if (glGetProgrami(program.getID(), GL_LINK_STATUS) == 0) {
+            LOGGER.trace("Calling glGetProgramInfoLog({}, 1024)", program.getID());
             LOGGER.warn("Link Status: {} @ {}",
                     glGetProgramInfoLog(program.getID(), 1024),
                     shader.getClass().getSimpleName()
             );
         }
 
+        LOGGER.trace("Calling glValidateProgram({})", program.getID());
         glValidateProgram(program.getID());
 
+        LOGGER.trace("Calling glGetProgrami({}, GL_VALIDATE_STATUS)", program.getID());
         if (glGetProgrami(program.getID(), GL_VALIDATE_STATUS) == 0) {
+            LOGGER.trace("Calling glGetProgramInfoLog({}, 1024)", program.getID());
             String error = glGetProgramInfoLog(program.getID(), 1024);
             // This is a hack to prevent error message on every shader load.
             // If we load the shaders before the mesh loading, there are not any
@@ -254,7 +314,8 @@ public class LWJGLDataBinder implements DataBinder {
             int loc = 0;
 
             for (Variable attr : script.getAttributes()) {
-                LOGGER.trace("{}: attribute {} got added at {}", this.getClass().getSimpleName(), attr.getName(), loc);
+                LOGGER.debug("{}: attribute {} got added at {}", this.getClass().getSimpleName(), attr.getName(), loc);
+                LOGGER.trace("Calling glBindAttribLocation({}, {}, {})", program.getID(), loc, attr.getName());
                 glBindAttribLocation(program.getID(), loc, attr.getName());
                 loc++;
             }
@@ -265,7 +326,9 @@ public class LWJGLDataBinder implements DataBinder {
     public void bindAsRenderTarget(FrameBuffer fbo) {
         if (fbo == null) {
             state.setBound((FrameBuffer) null);
+            LOGGER.trace("Calling glDrawBuffer(GL_NONE)");
             glDrawBuffer(GL_NONE);
+            LOGGER.trace("Calling glReadBuffer(GL_NONE)");
             glReadBuffer(GL_NONE);
             return;
         }
@@ -286,7 +349,9 @@ public class LWJGLDataBinder implements DataBinder {
         bandwith!
          */
         if (fbo.sizeColorTargets() == 0) {
+            LOGGER.trace("Calling glDrawBuffer(GL_NONE)");
             glDrawBuffer(GL_NONE);
+            LOGGER.trace("Calling glReadBuffer(GL_NONE)");
             glReadBuffer(GL_NONE);
         } else {
             /*
@@ -300,9 +365,11 @@ public class LWJGLDataBinder implements DataBinder {
                 }
 
                 intBuffer.flip();
+                LOGGER.trace("Calling glDrawBuffers(<data=color_attachments>)");
                 glDrawBuffers(intBuffer);
             } else {
                 // we only have one
+                LOGGER.trace("Calling glDrawBuffer(GL_COLOR_ATTACHMENT0)");
                 glDrawBuffer(GL_COLOR_ATTACHMENT0);
             }
         }
@@ -320,7 +387,9 @@ public class LWJGLDataBinder implements DataBinder {
         if (state.getBoundFbo() != null && state.getBoundFbo().getID() == fbo.getID()) {
             return;
         }
+        LOGGER.trace("Calling glBindFramebuffer(GL_FRAMEBUFFER, {})", fbo.getID());
         glBindFramebuffer(GL_FRAMEBUFFER, fbo.getID());
+        LOGGER.trace("Calling glViewport(0, 0, {}, {}", fbo.getWidth(), fbo.getHeight());
         glViewport(0, 0, fbo.getWidth(), fbo.getHeight());
         state.setBound(fbo);
     }
@@ -372,18 +441,32 @@ public class LWJGLDataBinder implements DataBinder {
                 getIDGenerator().generate(rbo);
             }
             // Bind the renderbuffer
+            LOGGER.trace("Calling glBindRenderbuffer(GL_RENDERBUFFER, {})", rbo.getID());
             glBindRenderbuffer(GL_RENDERBUFFER, rbo.getID());
             // TODO: allow multisample
             // tell in which format, the buffer should be stored.
             // TODO: use format from rbo.getFormat()
+            LOGGER.trace("Calling glRenderbufferStorage(GL_RENDERBUFFER, {}, {}, {})", iFormat, fbo.getWidth(), fbo.getHeight());
             glRenderbufferStorage(GL_RENDERBUFFER, iFormat, fbo.getWidth(), fbo.getHeight());
             // set the attachment type to the bound fbo
+            LOGGER.trace("Calling glFramebufferRenderbuffer(GL_FRAMEBUFFER, {}, GL_RENDERBUFFER, {})",
+                    attachment,
+                    rbo.getID()
+            );
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo.getID());
         } else {
 
             if (rbo.getTexture().getID() == INVALID_ID) {
                 // upload texture
                 upload(rbo.getTexture());
+            }
+
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Calling glFramebufferTexture2D(GL_FRAMEBUFFER, {}, {}, {}, {}, 0)",
+                        attachment,
+                        getGLEnum(rbo.getTexture().getType()),
+                        rbo.getTexture().getID()
+                );
             }
 
             glFramebufferTexture2D(
@@ -398,7 +481,9 @@ public class LWJGLDataBinder implements DataBinder {
     }
 
     protected void validateFrameBufferStatus(FrameBuffer fbo) throws FrameBufferException {
+        LOGGER.trace("Calling glCheckFramebufferStatus(GL_FRAMEBUFFER)");
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        LOGGER.trace("-> got {}", status);
 
         switch (status) {
             case GL_FRAMEBUFFER_COMPLETE:

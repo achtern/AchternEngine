@@ -24,12 +24,15 @@
 
 package org.achtern.AchternEngine.core;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
 import org.achtern.AchternEngine.core.bootstrap.BuildInfo;
-import org.achtern.AchternEngine.core.bootstrap.MainBindingProvider;
+import org.achtern.AchternEngine.core.bootstrap.CommonDrawStrategyFactoryPopulator;
 import org.achtern.AchternEngine.core.rendering.BasicRenderEngine;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
+import org.achtern.AchternEngine.core.rendering.texture.Texture;
 import org.achtern.AchternEngine.core.util.FPS;
 import org.achtern.AchternEngine.core.util.WindowChangeListener;
 import org.slf4j.Logger;
@@ -42,16 +45,20 @@ import java.util.List;
  * The CoreEngine is the main entry point of the
  * AchternEngine.
  * The Engine is running the main loop and manages Game and
- * RenderEngine, as well as the {@link org.achtern.AchternEngine.core.bootstrap.MainBindingProvider}.
+ * RenderEngine.
  */
 public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CoreEngine.class);
 
     /**
-     * Only used during bootstrap to manage the hardware/graphics/native binding
+     * Only used during bootstrap to manage the hardware/native binding and provide
+     *  the bindings during runtime
+     *
+     * @param bindingProvider the new binding provider
+     * @return current binding provider
      */
-    protected MainBindingProvider bindingManager;
+    @Getter @Setter protected BindingProvider bindingProvider;
 
     /**
      * The Main Render Window
@@ -60,7 +67,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     protected List<WindowChangeListener> windowChangeListenerList;
 
-    private static boolean stopRequest = false;
+    private boolean stopRequest = false;
 
     private boolean running;
 
@@ -74,7 +81,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     /**
      * Request a force stop of the engine
      */
-    public static void requestStop() {
+    public void requestStop() {
         stopRequest = true;
     }
 
@@ -82,19 +89,8 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * Whether a force stop was request via {@link CoreEngine#requestStop()}
      * @return stopRequest
      */
-    public static boolean stopRequested() {
+    public boolean stopRequested() {
         return stopRequest;
-    }
-
-    /**
-     * Creates a new Game Holder and runner
-     * @param game The game to run.
-     * @param provider The Graphics Binding
-     *
-     * @see org.achtern.AchternEngine.core.bootstrap.BindingProvider
-     */
-    public CoreEngine(Game game, BindingProvider provider) {
-        this(game, new MainBindingProvider(provider));
     }
 
     /**
@@ -102,14 +98,16 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param game The game to run.
      * @param binding Binding Manager
      */
-    public CoreEngine(Game game, MainBindingProvider binding) {
+    public CoreEngine(Game game, BindingProvider binding) {
         LOGGER.debug(BuildInfo.get());
         this.game = game;
         this.running = false;
         this.fps = new FPS();
-        this.bindingManager = binding;
-        this.bindingManager.populateDrawStrategyFactory();
+        this.bindingProvider = binding;
         this.windowChangeListenerList = new ArrayList<WindowChangeListener>();
+
+        this.bindingProvider.getGraphicsBindingProvider().populateDrawStrategyFactory();
+        CommonDrawStrategyFactoryPopulator.populate();
     }
 
     /**
@@ -118,9 +116,9 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      * @param dimensions The window's dimensions
      */
     protected void createWindow(String title, Dimension dimensions) {
-        window = bindingManager.getWindow(dimensions);
+        window = bindingProvider.getGraphicsBindingProvider().getWindow(dimensions);
         window.create(title);
-        this.renderEngine = new BasicRenderEngine(bindingManager);
+        this.renderEngine = new BasicRenderEngine(bindingProvider.getGraphicsBindingProvider());
         LOGGER.debug("OpenGL Version: {}", this.renderEngine.getState().getVersion());
     }
 
@@ -142,7 +140,7 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
      */
     protected void stop() {
         if (!running) {
-            return;
+            throw new IllegalStateException("Engine is already stopped.");
         }
 
         running = false;
@@ -156,18 +154,21 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
     @Override
     public void run() {
 
-        // Pre loading images here
-        // this way there is a shorter period of
-        // the black screen.
-        if (game.getSplashScreen() == null) {
-            LoadingScreen.get().preLoad();
-        }
 
         running = true;
 
         createWindow(game.getWindowTitle(), game.getWindowDimensions());
 
-        LoadingScreen.get().show(this, game.getSplashScreen());
+        try {
+            Texture loadingScreen = game.getSplashScreen();
+            if (loadingScreen != null) {
+                LoadingScreen.get().show(this, loadingScreen);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Error loading loading screen, ignoring", e);
+        }
+
+
 
         LOGGER.info("Initializing Game");
         game.preInit(this);
@@ -282,14 +283,6 @@ public class CoreEngine implements Runnable, EngineHolder<RenderEngine> {
 
     public Game getGame() {
         return game;
-    }
-
-    public MainBindingProvider getBindingManager() {
-        return bindingManager;
-    }
-
-    public void setBindingManager(MainBindingProvider bindingManager) {
-        this.bindingManager = bindingManager;
     }
 
     public Window getWindow() {

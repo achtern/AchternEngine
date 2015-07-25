@@ -65,7 +65,7 @@ public interface TexturableData {
     public InternalFormat getInternalFormat();
 
     /**
-     * Width & Height
+     * Width &amp; Height
      * @return the dimensions
      */
     public Dimension getDimension();

@@ -35,16 +35,25 @@ public class GLSLBuilder {
     /**
      * Nextgen source of the vertex shader (can be retrieved using
      * {@link org.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser.PipelineSeparator})
+     *
+     * @param vertex source code
+     * @return source code
      */
     @Getter @Setter protected String vertex;
     /**
      * Nextgen source of the vertex shader (can be retrieved using
      * {@link org.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser.PipelineSeparator})
+     *
+     * @param fragment source code
+     * @return source code
      */
     @Getter @Setter protected String fragment;
     /**
      * Nextgen source of the vertex shader (can be retrieved using
      * {@link org.achtern.AchternEngine.core.resource.fileparser.nextgenshader.parser.PipelineSeparator})
+     *
+     * @param geometry source code
+     * @return source code
      */
     @Getter @Setter protected String geometry;
 
