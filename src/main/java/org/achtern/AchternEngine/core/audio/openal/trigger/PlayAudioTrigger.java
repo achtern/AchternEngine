@@ -27,6 +27,9 @@ package org.achtern.AchternEngine.core.audio.openal.trigger;
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
 
+/**
+ * The PlayAudioTrigger returns {@link org.achtern.AchternEngine.core.audio.openal.AudioSourceState#PLAYING} all the time.
+ */
 public class PlayAudioTrigger implements AudioTrigger {
     /**
      * This tells the AudioEngine the desired state for any given AudioSource.

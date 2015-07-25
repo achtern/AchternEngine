@@ -26,18 +26,19 @@ package org.achtern.AchternEngine.core.audio.openal.trigger;
 
 import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
+import org.junit.Test;
 
-/**
- * AudioTrigger are used to change the playing state of one(many) AudioSource(s).
- * <br>
- * AudioTrigger should always return a value and never null, even if the state should not be changed.
- */
-public interface AudioTrigger {
+import static org.junit.Assert.assertEquals;
 
-    /**
-     * This tells the AudioEngine the desired state for any given AudioSource.
-     * @param as AudioSource to test
-     * @return desired state
-     */
-    public AudioSourceState next(AudioSource as);
+public class PlayAudioTriggerTest {
+
+
+    @Test
+    public void testNext() {
+        PlayAudioTrigger t = new PlayAudioTrigger();
+
+        assertEquals("should always return PLAYING", AudioSourceState.PLAYING, t.next(null));
+        assertEquals("should always return PLAYING", AudioSourceState.PLAYING, t.next(new AudioSource(null)));
+    }
+
 }
