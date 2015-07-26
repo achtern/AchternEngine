@@ -22,27 +22,33 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.lwjgl.audio.openal.binding;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.binding.IDGenerator;
 
-@Data
-@AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.openal.AL10.alGenSources;
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
-
-    protected AudioBindingProvider audioBindingProvider;
-
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
+public class LWJGLIDGenerator implements IDGenerator {
+    /**
+     * Generates an ID for the given AudioBuffer
+     *
+     * @param buffer will be allocated on the OpenAL engine
+     */
+    @Override
+    public void generate(AudioBuffer buffer) {
+        buffer.setID(alGenBuffers());
     }
 
-    public LWJGLBindingProvider() {
-        this(false);
+    /**
+     * Generates an ID for the given AudioSource
+     *
+     * @param source will be allocated on the OpenAL engine
+     */
+    @Override
+    public void generate(AudioSource source) {
+        source.setID(alGenSources());
     }
 }

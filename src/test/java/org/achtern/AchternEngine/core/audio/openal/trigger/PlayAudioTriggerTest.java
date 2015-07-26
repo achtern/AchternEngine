@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014 Christian Gärtner
+ * Copyright (c) 2015 Christian Gärtner
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,23 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.audio.openal.trigger;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
+import org.achtern.AchternEngine.core.audio.openal.AudioSourceState;
+import org.junit.Test;
 
-@Data
-@AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+import static org.junit.Assert.assertEquals;
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
+public class PlayAudioTriggerTest {
 
-    protected AudioBindingProvider audioBindingProvider;
 
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
+    @Test
+    public void testNext() {
+        PlayAudioTrigger t = new PlayAudioTrigger();
+
+        assertEquals("should always return PLAYING", AudioSourceState.PLAYING, t.next(null));
+        assertEquals("should always return PLAYING", AudioSourceState.PLAYING, t.next(new AudioSource(null)));
     }
 
-    public LWJGLBindingProvider() {
-        this(false);
-    }
 }

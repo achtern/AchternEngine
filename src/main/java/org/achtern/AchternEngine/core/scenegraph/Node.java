@@ -183,6 +183,7 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
      * Add an Entity to this Node.
      * All Entices attached to this node, will share
      * the same {@link org.achtern.AchternEngine.core.Transform}.
+     *
      * @param entity New Entity to add
      * @return this
      */
@@ -190,6 +191,9 @@ public class Node implements EngineHolder<CoreEngine>, Updatable, Renderable {
         getEntities().add(entity);
         entity.setParent(this);
         entity.setEngine(getEngine());
+        if (getEngine() != null) {
+            entity.attached();
+        }
         return this;
     }
 

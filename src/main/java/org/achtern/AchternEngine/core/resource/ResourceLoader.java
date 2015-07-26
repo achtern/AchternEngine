@@ -26,6 +26,7 @@ package org.achtern.AchternEngine.core.resource;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 import org.achtern.AchternEngine.core.rendering.Dimension;
 import org.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import org.achtern.AchternEngine.core.rendering.texture.Texture;
@@ -311,6 +312,35 @@ public class ResourceLoader {
      */
     public static GLSLProgram getShaderProgram(String name, boolean forceLoading) throws Exception {
         return provider.getShaderProgram(name, forceLoading);
+    }
+
+    /**
+     * Loads an AudioFile from disk and converts it into an OpenAL compatible format.
+     * This will not upload the data to the OpenAL Engine yet.
+     * TODO: calls which class?
+     * An IOException is thrown on read errors and other Exceptions might be
+     * thrown from the TODO: CLASS itself.
+     * @param name Name of the audio file
+     * @return OpenAL AudioSource (not yet uploaded)
+     * @throws Exception if loading/processing fails
+     */
+    public static AudioSource getAudioSource(String name) throws Exception {
+        return provider.getAudioSource(name);
+    }
+
+    /**
+     * Loads an AudioFile from disk and converts it into an OpenAL compatible format.
+     * This will not upload the data to the OpenAL Engine yet.
+     * TODO: calls which class?
+     * An IOException is thrown on read errors and other Exceptions might be
+     * thrown from the TODO: CLASS itself.
+     * @param name Name of the audio file
+     * @param forceLoading if set to true the file will get read again and not read from cache
+     * @return OpenAL AudioSource (not yet uploaded)
+     * @throws Exception if loading/processing fails
+     */
+    public static AudioSource getAudioSource(String name, boolean forceLoading) throws Exception {
+        return provider.getAudioSource(name, forceLoading);
     }
 
     /**

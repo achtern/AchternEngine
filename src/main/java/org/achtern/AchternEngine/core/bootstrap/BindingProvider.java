@@ -35,4 +35,6 @@ public interface BindingProvider {
 
     public GraphicsBindingProvider getGraphicsBindingProvider();
 
+    public AudioBindingProvider getAudioBindingProvider();
+
 }

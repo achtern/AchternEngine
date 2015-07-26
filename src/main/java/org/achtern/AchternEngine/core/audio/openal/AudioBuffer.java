@@ -22,27 +22,46 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import lombok.Getter;
+import org.achtern.AchternEngine.core.bootstrap.NativeObject;
 
-@Data
+import java.nio.ByteBuffer;
+
+@Getter
 @AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+public class AudioBuffer extends NativeObject {
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
-
-    protected AudioBindingProvider audioBindingProvider;
-
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
+    public static int getSampleSize(int bits, int channels) {
+        return (bits / 8) * channels;
     }
 
-    public LWJGLBindingProvider() {
-        this(false);
+    protected ByteBuffer data;
+
+    protected int frequency;
+
+    protected Format format;
+
+    public float getLengthInSamples() {
+        int size = data.capacity();
+        int channels = format.isStereo() ? 2 : 1;
+        int bits = format.getBits();
+        return size / getSampleSize(bits, channels);
+    }
+
+    public float getLengthInSeconds() {
+        return getLengthInSamples() / getFrequency();
+    }
+
+    @Override
+    public String toString() {
+        return "AudioBuffer{" +
+                "data=" + data +
+                ", frequency=" + frequency +
+                ", format=" + format +
+                ", length=" + getLengthInSeconds() + "sec" +
+                '}';
     }
 }

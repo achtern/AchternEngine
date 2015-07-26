@@ -22,27 +22,26 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.audio.openal.binding;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 
-@Data
-@AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+/**
+ * The IDGenerator generates IDs for a given type, but will not upload any data.
+ */
+public interface IDGenerator {
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
+    /**
+     * Generates an ID for the given AudioBuffer
+     * @param buffer will be allocated on the OpenAL engine
+     */
+    public void generate(AudioBuffer buffer);
 
-    protected AudioBindingProvider audioBindingProvider;
+    /**
+     * Generates an ID for the given AudioSource
+     * @param source will be allocated on the OpenAL engine
+     */
+    public void generate(AudioSource source);
 
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
-    }
-
-    public LWJGLBindingProvider() {
-        this(false);
-    }
 }

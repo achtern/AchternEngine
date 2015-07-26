@@ -22,27 +22,15 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.audio.openal;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+public enum Error {
 
-@Data
-@AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+    AL_NO_ERROR,
+    AL_INVALID_NAME,
+    AL_INVALID_ENUM,
+    AL_INVALID_VALUE,
+    AL_INVALID_OPERATION,
+    AL_OUT_OF_MEMORY
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
-
-    protected AudioBindingProvider audioBindingProvider;
-
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
-    }
-
-    public LWJGLBindingProvider() {
-        this(false);
-    }
 }

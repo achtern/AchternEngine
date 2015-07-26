@@ -101,7 +101,7 @@ public abstract class Game implements Updatable, Renderable, EngineHolder<CoreEn
      */
     public final void preInit(CoreEngine engine) {
         setEngine(engine);
-        setInputManager(new InputManager(engine.getBindingManager().getInputAdapter()));
+        setInputManager(new InputManager(engine.getBindingProvider().getGraphicsBindingProvider().getInputAdapter()));
         getSceneGraph().setEngine(engine);
 
         // And init the user's game

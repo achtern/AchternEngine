@@ -22,27 +22,37 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.audio.openal.binding;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import org.achtern.AchternEngine.core.audio.openal.AudioBuffer;
+import org.achtern.AchternEngine.core.audio.openal.AudioListener;
+import org.achtern.AchternEngine.core.audio.openal.AudioSource;
 
-@Data
-@AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+/**
+ * The DataBinder in OpenAL is used for data upload only.
+ */
+public interface DataBinder {
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
+    /**
+     * Uploads the buffer.
+     * @param buffer to be uploaded
+     */
+    public void upload(AudioBuffer buffer);
 
-    protected AudioBindingProvider audioBindingProvider;
+    /**
+     * Since sources cannot be 'uploaded' this assigns the buffer
+     *  in {@link org.achtern.AchternEngine.core.audio.openal.AudioSource} on the OpenAL Engine to the given source
+     *  and sets the paramters of the source
+     * @param source to be setup on the engine
+     */
+    public void upload(AudioSource source);
 
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
-    }
+    /**
+     * This is not a real upload, but rather a parameter setting, since OpenAL allows one listener only
+     * @param listener data to be set
+     */
+    public void upload(AudioListener listener);
 
-    public LWJGLBindingProvider() {
-        this(false);
-    }
+    public IDGenerator getIDGenerator();
+
 }

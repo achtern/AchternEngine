@@ -22,27 +22,28 @@
  * SOFTWARE.
  */
 
-package org.achtern.AchternEngine.lwjgl.bootstrap;
+package org.achtern.AchternEngine.core.audio.openal;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.achtern.AchternEngine.core.bootstrap.AudioBindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.BindingProvider;
-import org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider;
+import lombok.Getter;
 
-@Data
 @AllArgsConstructor
-public class LWJGLBindingProvider implements BindingProvider {
+public enum Format {
 
-    protected GraphicsBindingProvider graphicsBindingProvider;
+    MONO8,
+    MONO16(16),
 
-    protected AudioBindingProvider audioBindingProvider;
+    STEREO8(true, 8),
+    STEREO16(true, 16);
 
-    public LWJGLBindingProvider(boolean throwUnchanged) {
-        this(new LWJGLGraphicsBindingProvider(throwUnchanged), new LWJGLAudioBindingProvider());
+    @Getter protected final boolean stereo;
+    @Getter protected final int bits;
+
+    Format() {
+        this(false, 8);
     }
 
-    public LWJGLBindingProvider() {
-        this(false);
+    Format(int bits) {
+        this(false, bits);
     }
 }
