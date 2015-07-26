@@ -31,7 +31,7 @@ import org.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 
 /**
  * A BaseLight holds basic data, which lots of light type needs.
- * <br />
+ * <br>
  * This is an exact copy of the GLSL struct version!
  */
 @EqualsAndHashCode(callSuper = false)

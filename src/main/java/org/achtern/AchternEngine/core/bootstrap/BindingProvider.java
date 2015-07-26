@@ -26,7 +26,7 @@ package org.achtern.AchternEngine.core.bootstrap;
 
 /**
  * A BindingProvider is a way to inject a particular binding into the Engine.
- * <br />
+ * <br>
  * At this point in time this can only be used to inject the graphics binding.
  *
  * @see org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider

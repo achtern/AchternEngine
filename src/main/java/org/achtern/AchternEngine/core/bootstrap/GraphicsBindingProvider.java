@@ -37,9 +37,9 @@ import java.util.Map;
 /**
  * The GraphicsBindingProvider is used to pass graphics binding specific
  *  components from the user-land code into the core engine.
- * <br />
+ * <br>
  *
- * This includes: <br />
+ * This includes: <br>
  * <ul>
  *     <li>{@link org.achtern.AchternEngine.core.Window}</li>
  *     <li>{@link org.achtern.AchternEngine.core.rendering.state.RenderEngineState}</li>
