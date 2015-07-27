@@ -30,12 +30,32 @@ import org.achtern.AchternEngine.core.rendering.shader.Shader;
 import org.achtern.AchternEngine.core.rendering.state.RenderEngineState;
 import org.achtern.AchternEngine.core.rendering.texture.Texture;
 
+/**
+ * The DataBinder is responsible for binding resources to the context (graphics engine of the graphics card)
+ *  and uploading data to it.
+ *
+ * Calling bind(Resource), when the resource has not been uploaded yet will trigger an upload.
+ */
 public interface DataBinder {
 
+    /**
+     * Binds the given texture to the context.
+     * This should default to samplerslot 0.
+     * @param texture resource to bind
+     */
     public void bind(Texture texture);
 
+    /**
+     * Binds the given texture to the context on a specified samplerslot
+     * @param texture resource to bind
+     * @param samplerslot destination slot of the texture
+     */
     public void bind(Texture texture, int samplerslot);
 
+    /**
+     * This will bind the texture and then upload it.
+     * @param texture resource to upload
+     */
     public void upload(Texture texture);
 
     public void bind(Mesh mesh);

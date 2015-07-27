@@ -30,6 +30,7 @@ import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -72,6 +73,7 @@ public class LWJGLWindow extends Window {
             Display.create(pixelFormat, contextAtrributes);
             Keyboard.create();
             Mouse.create();
+            AL.create();
             drawBuffer = glGetInteger(GL_DRAW_BUFFER);
             readBuffer = glGetInteger(GL_READ_BUFFER);
         } catch (LWJGLException e) {
@@ -111,6 +113,7 @@ public class LWJGLWindow extends Window {
         Display.destroy();
         Keyboard.destroy();
         Mouse.destroy();
+        AL.destroy();
     }
 
     @Override

@@ -27,7 +27,7 @@ package org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
 import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.rendering.Color;
 import org.achtern.AchternEngine.core.rendering.light.Attenuation;
-import org.achtern.AchternEngine.core.rendering.shader.forward.Spot;
+import org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong.PhongSpot;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -41,7 +41,7 @@ public class SpotLight extends PointLight {
         super(color, intensity, attenuation);
         this.cutoff = cutoff;
 
-        setShader(Spot.getInstance());
+        setShader(PhongSpot.getInstance());
     }
 
     public Vector3f getDirection() {

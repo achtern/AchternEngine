@@ -33,7 +33,7 @@
     <name>AchternEngine</name>
     <artifactId>AchternEngine</artifactId>
 
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
 
     <url>http://achtern.org</url>
 
@@ -67,25 +67,33 @@
         <main.class>org.achtern.AchternEngine.core.CoreEngine</main.class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <slf4j.version>1.7.5</slf4j.version>
+        <java.jdk.version>1.7</java.jdk.version>
+
+        <slf4j.version>1.7.7</slf4j.version>
         <lwjgl.version>2.9.1</lwjgl.version>
-        <junit.version>4.11</junit.version>
-        <snakeyaml.version>1.13</snakeyaml.version>
-        <json.version>20140107</json.version>
+        <junit.version>4.12</junit.version>
+        <snakeyaml.version>1.14</snakeyaml.version>
+        <json.version>20141113</json.version>
+        <lombok.version>1.14.8</lombok.version>
 
         <git-commit-id-plugin.version>2.1.10</git-commit-id-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+        <lombok-maven-plugin.version>1.16.2.0</lombok-maven-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
     </properties>
 
     <dependencies>
 
+        <!-- Logging Framework -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- Shipped OpenGL Java Binding -->
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -97,6 +105,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+        </dependency>
+
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.0.5-beta</version>
         </dependency>
 
         <!-- YAML Parser -->
@@ -113,10 +128,11 @@
             <version>${json.version}</version>
         </dependency>
 
+        <!-- Helper. Easy Data classes and Getter & Setter Gen-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.14.0</version>
+            <version>${lombok.version}</version>
         </dependency>
 
     </dependencies>
@@ -151,11 +167,25 @@
                         </configuration>
 
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
 
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>build</name>
+                    <value>release</value>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -168,8 +198,35 @@
                     </plugin>
                 </plugins>
             </build>
-
         </profile>
+
+        <profile>
+            <id>lombok-needs-tools-jar</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../lib/tools.jar</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok-maven-plugin</artifactId>
+                        <version>${lombok-maven-plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>sun.jdk</groupId>
+                                <artifactId>tools</artifactId>
+                                <version>${java.jdk.version}</version>
+                                <scope>system</scope>
+                                <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 
     <build>
@@ -192,6 +249,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <defaultVersion>${project.version}</defaultVersion>
+                    <sourcepath>target/generated-sources/delombok</sourcepath>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -201,6 +262,37 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>${lombok-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <addOutputDirectory>false</addOutputDirectory>
+                    <sourceDirectory>src/main/java</sourceDirectory>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

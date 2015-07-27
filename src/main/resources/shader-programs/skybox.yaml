@@ -1,0 +1,3 @@
+version: 330
+vertex: shaders/skybox.gvs
+fragment: shaders/skybox.gfs

@@ -34,11 +34,15 @@ public class WireframeDraw extends SolidDraw {
     public void draw(DataBinder binder, Mesh mesh) {
 
         FillMode mode = binder.getState().getPolygonMode();
-        binder.getState().setPolygonMode(FillMode.LINE);
+        if (!mode.equals(FillMode.LINE)) {
+            binder.getState().setPolygonMode(FillMode.LINE);
+        }
 
         super.draw(binder, mesh);
 
-        binder.getState().setPolygonMode(mode);
+        if (!mode.equals(FillMode.LINE)) {
+            binder.getState().setPolygonMode(mode);
+        }
 
     }
 }

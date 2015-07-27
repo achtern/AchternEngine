@@ -1,0 +1,22 @@
+#version 330
+
+in vec2 texCoord0;
+out vec4 fragColor;
+uniform vec4 color;
+uniform sampler2D diffuse;
+
+// Dear Reader,
+// you might be tempted to remove this ununsed variable...
+// without the code compiles, but seems do fail at runtime.
+// DO NOT TRY IT. Take my word for it.
+// If you tried to fix this however; increase this counter below:
+// total_hours_wasted_here = 5;
+uniform int GLSL_SUXX_AND_I_DON_T_UNDERSTAND_IT_SOMETIMES;
+
+void main()
+{
+
+    fragColor = color * texture(diffuse, texCoord0.xy);
+
+    int k = 1 + GLSL_SUXX_AND_I_DON_T_UNDERSTAND_IT_SOMETIMES;
+}

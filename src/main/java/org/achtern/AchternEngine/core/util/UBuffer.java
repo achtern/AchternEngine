@@ -62,6 +62,11 @@ public class UBuffer {
             buffer.put(vertex.getNormal().getX());
             buffer.put(vertex.getNormal().getY());
             buffer.put(vertex.getNormal().getZ());
+
+            // Tangents
+            buffer.put(vertex.getTangent().getX());
+            buffer.put(vertex.getTangent().getY());
+            buffer.put(vertex.getTangent().getZ());
         }
 
         return buffer;
@@ -100,7 +105,7 @@ public class UBuffer {
 
     /**
      * Create an integer buffer.
-     * The size will get << shifted by 2 (integers allocate 2 bytes!)
+     * The size will get &lt;&lt; shifted by 2 (integers allocate 2 bytes!)
      * @param size the size of the buffer (amount of integers!)
      * @return the buffer
      */
@@ -110,7 +115,7 @@ public class UBuffer {
 
     /**
      * Create an float buffer.
-     * The size will get << shifted by 2 (floats allocate 2 bytes!)
+     * The size will get &lt;&lt; shifted by 2 (floats allocate 2 bytes!)
      * @param size the size of the buffer (amount of integers!)
      * @return the buffer
      */

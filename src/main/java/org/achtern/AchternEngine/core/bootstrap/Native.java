@@ -44,6 +44,7 @@ public interface Native {
 
     /**
      * internal use only
+     * @param id the new id to set
      */
     public void setID(int id);
 

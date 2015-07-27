@@ -42,12 +42,12 @@ public class NoShadowFirstSorter implements RenderPassSorter {
 
         if (o1 instanceof BaseLight && !(o2 instanceof BaseLight)) {
             // o2 CANNOT have shadow info
-            return -1;
+            return 1;
         }
 
         if (!(o1 instanceof BaseLight)) {
             // o1 CANNOT have shadow info
-            return 1;
+            return -1;
         }
 
         ShadowInfo i1 = ((BaseLight) o1).getShadowInfo();

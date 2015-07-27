@@ -29,11 +29,10 @@ import org.achtern.AchternEngine.core.math.Vector2f;
 import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.math.Vector4f;
 import org.achtern.AchternEngine.core.rendering.Color;
-import org.achtern.AchternEngine.core.rendering.binding.UniformManager;
+import org.achtern.AchternEngine.core.rendering.binding.BasicUniformManager;
 import org.achtern.AchternEngine.core.rendering.fog.Fog;
 import org.achtern.AchternEngine.core.rendering.light.Attenuation;
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
-import org.achtern.AchternEngine.core.resource.fileparser.caseclasses.GLSLScript;
 import org.achtern.AchternEngine.core.resource.fileparser.caseclasses.Uniform;
 import org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light.*;
 import org.achtern.AchternEngine.core.util.UBuffer;
@@ -44,7 +43,7 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public class LWJGLUniformManager implements UniformManager {
+public class LWJGLUniformManager extends BasicUniformManager {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(LWJGLUniformManager.class);
 
@@ -54,76 +53,11 @@ public class LWJGLUniformManager implements UniformManager {
 
         if (uniformLoc == 0xFFFFFFFF) {
             // Just trace, cause the uniform might be removed by the GLSL compiler, if un-used.
-            LOGGER.trace("{}: Could not find uniform location for '{}'",
+            LOGGER.debug("{}: Could not find uniform location for '{}'",
                     shader.getClass().getSimpleName(), uniform.getName());
         }
 
         uniform.setLocation(uniformLoc);
-    }
-
-    @Override
-    public void addUniforms(Shader shader) {
-        for (GLSLScript script : shader.getProgram().getScripts()) {
-            for (Uniform u : script.getExpandedUniforms()) {
-                LOGGER.trace("{}: uniform {} got added", this.getClass().getSimpleName(), u.getName());
-                registerUniform(shader, u);
-            }
-        }
-    }
-
-    @Override
-    public void setUniform(Shader shader, Uniform uniform) {
-        if (!uniform.shouldSet()) {
-            return;
-        }
-
-        boolean primitive = uniform.getValue() instanceof Float ||
-                            uniform.getValue() instanceof Integer ||
-                            uniform.getValue() instanceof Double;
-
-        if (!primitive && uniform.getValue() == null) {
-            throw new IllegalStateException("Uniform value cannot be null for " + uniform);
-        }
-
-        if (uniform.getValue() instanceof Vector3f) {
-            setUniform(shader, uniform.getName(), (Vector3f) uniform.getValue());
-        } else if (uniform.getValue() instanceof Color) {
-            setUniform(shader, uniform.getName(), (Color) uniform.getValue());
-        } else if (uniform.getValue() instanceof Vector4f) {
-            setUniform(shader, uniform.getName(), (Vector4f) uniform.getValue());
-        } else if (uniform.getValue() instanceof Vector2f) {
-            setUniform(shader, uniform.getName(), (Vector2f) uniform.getValue());
-        } else if (uniform.getValue() instanceof Matrix4f) {
-            setUniform(shader, uniform.getName(), (Matrix4f) uniform.getValue());
-        } else if (uniform.getValue() instanceof Integer) {
-            setUniform(shader, uniform.getName(), (Integer) uniform.getValue());
-        } else if (uniform.getValue() instanceof Float) {
-            setUniform(shader, uniform.getName(), (Float) uniform.getValue());
-        } else if (uniform.getValue() instanceof Double) {
-            setUniform(shader, uniform.getName(), (Double) uniform.getValue());
-        } else if (uniform.getValue() instanceof DirectionalLight) {
-            setUniform(shader, uniform.getName(), (DirectionalLight) uniform.getValue());
-        } else if (uniform.getValue() instanceof AmbientLight) {
-            setUniform(shader, uniform.getName(), (AmbientLight) uniform.getValue());
-        } else if (uniform.getValue() instanceof SpotLight) {
-            setUniform(shader, uniform.getName(), (SpotLight) uniform.getValue());
-        } else if (uniform.getValue() instanceof PointLight) {
-            setUniform(shader, uniform.getName(), (PointLight) uniform.getValue());
-        } else if (uniform.getValue() instanceof BaseLight) {
-            setUniform(shader, uniform.getName(), (BaseLight) uniform.getValue());
-        } else if (uniform.getValue() instanceof Attenuation) {
-            setUniform(shader, uniform.getName(), (Attenuation) uniform.getValue());
-        } else if (uniform.getValue() instanceof Fog) {
-            setUniform(shader, uniform.getName(), (Fog) uniform.getValue());
-        } else {
-
-            Uniform.SetStrategy strategy = uniform.getSetStrategy();
-            if (strategy == null) {
-                throw new UnsupportedOperationException("Cannot set uniform and no SetStrategy provided");
-            }
-
-            strategy.set(uniform, this);
-        }
     }
 
     @Override

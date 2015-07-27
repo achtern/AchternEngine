@@ -126,7 +126,7 @@ public class Quad extends Mesh {
                 new Vertex(new Vector3f(0, 0, 0), texCoords[3], new Vector3f(0, 0, -1)),
         };
 
-        setVertices(vertices, new int[] { 0, 1, 2, 0, 2, 3 }, false);
+        setVertices(vertices, new int[] { 0, 1, 2, 0, 2, 3 }, false, true);
 
     }
 

@@ -61,7 +61,7 @@ public class DrawStrategyLoader extends JsonLoader<DrawStrategy> {
      * This should used the information, generated during
      * loading and construct an Object.
      * @return The new object
-     * @throws Exception
+     * @throws Exception on json formatting or custom format spec violations
      */
     @Override
     public DrawStrategy get() throws Exception {

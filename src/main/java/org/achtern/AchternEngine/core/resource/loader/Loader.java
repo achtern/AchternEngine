@@ -46,7 +46,7 @@ public interface Loader<T, I> {
      * This should used the information, generated during
      * loading and construct an Object.
      * @return The new object
-     * @throws Exception
+     * @throws Exception anything can go wrong ;)
      */
     public T get() throws Exception;
 

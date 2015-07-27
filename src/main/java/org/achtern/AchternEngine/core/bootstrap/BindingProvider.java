@@ -24,26 +24,17 @@
 
 package org.achtern.AchternEngine.core.bootstrap;
 
-import org.achtern.AchternEngine.core.Window;
-import org.achtern.AchternEngine.core.input.adapter.InputAdapter;
-import org.achtern.AchternEngine.core.rendering.Dimension;
-import org.achtern.AchternEngine.core.rendering.binding.DataBinder;
-import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
-import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
-import org.achtern.AchternEngine.core.rendering.state.RenderEngineState;
-
-import java.util.Map;
-
+/**
+ * A BindingProvider is a way to inject a particular binding into the Engine.
+ * <br>
+ * At this point in time this can only be used to inject the graphics binding.
+ *
+ * @see org.achtern.AchternEngine.core.bootstrap.GraphicsBindingProvider
+ */
 public interface BindingProvider {
 
-    public Window getWindow(Dimension dimension);
+    public GraphicsBindingProvider getGraphicsBindingProvider();
 
-    public RenderEngineState getRenderEngineState();
-
-    public DataBinder getDataBinder();
-
-    public InputAdapter getInputAdapter();
-
-    public Map<DrawStrategyFactory.Common, DrawStrategy> getDrawStrategies();
+    public AudioBindingProvider getAudioBindingProvider();
 
 }

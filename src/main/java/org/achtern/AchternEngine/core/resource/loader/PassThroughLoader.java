@@ -53,7 +53,7 @@ public class PassThroughLoader extends AsciiFileLoader<String> {
      * loading and construct an Object.
      *
      * @return The new object
-     * @throws Exception
+     * @throws Exception cannot throw in the PassThroughLoader
      */
     @Override
     public String get() throws Exception {

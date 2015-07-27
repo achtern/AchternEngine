@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * A SceneGraphRetriever should be able to filter out
  * Entities from the SceneGraph.
- * @param <T>
+ * @param <T> type of entity this SceneGraphRetriever can retrieve
  */
 public interface SceneGraphRetriever<T extends Entity> extends NodeScanner {
 

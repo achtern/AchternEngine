@@ -103,6 +103,14 @@ public class Vector3f implements Cloneable {
     }
 
     /**
+     * Construct a new Vector, where all components are the same
+     * @param v X, Y, Z - Component
+     */
+    public Vector3f(float v) {
+        this(v, v, v);
+    }
+
+    /**
      * Copy constructor
      * @param v copy
      */
@@ -372,9 +380,11 @@ public class Vector3f implements Cloneable {
     /**
      * Clamp all components to the constant c.
      * Just checks:
-     * <code>
-     *     COMPONENT > c
-     * </code>
+     * <pre>
+     * {@code
+     * COMPONENT > c
+     * }
+     * </pre>
      * -4 will stay the same if clamped to 3!
      * @param c constant
      * @return this

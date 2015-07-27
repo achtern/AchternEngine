@@ -125,4 +125,22 @@ public class Transform {
 
         return this.parentMat;
     }
+
+    /**
+     * Apply the transformation of the given transform to this object.
+     * It takes the transformed properties of the given Transform
+     * @see #getTransformedPosition()
+     * @see #getTransformedRotation()
+     *
+     * @param transform The transform to apply
+     * @return this
+     */
+    public Transform apply(Transform transform) {
+
+        setPosition(transform.getTransformedPosition());
+        setRotation(transform.getTransformedRotation());
+        setScale(transform.getScale());
+
+        return this;
+    }
 }

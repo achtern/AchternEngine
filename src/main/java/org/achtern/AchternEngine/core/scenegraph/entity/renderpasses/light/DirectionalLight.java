@@ -27,7 +27,7 @@ package org.achtern.AchternEngine.core.scenegraph.entity.renderpasses.light;
 import org.achtern.AchternEngine.core.math.Matrix4f;
 import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.rendering.Color;
-import org.achtern.AchternEngine.core.rendering.shader.forward.Directional;
+import org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong.PhongDirectional;
 import org.achtern.AchternEngine.core.rendering.shadow.ShadowInfo;
 
 public class DirectionalLight extends BaseLight {
@@ -35,7 +35,7 @@ public class DirectionalLight extends BaseLight {
     public DirectionalLight(Color color, float intensity) {
         super(color, intensity);
 
-        setShader(Directional.getInstance());
+        setShader(PhongDirectional.getInstance());
 
         setShadowInfo(new ShadowInfo(new Matrix4f().initOrthographic(-30, 30, -30, 30, -30, 30)));
     }

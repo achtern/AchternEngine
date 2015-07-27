@@ -1,7 +1,7 @@
 #import "lighting.glib"
 
 in vec2 texCoord0;
-in vec3 normal0;
+in mat3 tbnMatrix;
 in vec3 worldPos0;
 in vec4 shadowMapCoords0;
 
@@ -15,4 +15,8 @@ uniform float specularPower;
 
 uniform vec4 color;
 uniform sampler2D diffuse;
+uniform sampler2D normalMap;
 uniform sampler2D shadowMap;
+
+uniform int receiveLight;
+uniform int receiveFog;

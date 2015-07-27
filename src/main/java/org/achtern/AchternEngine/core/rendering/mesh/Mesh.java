@@ -28,6 +28,7 @@ import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.rendering.Vertex;
 import org.achtern.AchternEngine.core.scenegraph.bounding.BoundingBox;
 import lombok.Getter;
+import org.achtern.AchternEngine.core.util.TangentGenerator;
 
 public class Mesh {
 
@@ -57,9 +58,17 @@ public class Mesh {
     }
 
     protected void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals) {
+        setVertices(vertices, indices, calcNormals, true);
+    }
+
+    protected void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals, boolean calcTangents) {
 
         if (calcNormals) {
             calcNormals(vertices, indices);
+        }
+
+        if (calcTangents && vertices[0].getTangent() == null) {
+            TangentGenerator.calculate(vertices, indices);
         }
 
         this.data.set(vertices, indices);

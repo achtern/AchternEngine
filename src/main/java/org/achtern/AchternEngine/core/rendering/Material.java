@@ -24,6 +24,9 @@
 
 package org.achtern.AchternEngine.core.rendering;
 
+import lombok.Setter;
+import org.achtern.AchternEngine.core.rendering.shader.forward.ShaderSuit;
+import org.achtern.AchternEngine.core.rendering.shader.forward.suits.phong.PhongShaderSuit;
 import org.achtern.AchternEngine.core.rendering.texture.Texture;
 import org.achtern.AchternEngine.core.resource.ResourceLoader;
 import org.achtern.AchternEngine.core.util.CommonDataStore;
@@ -35,7 +38,41 @@ public class Material extends CommonDataStore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Material.class);
 
+    public static Texture DEFAULT_NORMAL;
+
+    public static Texture MISSING_TEXTURE;
+
+    static {
+        try {
+            DEFAULT_NORMAL = ResourceLoader.getTexture("default_normal.jpg");
+            MISSING_TEXTURE = ResourceLoader.getTexture("missing.jpg");
+        } catch (Exception e) {
+            LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
+        }
+    }
+
     @Getter protected boolean wireframe = false;
+
+    @Getter @Setter protected ShaderSuit shader;
+
+    /**
+     * Creates a Material with a given ShaderSuit
+     * Use the parameter less constructor to get the default ShaderSuit.
+     * @param shader ShaderSuit to render objects with
+     */
+    public Material(ShaderSuit shader) {
+        this.shader = shader;
+
+        // load default normalMap
+        addTexture("normalMap", DEFAULT_NORMAL);
+    }
+
+    /**
+     * Creates a Material with the default PhongShaderSuit
+     */
+    public Material() {
+        this(PhongShaderSuit.get());
+    }
 
     @Override
     public Texture getTexture(String name) {
@@ -44,15 +81,9 @@ public class Material extends CommonDataStore {
             return r;
         }
 
-        try {
-            return ResourceLoader.getTexture("missing.jpg");
-        } catch (Exception e) {
-            // WILL NEVER HAPPEN... But log it and return null.
-            LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
-            return null;
-        }
+        addTexture(name, MISSING_TEXTURE);
+        return MISSING_TEXTURE;
     }
-
 
     public void setColor(Color color) {
         addColor("color", color);

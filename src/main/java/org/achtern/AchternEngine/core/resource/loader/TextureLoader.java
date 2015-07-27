@@ -82,7 +82,7 @@ public class TextureLoader extends BinaryLoader<Texture, TexturableData> {
      * loading and construct an Object.
      *
      * @return The new object
-     * @throws Exception
+     * @throws Exception cannot throw with this TextureLoader
      */
     @Override
     public Texture get() throws Exception {
@@ -103,7 +103,7 @@ public class TextureLoader extends BinaryLoader<Texture, TexturableData> {
      * value provided by the ResourceLoader
      * @param value Cache
      * @return Object {@link org.achtern.AchternEngine.core.rendering.texture.TexturableData}
-     * @throws Exception
+     * @throws Exception cannot throw with this TextureLoader
      */
     @Override
     public Texture fromCache(TexturableData value) throws Exception {

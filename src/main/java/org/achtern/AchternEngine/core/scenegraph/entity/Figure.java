@@ -24,14 +24,16 @@
 
 package org.achtern.AchternEngine.core.scenegraph.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.achtern.AchternEngine.core.rendering.Material;
+import org.achtern.AchternEngine.core.rendering.PassFilter;
 import org.achtern.AchternEngine.core.rendering.RenderEngine;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategy;
 import org.achtern.AchternEngine.core.rendering.drawing.DrawStrategyFactory;
 import org.achtern.AchternEngine.core.rendering.mesh.Mesh;
+import org.achtern.AchternEngine.core.rendering.shader.Shader;
 import org.achtern.AchternEngine.core.scenegraph.Node;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * A Figure represents a renderable {@link Mesh}.
@@ -45,6 +47,10 @@ public class Figure extends QuickEntity {
     /**
      * Override the renderEngine supplied drawStrategy
      * if not null
+     *
+     * @param drawStrategy the new DrawStrategy
+     *
+     * @return the DrawStrategy
      */
     @Getter @Setter protected DrawStrategy drawStrategy;
 
@@ -90,6 +96,7 @@ public class Figure extends QuickEntity {
     /**
      * Creates an untitled Figure with a mesh and a material
      * @param mesh The mesh
+     * @param material The material
      */
     public Figure(Mesh mesh, Material material) {
         this("Untitled Figure", mesh, material);
@@ -102,8 +109,16 @@ public class Figure extends QuickEntity {
     public void render(RenderEngine renderEngine) {
 
 
+        Shader shader = renderEngine.getActiveRenderPass().getShader();
 
-        renderEngine.getActiveRenderPass().getShader().updateUniforms(renderEngine, this);
+        // If the current Shader is not from a RenderPassFilter (shadows etc.)
+        // and the ShaderSuit is not empty, try to get the Shader from the Suit
+        if (!(renderEngine.getActiveRenderPass() instanceof PassFilter) && getMaterial().getShader() != null) {
+            shader = getMaterial().getShader().getFor(renderEngine.getActiveRenderPass().getClass());
+        }
+
+        shader.updateUniforms(renderEngine, this);
+        renderEngine.getDataBinder().bind(shader);
 
         DrawStrategy ds = getDrawStrategy();
         if (ds == null) {

@@ -171,7 +171,7 @@ public class Texture extends Dimension implements TexturableData, Native {
     }
 
     /**
-     * Width & Height
+     * Width &amp; Height
      *
      * @return the dimensions
      */

@@ -65,7 +65,7 @@ public class GLSLProgramLoader extends AsciiFileLoader<GLSLProgram> {
      * This should used the information, generated during
      * loading and construct an Object.
      * @return The new object
-     * @throws Exception
+     * @throws Exception in this case, this will never throw here
      */
     @Override
     public GLSLProgram get() throws Exception {

@@ -31,6 +31,8 @@ import org.achtern.AchternEngine.core.rendering.mesh.Mesh;
 import org.achtern.AchternEngine.core.rendering.shader.Shader;
 import org.achtern.AchternEngine.core.rendering.state.*;
 import org.achtern.AchternEngine.core.rendering.texture.Texture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,6 +47,8 @@ import static org.lwjgl.opengl.GL11.*;
  * @see org.achtern.AchternEngine.core.rendering.state.RenderEngineState
  */
 public class LWJGLRenderEngineState implements RenderEngineState {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(RenderEngineState.class);
 
     /**
      * Stores the version string of the OpenGL Version on the system.
@@ -154,8 +158,12 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     @Override
     public String getVersion() {
         if (version == null) {
+            LOGGER.trace("Calling glGetString(GL_VERSION)");
             version = glGetString(GL_VERSION);
+        } else {
+            LOGGER.trace("Using cached Version string");
         }
+
         return version;
     }
 
@@ -181,6 +189,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             mask |= GL_STENCIL_BUFFER_BIT;
         }
 
+        LOGGER.trace("Clearing Screen Buffers color:{}, depth:{}, stencil:{}", color, depth, stencil);
         glClear(mask);
     }
 
@@ -190,10 +199,11 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException(feature + " is already enabled");
             } else {
+                LOGGER.debug("{} is already enabled", feature);
                 return;
             }
         }
-
+        LOGGER.trace("Calling glEnable({})", feature);
         glEnable(getGLEnum(feature));
         enabled.put(feature, true);
     }
@@ -204,9 +214,11 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException(feature + " is not enabled");
             } else {
+                LOGGER.debug("{} is not enabled", feature);
                 return;
             }
         }
+        LOGGER.trace("Calling glDisable({})", feature);
         glDisable(getGLEnum(feature));
         enabled.put(feature, false);
     }
@@ -214,7 +226,8 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     @Override
     public boolean isEnabled(Feature feature) {
         if (!enabled.containsKey(feature)) {
-            enabled.put(feature, glGetBoolean(getGLEnum(feature)));
+            LOGGER.trace("Calling glIsEnabled({})", feature);
+            enabled.put(feature, glIsEnabled(getGLEnum(feature)));
         }
 
         return enabled.get(feature);
@@ -223,17 +236,19 @@ public class LWJGLRenderEngineState implements RenderEngineState {
     @Override
     public void cullFace(Face face) {
         if (!isEnabled(Feature.CULL_FACE)) {
-            throw new IllegalStateException("Cull Face is not enabled!");
+            throw new IllegalStateException("CullFace is not enabled!");
         }
 
         if (face.equals(cullFace)) {
             if (throwUnchanged) {
-                throw new IllegalStateException("Cull Face already " + face);
+                throw new IllegalStateException("CullFace already " + face);
             } else {
+                LOGGER.debug("Cull Face is already {}", face);
                 return;
             }
         }
 
+        LOGGER.trace("Calling glCullFace({})", face);
         glCullFace(getGLEnum(face));
         cullFace = face;
     }
@@ -252,10 +267,12 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("FrontFace already " + face);
             } else {
+                LOGGER.debug("FrontFace is already {}", face);
                 return;
             }
         }
 
+        LOGGER.trace("Calling glFrontFace({})", face);
         glFrontFace(getGLEnum(face));
         frontFace = face;
     }
@@ -271,9 +288,11 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("Clear Color already " + color);
             } else {
+                LOGGER.debug("ClearColor is already {}", color);
                 return;
             }
         }
+        LOGGER.trace("Calling glClearColor({})", color);
         glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         this.clearColor = color;
     }
@@ -289,9 +308,11 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("DepthFunction is already " + function);
             } else {
+                LOGGER.debug("DepthFunction is already {}", function);
                 return;
             }
         }
+        LOGGER.trace("Calling glDepthFunc({})", function);
         glDepthFunc(getGLEnum(function));
         this.depthFunction = function;
     }
@@ -307,11 +328,13 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("BlendFunction is already " + sfactor + "-" + dfactor);
             } else {
+                LOGGER.debug("DepthFunction is already {}-{}", sfactor, dfactor);
                 return;
             }
         }
 
-        glBlendFunc(getGLEnum(sfactor), getGLEnum(sfactor));
+        LOGGER.trace("Calling glBlendFunc({}, {})", sfactor, dfactor);
+        glBlendFunc(getGLEnum(sfactor), getGLEnum(dfactor));
         blendFunction[0] = sfactor;
         blendFunction[1] = dfactor;
     }
@@ -327,6 +350,7 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("DepthWriting is already enabled");
             } else {
+                LOGGER.debug("DepthWriting is already enabled");
                 return;
             }
         }
@@ -335,10 +359,12 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("DepthWriting is already disabled");
             } else {
+                LOGGER.debug("DepthWriting is already disabled");
                 return;
             }
         }
 
+        LOGGER.trace("Calling glDepthMask({})", enable);
         glDepthMask(enable);
         depthWrite = enable;
     }
@@ -354,12 +380,14 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("PolygonMode is already " + mode);
             } else {
+                LOGGER.debug("PolygonMode is already {}", mode);
                 return;
             }
         }
         /*
         Only GL_FRONT_AND_BACK is allowed here!
          */
+        LOGGER.trace("Calling glDepthMask(GL_FRONT_AND_BACK, {})", mode);
         glPolygonMode(GL_FRONT_AND_BACK, getGLEnum(mode));
         polygonMode = mode;
     }
@@ -376,9 +404,11 @@ public class LWJGLRenderEngineState implements RenderEngineState {
             if (throwUnchanged) {
                 throw new IllegalStateException("ColorWrite (Mask) already <" + r + g + b + a + ">!");
             } else {
+                LOGGER.debug("ColorWrite (Mask) is already <{},{},{},{}>", r, g, b, a);
                 return;
             }
         }
+        LOGGER.trace("Calling glColorMask({}, {}, {}, {})", r, g, b, a);
         glColorMask(r, g, b, a);
         this.colorMask = updated;
 

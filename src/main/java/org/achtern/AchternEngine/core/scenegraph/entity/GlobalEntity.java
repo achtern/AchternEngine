@@ -24,6 +24,13 @@
 
 package org.achtern.AchternEngine.core.scenegraph.entity;
 
+/**
+ * A global Entity is an Entity which is not bound to a Node.
+ *
+ * It lives outside the scenegraph in the RenderEngine and can be used for parameters which
+ * should be accessible from everywhere the RenderEngine is available.
+ * @param <T> The type of Object it holds.
+ */
 public interface GlobalEntity<T> {
 
     public T getObject();
