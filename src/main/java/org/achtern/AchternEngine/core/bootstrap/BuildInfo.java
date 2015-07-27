@@ -34,7 +34,7 @@ import java.util.Properties;
  */
 public class BuildInfo {
 
-    public static final String ENGINE_VERSION = "0.4";
+    public static final String ENGINE_VERSION = "0.5-SNAPSHOT";
 
     private static BuildInfo instance;
 

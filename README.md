@@ -1,6 +1,6 @@
-# Achtern Engine v0.4
+# Achtern Engine v0.5-SNAPSHOT
 
-[![Build Status](https://travis-ci.org/achtern/AchternEngine.svg?branch=develop)](https://travis-ci.org/achtern/AchternEngine)
+[![Build Status](https://travis-ci.org/achtern/AchternEngine.svg?branch=master)](https://travis-ci.org/achtern/AchternEngine)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine)
 [![Documentation Status](https://readthedocs.org/projects/achternengine/badge/?version=latest)](http://docs.achtern.org)
 
