@@ -175,8 +175,8 @@
             <id>release</id>
             <activation>
                 <property>
-                    <name>build</name>
-                    <value>release</value>
+                    <name>sign</name>
+                    <value>true</value>
                 </property>
             </activation>
 
