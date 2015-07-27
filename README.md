@@ -1,4 +1,4 @@
-# Achtern Engine v0.4-SNAPSHOT
+# Achtern Engine v0.4
 
 [![Build Status](https://travis-ci.org/achtern/AchternEngine.svg?branch=develop)](https://travis-ci.org/achtern/AchternEngine)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.achtern/AchternEngine)
@@ -69,7 +69,7 @@ AchternEngine uses maven! Simply add this to your dependencies:
 <dependency>
     <groupId>org.achtern</groupId>
     <artifactId>AchternEngine</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
 </dependency>
 ```
 
