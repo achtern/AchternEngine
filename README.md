@@ -29,8 +29,8 @@ public class MyGame extends Game {
         add(new Node("Camera")
             .add(new Camera()) // the main camera
             .add(new MouseLook(1)) // allows you to look around
-            .add(new HumanMover(10)); // allows you to walk
-            .add(new FlyMover(10)); // allows you to fly. Awesome \o/
+            .add(new HumanMover(10)) // allows you to walk
+            .add(new FlyMover(10)) // allows you to fly. Awesome \o/
         );
         add(new FigureProvider("Meshes", "floor").get()); // add a basic plane mesh
 
