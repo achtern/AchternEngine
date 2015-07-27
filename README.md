@@ -14,24 +14,39 @@ You can easily start the engine by using the following code:
 
 public class MyGame extends Game {
     public static void main(String... args) {
-        CoreEngine engine = new CoreEngine(new MyGame());
-        engine.start(60); // 60fps
+        CoreEngine engine = new CoreEngine(new AchternGame(), new LWJGLBindingProvider());
+        engine.start(60); // 60 fps
+        System.exit(0);
     }
     
     @Override
     public Dimension getWindowDimensions() {
-        return new Dimension(1280, 720);
-    }
-    
-    @Override
-    public String getWindowTitle() {
-        return "MyGame";
+        return Dimension.HD_720;
     }
     
     @Override
     public void init(CoreEngine engine) {
-        add(new Node("Camera").add(new Camera()));
-        add(ResourceLoader.getFigure("floor").boxed());
+        add(new Node("Camera")
+            .add(new Camera()) // the main camera
+            .add(new MouseLook(1)) // allows you to look around
+            .add(new HumanMover(10)); // allows you to walk
+            .add(new FlyMover(10)); // allows you to fly. Awesome \o/
+        );
+        add(new FigureProvider("Meshes", "floor").get()); // add a basic plane mesh
+
+        Node light = new DirectionalLight(Color.WHITE, 1).boxed(); // some light!
+
+        // adjust the position a bit
+        light.getTransform().setPosition(new Vector3f(5, 5 ,5));
+        light.getTransform().rotate(Transform.X_AXIS, 45);
+        light.getTransform().rotate(Transform.Z_AXIS, 45);
+        light.getTransform().rotate(Transform.Y_AXIS, 90);
+
+
+        add(new FogGenerator().boxed()); // maybe some fog would be cool..?!
+
+
+
     }
     
     @Override
@@ -45,6 +60,72 @@ public class MyGame extends Game {
 }
 
 ```
+
+## How to install
+
+AchternEngine uses maven! Simply add this to your dependencies:
+
+```xml
+<dependency>
+    <groupId>org.achtern</groupId>
+    <artifactId>AchternEngine</artifactId>
+    <version>0.4-SNAPSHOT</version>
+</dependency>
+```
+
+But in order to be able to run the OpenGL binding, you need to have the natives in your classpath.
+
+This is easily done with maven as well:
+
+under `<build><plugins>` add this build plugin
+
+```xml
+<plugin>
+    <groupId>com.googlecode.mavennatives</groupId>
+    <artifactId>maven-nativedependencies-plugin</artifactId>
+    <version>0.0.7</version>
+    <executions>
+        <execution>
+            <id>unpacknatives</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>copy</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+In addition to that AchternEngine uses slf4j as logging framework, you need to provide the implementation for that.
+You can use whatever you want and fits your project, but I recommend to use logback!
+
+```xml
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.0.13</version>
+</dependency>
+```
+
+And add the following basic configuration file `logback.xml`:
+
+```xml
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+```
+
+The logging levels debug and trace are used to debug the engine itself, not your game!
 
 ## Here are some screenshots, 'cause everyone loves screenshots
 
