@@ -24,7 +24,9 @@
 
 package org.achtern.AchternEngine.core.util.scenegraph;
 
+import lombok.Getter;
 import org.achtern.AchternEngine.core.audio.openal.AudioListener;
+import org.achtern.AchternEngine.core.math.Vector3f;
 import org.achtern.AchternEngine.core.scenegraph.Node;
 import org.achtern.AchternEngine.core.scenegraph.entity.Camera;
 import org.achtern.AchternEngine.core.scenegraph.entity.controller.FlyMover;
@@ -40,21 +42,30 @@ import org.achtern.AchternEngine.core.scenegraph.entity.controller.MouseLook;
  * - {@link org.achtern.AchternEngine.core.scenegraph.entity.controller.HumanMover} <br>
  * - {@link org.achtern.AchternEngine.core.scenegraph.entity.controller.MouseLook} <br>
  * <br>
- * By default it is named "Camera"
+ * By default it is named "Camera", you can get this camera entity easily, by calling<br>
+ * {@link #getCamera()}
  */
 public class BasicCamera extends Node {
 
+    @Getter protected Camera camera;
+
     /**
-     * Create a new BasicCamera.
+     * Creates a new BasicCamera
+     * <br>
+     * The speeds vector should contain the speeds for the various components:<br>
+     * X => walking speed<br>
+     * Y => flying speed<br>
+     * Z => mouse sensitivity<br>
      *
      * @param name The name of the camera
+     * @param speeds holds speed values for the various components.
      */
-    public BasicCamera(String name) {
+    public BasicCamera(String name, Vector3f speeds) {
         super(name);
-        Camera camera = new Camera();
-        camera.setName(name);
+        this.camera = new Camera();
+        this.camera.setName(name);
 
-        add(camera);
+        add(this.camera);
         add(new HumanMover(10));
         add(new FlyMover(10));
         add(new MouseLook(1));
@@ -63,9 +74,10 @@ public class BasicCamera extends Node {
     }
 
     /**
-     * Creates a BasicCamera with the name "Camera".
+     * Creates a BasicCamera with the name "Camera".<br>
+     * with 10 as both walking and flying speed and a mouse sensitivity of 1.
      */
     public BasicCamera() {
-        this("Camera");
+        this("Camera", new Vector3f(10, 10, 1));
     }
 }
