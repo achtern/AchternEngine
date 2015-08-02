@@ -53,9 +53,9 @@ public class BasicCamera extends Node {
      * Creates a new BasicCamera
      * <br>
      * The speeds vector should contain the speeds for the various components:<br>
-     * X => walking speed<br>
-     * Y => flying speed<br>
-     * Z => mouse sensitivity<br>
+     * X - walking speed<br>
+     * Y - flying speed<br>
+     * Z - mouse sensitivity<br>
      *
      * @param name The name of the camera
      * @param speeds holds speed values for the various components.
