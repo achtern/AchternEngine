@@ -40,11 +40,14 @@ public class Material extends CommonDataStore {
 
     public static Texture DEFAULT_NORMAL;
 
+    public static Texture DEFAULT_DISPLACEMENT;
+
     public static Texture MISSING_TEXTURE;
 
     static {
         try {
             DEFAULT_NORMAL = ResourceLoader.getTexture("default_normal.jpg");
+            DEFAULT_DISPLACEMENT = ResourceLoader.getTexture("default_displacement.png");
             MISSING_TEXTURE = ResourceLoader.getTexture("missing.jpg");
         } catch (Exception e) {
             LOGGER.error("BREAK IN THE SPACETIME! MISSING BUNDLED TEXTURE!", e);
@@ -63,8 +66,13 @@ public class Material extends CommonDataStore {
     public Material(ShaderSuit shader) {
         this.shader = shader;
 
-        // load default normalMap
+        // load default normalMap && displacementMap
         addTexture("normalMap", DEFAULT_NORMAL);
+        addTexture("displacementMap", DEFAULT_DISPLACEMENT);
+
+        // set default displacement Values
+        addFloat("displacementAmount", 0.04f);
+        addFloat("displacementOffset", 0);
     }
 
     /**
